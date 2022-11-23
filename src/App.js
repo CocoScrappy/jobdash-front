@@ -1,26 +1,24 @@
-import  { useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import JobPosting from './pages/JobPosting'
-import axios from "axios";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import {Provider} from 'react-redux';
 
-function App() {
+import HomePage from 'containers/HomePage';
+import DashboardPage from 'containers/DashboardPage';
+import LoginPage from 'containers/LoginPage';
+import RegisterPage from 'containers/RegisterPage';
 
-  return (
+import {store} from 'store';
 
-  
-  <div className="App">
-   <BrowserRouter>
-      <div className="pages">
-        <Routes>
-          <Route 
-            path="/jobpostings" 
-            element={<JobPosting />}
-          />
-        </Routes>
-      </div>
-    </BrowserRouter>
-  </div>
-  );
-};
+const App = ()=>(
+	<Provider store={store}>
+		<Router>
+				<Routes>
+					<Route path='/' element={<HomePage />} />
+					<Route path='/dashboard' element={<DashboardPage />} />
+					<Route path='/login' element={<LoginPage />} />
+					<Route path='/register' element={<RegisterPage />} />
+				</Routes>
+		</Router>
+	</Provider>
+);
 
 export default App;
