@@ -11,7 +11,7 @@ const MyCVPage = () => {
 
   const fetchCVs = () => {
     axios
-      .get(`http://localhost:8000/api/cvs/get_user_cvs/`, {
+      .get(`https://jobdash1.herokuapp.com/api/cvs/get_user_cvs/`, {
         headers: {
           email: "johndoes@gmail.ca",
         },
