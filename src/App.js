@@ -6,6 +6,7 @@ import DashboardPage from "containers/DashboardPage";
 import LoginPage from "containers/LoginPage";
 import RegisterPage from "containers/RegisterPage";
 import JobPosting from "pages/JobPosting";
+import MyCVPage from "containers/MyCVPage";
 
 import { store } from "store";
 
@@ -18,6 +19,7 @@ const App = () => (
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/jobpostings" element={<JobPosting />} />
+        <Route path="/cv" element={<MyCVPage />} />
       </Routes>
     </Router>
   </Provider>
