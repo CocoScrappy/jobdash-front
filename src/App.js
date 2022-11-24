@@ -13,7 +13,7 @@ import { store } from "store";
 
 const App = () => (
   <Provider store={store}>
-    <HashRouter>
+    <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/dashboard" element={<DashboardPage />} />
@@ -22,7 +22,7 @@ const App = () => (
         <Route path="/jobpostings" element={<JobPosting />} />
         <Route path="/cv" element={<MyCVPage />} />
       </Routes>
-    </HashRouter>
+    </Router>
   </Provider>
 );
 
