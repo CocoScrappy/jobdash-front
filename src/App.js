@@ -1,5 +1,6 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+//import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Provider } from "react-redux";
+import { HashRouter as Router, Routes, Route } from "react-router-dom";
 
 import HomePage from "containers/HomePage";
 import DashboardPage from "containers/DashboardPage";
@@ -12,7 +13,7 @@ import { store } from "store";
 
 const App = () => (
   <Provider store={store}>
-    <Router>
+    <HashRouter>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/dashboard" element={<DashboardPage />} />
@@ -21,7 +22,7 @@ const App = () => (
         <Route path="/jobpostings" element={<JobPosting />} />
         <Route path="/cv" element={<MyCVPage />} />
       </Routes>
-    </Router>
+    </HashRouter>
   </Provider>
 );
 
