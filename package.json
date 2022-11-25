@@ -2,16 +2,21 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://CocoScrappy.github.io/jobdash-front",
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.2.0",
+    "bootstrap": "^5.2.3",
     "formik": "^2.2.9",
+    "gh-pages": "^4.0.0",
     "react": "^18.2.0",
+    "react-bootstrap": "^2.6.0",
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",
+    "react-icons": "^4.6.0",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.4.3",
     "web-vitals": "^2.1.4",
@@ -20,11 +25,17 @@
   "devDependencies": {
     "react-scripts": "5.0.1"
   },
+  "proxy": "http://localhost:8000",
   "scripts": {
+    "predeploy": "npm run build:production",
+    "deploy": "gh-pages -d build:production",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "build:development": "env-cmd -f .env.development react-scripts build",
+    "build:staging": "env-cmd -f .env.staging react-scripts build",
+    "build:production": "env-cmd -f .env.production react-scripts build"
   },
   "eslintConfig": {
     "extends": [
