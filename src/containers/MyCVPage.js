@@ -5,9 +5,12 @@ import axios from "axios";
 
 const MyCVPage = () => {
   const [UserCVInfo, setUserCVInfo] = useState();
-  const [PageMsg, setPageMsg] = useState("");
+  const [pageMsg, setPageMsg] = useState("");
+  const [pageMsgStyle, setPageMsgStyle] = useState("");
 
   const getUserCV = () => {
+    setPageMsg("");
+    setPageMsgStyle("");
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/cvs/get_user_cvs/`, {
         headers: {
@@ -15,7 +18,6 @@ const MyCVPage = () => {
         },
       })
       .then((response) => {
-        // console.log(response);
         setUserCVInfo(response.data);
       })
       .catch((error) => {
@@ -27,11 +29,10 @@ const MyCVPage = () => {
   if(UserCVInfo != null) {
   return (
     <Layout title="AuthSite | MyCVPage" content="MyCV Page">
-      {/* {console.log(UserCVInfo)} */}
       <h2>My CV</h2>
       <hr />
-      
-      <UserCV cv={UserCVInfo} />
+      <p className="${pageMsg}"></p>
+      <UserCV cv={UserCVInfo} setPageMsg={setPageMsg} setPageMsgStyle={setPageMsgStyle} setUserCVInfo={setUserCVInfo}/>
     </Layout>
   );
 }

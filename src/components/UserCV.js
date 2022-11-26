@@ -3,41 +3,78 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { Button, Container, FloatingLabel } from "react-bootstrap";
-import { EditorState, convertToRaw, ContentState } from "draft-js";
+import {
+  EditorState,
+  convertToRaw,
+  ContentState,
+  convertFromHTML,
+} from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import draftToHtml from "draftjs-to-html";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import parse from "html-react-parser";
+import MyEditor from "components/MyEditor";
+import { format } from 'date-fns'
 
-function UserCV({ cv }) {
-  let _contentState = ContentState.createFromText(
-    "<p><b>Sample content state</b></p>"
+function UserCV({ cv, setPageMsg, setPageMsgStyle, setUserCVInfo }) {
+//   const sampleMarkup = `
+//     <div>
+//       <h2>Title</h2>
+//     <i>some text</i>
+//   </div>
+// `;
+
+const sampleMarkup = cv.content;
+
+  const blocksFromHTML = convertFromHTML(sampleMarkup);
+  const state = ContentState.createFromBlockArray(
+    blocksFromHTML.contentBlocks,
+    blocksFromHTML.entityMap
   );
-  console.log(_contentState)
-  const raw = convertToRaw(_contentState);
-  console.log(raw)
-  const [contentState, setContentState] = useState(parse(_contentState));
-  // const [EditorMsg, setEditorMsg] = useState("");
-  const [editorState, setEditorState] = useState(() => {
-    EditorState.createEmpty();
-  });
+
+  const [editorState, setEditorState] = useState(() =>
+    EditorState.createWithContent(state)
+  );
+
+  // ---------------------------------------------
+//   const [editorState, setEditorState] = useState(() =>
+//     EditorState.createEmpty()
+//   );
+
+  const [convertedContent, setConvertedContent] = useState("");
+
+  const handleEditorChange = (state) => {
+    setEditorState(state);
+    convertContentToHTML();
+  };
+
+  const convertContentToHTML = () => {
+    let currentContentAsHTML = draftToHtml(
+      convertToRaw(editorState.getCurrentContent())
+    );
+    setConvertedContent(currentContentAsHTML);
+  };
 
   const onSubmit = (data) => {
     // setPageMsg("");
-    data.content = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+    data.content = convertedContent;
+    // console.log(convertedContent);
     console.log(data);
-    // axios
-    //   .patch(`${process.env.REACT_APP_API_URL}/api/cvs/${data.id}`, data)
-    //   .then((response) => {
-    //     console.log(response.data);
-    //     // setUserCV(response.data);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //     if (error.response) {
-    //       setErrorMsg(error.response.data.message);
-    //     }
-    //   });
+    axios
+      .patch(`${process.env.REACT_APP_API_URL}/api/cvs/${data.id}/`, data)
+      .then((response) => {
+        console.log(response.data);
+        setUserCVInfo(response.data);
+        setPageMsg("CV successfully edited on " + format(new Date(),"MMM dd yyyy h:mmaa"));
+        setPageMsgStyle("text-success");
+      })
+      .catch((error) => {
+        console.log(error);
+        if (error.response) {
+          setPageMsg(error.response.data.message);
+          setPageMsgStyle("text-danger")
+        }
+      });
   };
 
   const initialValues = {
@@ -64,7 +101,6 @@ function UserCV({ cv }) {
             <Field
               type="hidden"
               name="id"
-              placeholder="id"
               className="form-control col-auto"
             />
           </div>
@@ -85,17 +121,17 @@ function UserCV({ cv }) {
           <div className="mb-3">
             {/* <p className="text-danger">{EditorMsg}</p> */}
             <p className="h5 text-start my-3">Content</p>
-            <Editor
-              defaultContentState={contentState}
-              //   onContentStateChange={setContentState}
-              //   editorState={editorState}
+            <MyEditor
+              content={cv.content}
+              editorState={editorState}
               onEditorStateChange={setEditorState}
-              // handleBeforeInput={handleBeforeInput}
-              editorStyle={{
-                border: "1px solid",
-                borderStyle: "groove",
-                color: "black",
-              }}
+            />
+            <Editor
+              editorState={editorState}
+              onEditorStateChange={handleEditorChange}
+              wrapperClassName="wrapper-class"
+              editorClassName="editor-class"
+              toolbarClassName="toolbar-class"
             />
           </div>
           <div className="d-grid gap-2">
@@ -105,6 +141,7 @@ function UserCV({ cv }) {
           </div>
         </Form>
       </Formik>
+      <div>{parse(convertedContent)}</div>
     </div>
   );
 }
