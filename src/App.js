@@ -9,10 +9,8 @@ import RegisterPage from "containers/RegisterPage";
 import JobPosting from "pages/JobPosting";
 import MyCVPage from "containers/MyCVPage";
 
-import { store } from "store";
 
 const App = () => (
-  <Provider store={store}>
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
@@ -23,7 +21,6 @@ const App = () => (
         <Route path="/cv" element={<MyCVPage />} />
       </Routes>
     </Router>
-  </Provider>
 );
 
 export default App;

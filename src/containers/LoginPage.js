@@ -2,9 +2,23 @@ import Layout from "components/Layout";
 import {Formik,Form,Field,ErrorMessage} from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
+import useStore from "store";
 
 const LoginPage = ()=>{
 
+  const uId=useStore(state=>state.id);
+  const addUId=useStore(state=>state.addId);
+
+  const uFirstName=useStore(state=>state.first_name);
+  const addUFirstName=useStore(state=>state.addFirstName);
+
+  const uLastName=useStore(state=>state.last_name);
+  const addULastName=useStore(state=>state.addLastName);
+
+  const uEmail=useStore(state=>state.email);
+  const addUEmail=useStore(state=>state.addEmail);
+
+  // const iniUser=useStore(state=>state.addUserInfo);
   const onSubmit=(data)=>{
       axios
             .post(`http://localhost:8000/api/token/`,data)
@@ -15,8 +29,26 @@ const LoginPage = ()=>{
               console.log(response);
               localStorage.setItem("rtoken",response.data.refresh);
               localStorage.setItem("atoken",response.data.access);
-            }
-              )
+            })
+            .then(()=>{
+              axios
+                .get(`http://localhost:8000/api/me`,{headers:{"Authorization":"Bearer "+localStorage.getItem('atoken')}})
+                .catch((error)=>{
+                  console.log(error);
+                })
+                .then((res)=>{
+                  // console.log("Response "+res.data.id);
+                  // iniUser(res.data);
+                  // console.log("State: "+JSON.stringify(getUser));
+                  addUId(res.data.id);
+                  addUFirstName(res.data.first_name);
+                  addULastName(res.data.last_name);
+                  addUEmail(res.data.email);
+
+                  console.log(uEmail)
+
+                })
+            })
     }
 
   const validationSchema=Yup.object().shape({
