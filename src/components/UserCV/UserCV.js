@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
-import { Button, Container, FloatingLabel } from "react-bootstrap";
+import { Button, Container, FloatingLabel, Modal } from "react-bootstrap";
 import {
   EditorState,
   convertToRaw,
@@ -14,17 +14,13 @@ import draftToHtml from "draftjs-to-html";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import parse from "html-react-parser";
 import MyEditor from "components/MyEditor";
-import { format } from 'date-fns'
+import { format } from "date-fns";
+import "./UserCV.css";
 
 function UserCV({ cv, setPageMsg, setPageMsgStyle, setUserCVInfo }) {
-//   const sampleMarkup = `
-//     <div>
-//       <h2>Title</h2>
-//     <i>some text</i>
-//   </div>
-// `;
+  const [previewCV, setPreviewCV] = useState(false);
 
-const sampleMarkup = cv.content;
+  const sampleMarkup = cv.content;
 
   const blocksFromHTML = convertFromHTML(sampleMarkup);
   const state = ContentState.createFromBlockArray(
@@ -37,23 +33,31 @@ const sampleMarkup = cv.content;
   );
 
   // ---------------------------------------------
-//   const [editorState, setEditorState] = useState(() =>
-//     EditorState.createEmpty()
-//   );
+  //   const [editorState, setEditorState] = useState(() =>
+  //     EditorState.createEmpty()
+  //   );
 
   const [convertedContent, setConvertedContent] = useState("");
 
-  const handleEditorChange = (state) => {
-    setEditorState(state);
-    convertContentToHTML();
-  };
-
-  const convertContentToHTML = () => {
+  useEffect(() => {
     let currentContentAsHTML = draftToHtml(
       convertToRaw(editorState.getCurrentContent())
     );
     setConvertedContent(currentContentAsHTML);
+    //   console.log(convertedContent)
+  }, [editorState]);
+
+  const handleEditorChange = (state) => {
+    setEditorState(state);
+    // convertContentToHTML();
   };
+
+  //   const convertContentToHTML = () => {
+  //     let currentContentAsHTML = draftToHtml(
+  //       convertToRaw(editorState.getCurrentContent())
+  //     );
+  //     setConvertedContent(currentContentAsHTML);
+  //   };
 
   const onSubmit = (data) => {
     // setPageMsg("");
@@ -65,16 +69,24 @@ const sampleMarkup = cv.content;
       .then((response) => {
         console.log(response.data);
         setUserCVInfo(response.data);
-        setPageMsg("CV successfully edited on " + format(new Date(),"MMM dd yyyy h:mmaa"));
+        setPageMsg(
+          "CV successfully edited on " +
+            format(new Date(), "MMM dd yyyy h:mmaa")
+        );
         setPageMsgStyle("text-success");
       })
       .catch((error) => {
         console.log(error);
         if (error.response) {
           setPageMsg(error.response.data.message);
-          setPageMsgStyle("text-danger")
+          setPageMsgStyle("text-danger");
         }
       });
+  };
+
+  const resetEditorState = () => {
+    console.log("cancel");
+    window.location.reload(false);
   };
 
   const initialValues = {
@@ -98,11 +110,7 @@ const sampleMarkup = cv.content;
       >
         <Form className="m-3">
           <div>
-            <Field
-              type="hidden"
-              name="id"
-              className="form-control col-auto"
-            />
+            <Field type="hidden" name="id" className="form-control col-auto" />
           </div>
           <div className="my-3">
             <ErrorMessage
@@ -121,11 +129,6 @@ const sampleMarkup = cv.content;
           <div className="mb-3">
             {/* <p className="text-danger">{EditorMsg}</p> */}
             <p className="h5 text-start my-3">Content</p>
-            <MyEditor
-              content={cv.content}
-              editorState={editorState}
-              onEditorStateChange={setEditorState}
-            />
             <Editor
               editorState={editorState}
               onEditorStateChange={handleEditorChange}
@@ -134,14 +137,39 @@ const sampleMarkup = cv.content;
               toolbarClassName="toolbar-class"
             />
           </div>
-          <div className="d-grid gap-2">
+          <div className="d-grid gap-2  col-6 mx-auto">
             <Button type="submit" variant="primary" size="lg">
               Submit
+            </Button>
+            <Button
+              type="button"
+              variant="secondary"
+              size="lg"
+              onClick={() => resetEditorState()}
+            >
+              Cancel
+            </Button>
+            <Button variant="info" onClick={() => setPreviewCV(true)}>
+              Preview
             </Button>
           </div>
         </Form>
       </Formik>
-      <div>{parse(convertedContent)}</div>
+      {/* <div>{parse(convertedContent)}</div> */}
+      <Modal
+        // id="modal"
+        // fullscreen={true}
+        size="lg"
+        show={previewCV}
+        onHide={() => setPreviewCV(false)}
+        // dialogClassName="modal"
+        aria-labelledby="cv-preview"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="cv-preview">{cv.name}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{parse(convertedContent)}</Modal.Body>
+      </Modal>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Layout from "components/Layout";
-import UserCV from "components/UserCV";
+import UserCV from "components/UserCV/UserCV";
 import axios from "axios";
 
 const MyCVPage = () => {
