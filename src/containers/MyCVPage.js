@@ -1,15 +1,13 @@
 import { useState, useEffect } from "react";
 import Layout from "components/Layout";
+import UserCV from "components/UserCV";
 import axios from "axios";
-import Button from "react-bootstrap/Button";
-import Card from "react-bootstrap/Card";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 
 const MyCVPage = () => {
-  const [listOfCvs, setListOfCvs] = useState([]);
+  const [UserCVInfo, setUserCVInfo] = useState();
+  const [PageMsg, setPageMsg] = useState("");
 
-  const fetchCVs = () => {
+  const getUserCV = () => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/cvs/get_user_cvs/`, {
         headers: {
@@ -17,39 +15,25 @@ const MyCVPage = () => {
         },
       })
       .then((response) => {
-        console.log(response);
-        setListOfCvs(response.data);
+        // console.log(response);
+        setUserCVInfo(response.data);
       })
       .catch((error) => {
         console.log(error);
       });
   };
 
-  useEffect(fetchCVs, []);
-
-  const renderCVs = (listOfCvs) => {
-    return (
-      <Row>
-        {listOfCvs.map((cv, index) => (
-          <Col>
-            <Card style={{ width: "24rem" }}>
-              <Card.Body>
-                <Card.Title className="">{cv.name}</Card.Title>
-                <Card.Text className="text-truncate">
-                  {cv.content}
-                </Card.Text>
-              </Card.Body>
-            </Card>
-          </Col>
-        ))}
-      </Row>
-    );
-  };
-
+  useEffect(getUserCV, []);
+  if(UserCVInfo != null) {
   return (
     <Layout title="AuthSite | MyCVPage" content="MyCV Page">
-      <h1>{renderCVs(listOfCvs)}</h1>
+      {/* {console.log(UserCVInfo)} */}
+      <h2>My CV</h2>
+      <hr />
+      
+      <UserCV cv={UserCVInfo} />
     </Layout>
   );
+}
 };
 export default MyCVPage;
