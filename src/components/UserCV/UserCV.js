@@ -13,7 +13,6 @@ import { Editor } from "react-draft-wysiwyg";
 import draftToHtml from "draftjs-to-html";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import parse from "html-react-parser";
-import MyEditor from "components/MyEditor";
 import { format } from "date-fns";
 import "./UserCV.css";
 
@@ -44,7 +43,7 @@ function UserCV({ cv, setPageMsg, setPageMsgStyle, setUserCVInfo }) {
       convertToRaw(editorState.getCurrentContent())
     );
     setConvertedContent(currentContentAsHTML);
-    //   console.log(convertedContent)
+      console.log(convertedContent)
   }, [editorState]);
 
   const handleEditorChange = (state) => {
@@ -62,11 +61,12 @@ function UserCV({ cv, setPageMsg, setPageMsgStyle, setUserCVInfo }) {
   const onSubmit = (data) => {
     // setPageMsg("");
     data.content = convertedContent;
-    // console.log(convertedContent);
+    console.log(convertedContent);
     console.log(data);
     axios
       .patch(`${process.env.REACT_APP_API_URL}/api/cvs/${data.id}/`, data)
       .then((response) => {
+        console.log("successful");
         console.log(response.data);
         setUserCVInfo(response.data);
         setPageMsg(
