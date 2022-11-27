@@ -11,15 +11,17 @@ const Navbar = () => {
   const addId=useStore(state=>state.addId);
   const addEmail=useStore(state=>state.addEmail);
   const addFirstName=useStore(state=>state.addFirstName);
-  const addLastName=useStore(state=>state.addId);
+  const addLastName=useStore(state=>state.addLastName);
 
   const logout= event=>{
     setAuthState(false);
+    localStorage.clear();
     addId(-1);
+    // console.log("should be -1 "+uId);
     addEmail("");
     addFirstName("");
     addLastName("");
-    localStorage.clear();
+    
   }
 
   useEffect(()=>{},[authState])
@@ -29,6 +31,11 @@ const Navbar = () => {
       <li className="nav-item active">
         <Link className="nav-link" to="/dashboard">
           Dashboard
+        </Link>
+      </li>
+      <li className="nav-item">
+        <Link className="nav-link" to="/cv">
+          CV
         </Link>
       </li>
       <li className="nav-item ">
@@ -49,11 +56,6 @@ const Navbar = () => {
       <li className="nav-item">
         <Link className="nav-link" to="/register">
           Register
-        </Link>
-      </li>
-      <li className="nav-item">
-        <Link className="nav-link" to="/cv">
-          CV
         </Link>
       </li>
     </>
@@ -77,8 +79,6 @@ const Navbar = () => {
       <div className="collapse navbar-collapse" id="navbarNav">
         <ul className="navbar-nav">
           {authState ? authLinks : guestLinks}
-          {/* {authLinks}
-          {guestLinks} */}
         </ul>
       </div>
     </nav>
