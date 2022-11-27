@@ -1,8 +1,31 @@
+import { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { useSelector } from "react-redux";
+import useStore from "store";
 
 const Navbar = () => {
-  const { isAuthenticated } = useSelector((state) => state.user);
+  const uId=useStore(state=>state.id);
+  var isAuthenticated= uId===-1?false:true;
+
+  const [authState,setAuthState]=useState(isAuthenticated);
+
+  const addId=useStore(state=>state.addId);
+  const addEmail=useStore(state=>state.addEmail);
+  const addFirstName=useStore(state=>state.addFirstName);
+  const addLastName=useStore(state=>state.addLastName);
+
+  const logout= event=>{
+    setAuthState(false);
+    localStorage.clear();
+    addId(-1);
+    // console.log("should be -1 "+uId);
+    addEmail("");
+    addFirstName("");
+    addLastName("");
+    
+  }
+
+  useEffect(()=>{},[authState])
+
   const authLinks = (
     <>
       <li className="nav-item active">
@@ -10,10 +33,20 @@ const Navbar = () => {
           Dashboard
         </Link>
       </li>
+      <li className="nav-item">
+        <Link className="nav-link" to="/cv">
+          CV
+        </Link>
+      </li>
+      <li className="nav-item">
+        <Link className="nav-link" to="/jobApplications">
+          Applications
+        </Link>
+      </li>
       <li className="nav-item ">
-        <a className="nav-link" href="#!">
+        <Link className="nav-link" href="#" onClick={logout}>
           LogOut
-        </a>
+        </Link>
       </li>
     </>
   );
@@ -28,16 +61,6 @@ const Navbar = () => {
       <li className="nav-item">
         <Link className="nav-link" to="/register">
           Register
-        </Link>
-      </li>
-      <li className="nav-item">
-        <Link className="nav-link" to="/cv">
-          CV
-        </Link>
-      </li>
-      <li className="nav-item">
-        <Link className="nav-link" to="/jobApplications">
-          Applications
         </Link>
       </li>
     </>
@@ -60,7 +83,7 @@ const Navbar = () => {
       </button>
       <div className="collapse navbar-collapse" id="navbarNav">
         <ul className="navbar-nav">
-          {isAuthenticated ? authLinks : guestLinks}
+          {authState ? authLinks : guestLinks}
         </ul>
       </div>
     </nav>

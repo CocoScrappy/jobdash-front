@@ -1,5 +1,3 @@
-//import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Provider } from "react-redux";
 import { HashRouter as Router, Routes, Route } from "react-router-dom";
 
 import HomePage from "containers/HomePage";
@@ -10,24 +8,24 @@ import JobPosting from "pages/JobPosting";
 import JobApplicationViewEdit from "containers/JobApplicationViewEdit";
 import JobApplications from "containers/JobApplications";
 import MyCVPage from "containers/MyCVPage";
-
-import { store } from "store";
+import UserProtectedRoute from "UserProtectedRoute";
 
 const App = () => (
-  <Provider store={store}>
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/jobpostings" element={<JobPosting />} />
-        <Route path="/jobapplicationviewedit" element={<JobApplicationViewEdit />} />
-        <Route path="/jobapplications" element={<JobApplications />} />
-        <Route path="/cv" element={<MyCVPage />} />
+
+        <Route path="/" element={<UserProtectedRoute/>}>
+          <Route path="dashboard" element={<DashboardPage />} />
+          <Route path="jobpostings" element={<JobPosting />} />
+          <Route path="/jobapplicationviewedit" element={<JobApplicationViewEdit />} />
+          <Route path="/jobapplications" element={<JobApplications />} />
+          <Route path="cv" element={<MyCVPage />} />
+        </Route>
       </Routes>
     </Router>
-  </Provider>
 );
 
 export default App;
