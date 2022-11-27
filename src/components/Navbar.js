@@ -1,9 +1,28 @@
+import { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import useStore from "store";
 
 const Navbar = () => {
   const uId=useStore(state=>state.id);
   var isAuthenticated= uId===-1?false:true;
+
+  const [authState,setAuthState]=useState(isAuthenticated);
+
+  const addId=useStore(state=>state.addId);
+  const addEmail=useStore(state=>state.addEmail);
+  const addFirstName=useStore(state=>state.addFirstName);
+  const addLastName=useStore(state=>state.addId);
+
+  const logout= event=>{
+    setAuthState(false);
+    addId(-1);
+    addEmail("");
+    addFirstName("");
+    addLastName("");
+    localStorage.clear();
+  }
+
+  useEffect(()=>{},[authState])
 
   const authLinks = (
     <>
@@ -13,9 +32,9 @@ const Navbar = () => {
         </Link>
       </li>
       <li className="nav-item ">
-        <a className="nav-link" href="#!">
+        <Link className="nav-link" href="#" onClick={logout}>
           LogOut
-        </a>
+        </Link>
       </li>
     </>
   );
@@ -57,7 +76,7 @@ const Navbar = () => {
       </button>
       <div className="collapse navbar-collapse" id="navbarNav">
         <ul className="navbar-nav">
-          {isAuthenticated ? authLinks : guestLinks}
+          {authState ? authLinks : guestLinks}
           {/* {authLinks}
           {guestLinks} */}
         </ul>

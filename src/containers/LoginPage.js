@@ -3,8 +3,11 @@ import {Formik,Form,Field,ErrorMessage} from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 import useStore from "store";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = ()=>{
+
+  const navigate=useNavigate();
 
   const uId=useStore(state=>state.id);
   const addUId=useStore(state=>state.addId);
@@ -44,8 +47,7 @@ const LoginPage = ()=>{
                   addUFirstName(res.data.first_name);
                   addULastName(res.data.last_name);
                   addUEmail(res.data.email);
-
-                  console.log(uEmail)
+                  navigate('/dashboard');
 
                 })
             })
