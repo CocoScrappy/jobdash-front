@@ -13,7 +13,7 @@ const RegisterPage = ()=>{
     const onSubmit=(data)=>{
         data.summary="";
         console.log(data);
-        axios.post(`http://localhost:8000/api/register`,data)
+        axios.post(`${process.env.REACT_APP_API_URL}/api/register`,data)
             .catch((error)=>{
                 //reset previous errors
                 setEmailTaken("");
