@@ -78,7 +78,7 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
 
   const handleApply = async (id) => {
     return axios
-      .get(`${process.env.REACT_APP_API_URL}api/postings/${id}/`)
+      .get(`${process.env.REACT_APP_API_URL}/api/postings/${id}/`)
       .then((res) => {
         const { data } = res;
         return data;
