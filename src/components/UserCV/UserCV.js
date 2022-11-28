@@ -1,3 +1,4 @@
+// https://blog.logrocket.com/building-rich-text-editors-in-react-using-draft-js-and-react-draft-wysiwyg/
 import { useState, useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -17,9 +18,10 @@ import { format } from "date-fns";
 import "./UserCV.css";
 
 function UserCV({ cv, setPageMsg, setPageMsgStyle, setUserCVInfo }) {
+  // console.log(cv)
   const [previewCV, setPreviewCV] = useState(false);
 
-  const sampleMarkup = cv.content;
+  const sampleMarkup = cv.content == "" ? "<p></p>" : cv.content;
 
   const blocksFromHTML = convertFromHTML(sampleMarkup);
   const state = ContentState.createFromBlockArray(
@@ -31,11 +33,6 @@ function UserCV({ cv, setPageMsg, setPageMsgStyle, setUserCVInfo }) {
     EditorState.createWithContent(state)
   );
 
-  // ---------------------------------------------
-  //   const [editorState, setEditorState] = useState(() =>
-  //     EditorState.createEmpty()
-  //   );
-
   const [convertedContent, setConvertedContent] = useState("");
 
   useEffect(() => {
@@ -43,7 +40,7 @@ function UserCV({ cv, setPageMsg, setPageMsgStyle, setUserCVInfo }) {
       convertToRaw(editorState.getCurrentContent())
     );
     setConvertedContent(currentContentAsHTML);
-      console.log(convertedContent)
+    // console.log(convertedContent);
   }, [editorState]);
 
   const handleEditorChange = (state) => {
@@ -61,27 +58,59 @@ function UserCV({ cv, setPageMsg, setPageMsgStyle, setUserCVInfo }) {
   const onSubmit = (data) => {
     // setPageMsg("");
     data.content = convertedContent;
-    console.log(convertedContent);
+    // console.log(convertedContent);
     console.log(data);
-    axios
-      .patch(`${process.env.REACT_APP_API_URL}/api/cvs/${data.id}/`, data)
-      .then((response) => {
-        console.log("successful");
-        console.log(response.data);
-        setUserCVInfo(response.data);
-        setPageMsg(
-          "CV successfully edited on " +
-            format(new Date(), "MMM dd yyyy h:mmaa")
-        );
-        setPageMsgStyle("text-success");
-      })
-      .catch((error) => {
-        console.log(error);
-        if (error.response) {
-          setPageMsg(error.response.data.message);
-          setPageMsgStyle("text-danger");
-        }
-      });
+    if (data.id === undefined) {
+      delete data.id;
+      console.log(data);
+      axios
+        .post(`${process.env.REACT_APP_API_URL}/api/cvs/`, data, {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("atoken"),
+          },
+        })
+        .then((response) => {
+          console.log("successful");
+          console.log(response.data);
+          setUserCVInfo(response.data);
+          setPageMsg(
+            "CV successfully created on " +
+              format(new Date(), "MMM dd yyyy h:mmaa")
+          );
+          setPageMsgStyle("text-success");
+        })
+        .catch((error) => {
+          console.log(error);
+          if (error.response) {
+            setPageMsg(error.response.data.message);
+            setPageMsgStyle("text-danger");
+          }
+        });
+    } else {
+      axios
+        .patch(`${process.env.REACT_APP_API_URL}/api/cvs/${data.id}/`, data, {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("atoken"),
+          },
+        })
+        .then((response) => {
+          console.log("successful");
+          console.log(response.data);
+          setUserCVInfo(response.data);
+          setPageMsg(
+            "CV successfully edited on " +
+              format(new Date(), "MMM dd yyyy h:mmaa")
+          );
+          setPageMsgStyle("text-success");
+        })
+        .catch((error) => {
+          console.log(error);
+          if (error.response) {
+            setPageMsg(error.response.data.message);
+            setPageMsgStyle("text-danger");
+          }
+        });
+    }
   };
 
   const resetEditorState = () => {
@@ -92,12 +121,10 @@ function UserCV({ cv, setPageMsg, setPageMsgStyle, setUserCVInfo }) {
   const initialValues = {
     id: cv.id,
     name: cv.name,
-    content: cv.content,
   };
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().max(120).required(),
-    content: Yup.string().required(),
   });
 
   return (
@@ -130,11 +157,18 @@ function UserCV({ cv, setPageMsg, setPageMsgStyle, setUserCVInfo }) {
             {/* <p className="text-danger">{EditorMsg}</p> */}
             <p className="h5 text-start my-3">Content</p>
             <Editor
+              placeholder="CV content"
               editorState={editorState}
               onEditorStateChange={handleEditorChange}
-              wrapperClassName="wrapper-class"
-              editorClassName="editor-class"
+              // wrapperClassName="wrapper-class"
+              // editorClassName="demo-editor"
               toolbarClassName="toolbar-class"
+              editorStyle={{
+                border: "1px solid",
+                borderStyle: "groove",
+                color: "black",
+                height: "200px",
+              }}
             />
           </div>
           <div className="d-grid gap-2  col-6 mx-auto">

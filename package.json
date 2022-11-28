@@ -13,6 +13,7 @@
     "date-fns": "^2.29.3",
     "draft-js": "^0.11.7",
     "draftjs-to-html": "^0.9.1",
+    "env-cmd": "^10.1.0",
     "formik": "^2.2.9",
     "gh-pages": "^4.0.0",
     "html-react-parser": "^3.0.4",
@@ -31,10 +32,9 @@
   "devDependencies": {
     "react-scripts": "5.0.1"
   },
-  "proxy": "http://localhost:8000",
   "scripts": {
     "predeploy": "npm run build:production",
-    "deploy": "gh-pages -d build:production",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

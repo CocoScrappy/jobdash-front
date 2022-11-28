@@ -25,7 +25,7 @@ const LoginPage = () => {
   // const iniUser=useStore(state=>state.addUserInfo);
   const onSubmit = (data) => {
     axios
-      .post(`http://localhost:8000/api/token/`, data)
+      .post(`${process.env.REACT_APP_API_URL}/api/token/`, data)
       .catch((error) => {
         console.log(error);
       })
@@ -36,7 +36,7 @@ const LoginPage = () => {
       })
       .then(() => {
         axios
-          .get(`http://localhost:8000/api/me`, {
+          .get(`${process.env.REACT_APP_API_URL}/api/me`, {
             headers: {
               Authorization: "Bearer " + localStorage.getItem("atoken"),
             },
