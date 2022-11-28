@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/jobdash-front/static/css/main.ac15a836.css",
-    "main.js": "/jobdash-front/static/js/main.3bc8c1dd.js",
+    "main.js": "/jobdash-front/static/js/main.5fc89642.js",
     "static/js/787.c4e7f8f9.chunk.js": "/jobdash-front/static/js/787.c4e7f8f9.chunk.js",
     "index.html": "/jobdash-front/index.html",
     "main.ac15a836.css.map": "/jobdash-front/static/css/main.ac15a836.css.map",
-    "main.3bc8c1dd.js.map": "/jobdash-front/static/js/main.3bc8c1dd.js.map",
+    "main.5fc89642.js.map": "/jobdash-front/static/js/main.5fc89642.js.map",
     "787.c4e7f8f9.chunk.js.map": "/jobdash-front/static/js/787.c4e7f8f9.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.ac15a836.css",
-    "static/js/main.3bc8c1dd.js"
+    "static/js/main.5fc89642.js"
   ]
 }
