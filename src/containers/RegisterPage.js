@@ -12,7 +12,6 @@ const RegisterPage = ()=>{
     
     const onSubmit=(data)=>{
         data.summary="";
-        data.role="user";
         console.log(data);
         axios.post(`http://localhost:8000/api/register`,data)
             .catch((error)=>{
@@ -40,6 +39,7 @@ const RegisterPage = ()=>{
         first_name:"",
         last_name:"",
         email:"",
+        role:"user",
         password:"",
         confirmPass:""
             };
@@ -102,7 +102,15 @@ const RegisterPage = ()=>{
                 <div className="row">
                     <span className='errorMsg'>{emailTaken}</span>
                 </div>
-                
+
+                <div className='row'>
+                    <label>Select Role:</label>
+                    <Field as="select" name="role">
+                        <option value="user">User</option>
+                        <option value="employer">Recruiter</option>
+                    </Field>
+                </div>
+
                 <div className="row">
                     <label>Password:</label>
                     <Field  name="password"
