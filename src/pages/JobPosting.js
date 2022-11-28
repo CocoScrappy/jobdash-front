@@ -51,7 +51,7 @@ export const JobPosting = () => {
   };
 
   const getUser = async (access) => {
-    const userResp = await fetch("/api/me", {
+    const userResp = await fetch(`${process.env.REACT_APP_API_URL}/api/me`, {
       method: "GET",
 
       headers: {
