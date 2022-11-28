@@ -22,7 +22,7 @@ export const JobPosting = () => {
 
   useEffect(() => {
     axios
-      .get("/api/postings/default") //FIXME : trailing / ?
+      .get(`${process.env.REACT_APP_API_URL}/api/postings/default`) //FIXME : trailing / ?
       .then((res) => {
         setJobpostings(res.data);
       })
@@ -38,7 +38,7 @@ export const JobPosting = () => {
       password: "Qwert1234!",
     });
 
-    const tokenResp = await fetch("/api/token/", {
+    const tokenResp = await fetch(`${process.env.REACT_APP_API_URL}/api/token/`, {
       method: "POST",
       headers: {
         Accept: "application/json",
