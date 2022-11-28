@@ -167,7 +167,7 @@ function UserCV({ cv, setPageMsg, setPageMsgStyle, setUserCVInfo }) {
                 border: "1px solid",
                 borderStyle: "groove",
                 color: "black",
-                height: "200px",
+                height: "1200px",
               }}
             />
           </div>

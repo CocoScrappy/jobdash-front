@@ -11,6 +11,7 @@ import JobApplicationForm from "components/JobApplicationForms/JobApplicationFor
 import ExternalJobApplicationForm from "components/JobApplicationForms/ExternalJobApplicationForm";
 import MyCVPage from "containers/MyCVPage";
 import UserProtectedRoute from "UserProtectedRoute";
+import PdfTestPage from "containers/PdfTestPage";
 
 const App = () => (
     <Router>
@@ -18,6 +19,8 @@ const App = () => (
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/pdfTest" element={<PdfTestPage />} />
 
         <Route path="/" element={<UserProtectedRoute/>}>
           <Route path="dashboard" element={<DashboardPage />} />
