@@ -3,17 +3,18 @@ import { Link, NavLink } from "react-router-dom";
 import useStore from "store";
 
 const Navbar = () => {
-  const uId=useStore(state=>state.id);
-  var isAuthenticated= uId===-1?false:true;
+  const uId = useStore((state) => state.id);
+  var isAuthenticated = uId === -1 ? false : true;
 
-  const [authState,setAuthState]=useState(isAuthenticated);
+  const [authState, setAuthState] = useState(isAuthenticated);
 
-  const addId=useStore(state=>state.addId);
-  const addEmail=useStore(state=>state.addEmail);
-  const addFirstName=useStore(state=>state.addFirstName);
-  const addLastName=useStore(state=>state.addLastName);
+  const addId = useStore((state) => state.addId);
+  const addEmail = useStore((state) => state.addEmail);
+  const addFirstName = useStore((state) => state.addFirstName);
+  const addLastName = useStore((state) => state.addLastName);
+  const addRole = useStore((state) => state.addRole);
 
-  const logout= event=>{
+  const logout = (event) => {
     setAuthState(false);
     localStorage.clear();
     addId(-1);
@@ -21,10 +22,10 @@ const Navbar = () => {
     addEmail("");
     addFirstName("");
     addLastName("");
-    
-  }
+    addRole("");
+  };
 
-  useEffect(()=>{},[authState])
+  useEffect(() => {}, [authState]);
 
   const authLinks = (
     <>
@@ -82,9 +83,7 @@ const Navbar = () => {
         <span className="navbar-toggler-icon"></span>
       </button>
       <div className="collapse navbar-collapse" id="navbarNav">
-        <ul className="navbar-nav">
-          {authState ? authLinks : guestLinks}
-        </ul>
+        <ul className="navbar-nav">{authState ? authLinks : guestLinks}</ul>
       </div>
     </nav>
   );

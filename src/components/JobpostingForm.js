@@ -4,8 +4,12 @@ import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from "react-bootstrap/FormControl";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
+import { format } from "date-fns";
+import useStore from "store";
 
 export default function JobpostingForm({ jobpostings, setJobpostings }) {
+  const uRole = useStore((state) => state.addRole);
+  const uId = useStore((state) => state.addId);
   const [success, setSuccess] = useState(false);
   const [formData, setFormData] = useState({});
 
@@ -27,11 +31,16 @@ export default function JobpostingForm({ jobpostings, setJobpostings }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    console.log(formData);
     if (!formData) {
       alert("Please provide a valid value for jobposting");
       return;
     }
-    formData.employer = 3;
+
+    if (uRole === "employer") {
+      formData.employer = uId;
+    }
+    formData.employer = 3; //FIXME: gotta be default internal Employer
 
     axios
       .post(`${process.env.REACT_APP_API_URL}/api/postings/`, formData)
@@ -54,6 +63,7 @@ export default function JobpostingForm({ jobpostings, setJobpostings }) {
           onChange={handleChange}
           name="title"
           value={title}
+          required
         />
       </InputGroup>
       <InputGroup className="mb-4">
@@ -63,6 +73,7 @@ export default function JobpostingForm({ jobpostings, setJobpostings }) {
           onChange={handleChange}
           name="logo_url"
           value={logo_url}
+          required
         />
       </InputGroup>
       <InputGroup className="mb-4">
@@ -72,6 +83,7 @@ export default function JobpostingForm({ jobpostings, setJobpostings }) {
           onChange={handleChange}
           name="location"
           value={location}
+          required
         />
       </InputGroup>
       <InputGroup className="mb-4">
@@ -81,6 +93,7 @@ export default function JobpostingForm({ jobpostings, setJobpostings }) {
           onChange={handleChange}
           name="description"
           value={description}
+          required
         />
       </InputGroup>
       <InputGroup className="mb-4">
@@ -100,10 +113,13 @@ export default function JobpostingForm({ jobpostings, setJobpostings }) {
           onChange={handleChange}
           name="remote_option"
           value={remote_option}
+          defaultValue={"#"}
           required
         >
           {/* make the first one unpickable but display first? */}
-          <option>Pick one</option>
+          <option disabled value="#">
+            Pick one
+          </option>
           <option value="remote">Remote</option>
           <option value="hybrid">Hybrid</option>
           <option value="in-person">In-Person</option>
