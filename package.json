@@ -32,7 +32,6 @@
   "devDependencies": {
     "react-scripts": "5.0.1"
   },
-  "proxy": "http://localhost:8000",
   "scripts": {
     "predeploy": "npm run build:production",
     "deploy": "gh-pages -d build",
