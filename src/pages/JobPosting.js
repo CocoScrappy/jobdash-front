@@ -86,8 +86,6 @@ export const JobPosting = () => {
           <JobpostingForm
             jobpostings={jobpostings}
             setJobpostings={setJobpostings}
-            name={first_name}
-            email={email}
           />
         </Modal.Body>
         <Modal.Footer>
