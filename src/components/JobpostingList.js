@@ -1,5 +1,6 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useState} from "react";
+import { useNavigate } from "react-router-dom";
 import ListGroup from "react-bootstrap/ListGroup";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
@@ -9,11 +10,15 @@ import {
   MdCheckBoxOutlineBlank,
   MdEdit,
   MdDelete,
+  MdSend,
 } from "react-icons/md";
+import JobApplicationForm from "./JobApplicationForms/JobApplicationForm";
+import { Link } from "react-router-dom";
 
 export default function JobpostingList({ jobpostings = [], setJobpostings }) {
   const [show, setShow] = useState(false);
   const [record, setRecord] = useState(null);
+  const navigate = useNavigate();
 
   const handleClose = () => {
     setShow(false);
@@ -51,6 +56,19 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
       });
   };
 
+  const handleApply = async (id) => {
+    return axios
+      .get(`api/postings/${id}/`)
+      .then((res) => {
+        const { data } = res;
+        return data;
+        console.log(data);
+      })
+      .catch(() => {
+        alert("Something wrong with aplying to Job posting");
+      });
+  };
+
   const renderListGroupItem = (t) => {
     return (
       <ListGroup.Item
@@ -83,6 +101,18 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
               handleDelete(t.id);
             }}
           />
+        </div>
+        <div>
+            <MdSend
+              style={{
+                cursor: "pointer",
+              }}
+              onClick={async () => {
+                const posting = await handleApply(t.id);
+                console.log(posting);
+                navigate('/jobapplicationform',{state:{...posting}});
+              }}
+            />
         </div>
       </ListGroup.Item>
     );

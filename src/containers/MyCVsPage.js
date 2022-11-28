@@ -6,7 +6,7 @@ import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-const MyCVPage = () => {
+const MyCVsPage = () => {
   const [listOfCvs, setListOfCvs] = useState([]);
 
   const fetchCVs = () => {
@@ -47,9 +47,9 @@ const MyCVPage = () => {
   };
 
   return (
-    <Layout title="AuthSite | MyCVPage" content="MyCV Page">
+    <Layout title="AuthSite | MyCVsPage" content="MyCVs Page">
       <h1>{renderCVs(listOfCvs)}</h1>
     </Layout>
   );
 };
-export default MyCVPage;
+export default MyCVsPage;
