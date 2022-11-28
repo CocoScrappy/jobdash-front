@@ -7,6 +7,8 @@ import RegisterPage from "containers/RegisterPage";
 import JobPosting from "pages/JobPosting";
 import JobApplicationViewEdit from "containers/JobApplicationViewEdit";
 import JobApplications from "containers/JobApplications";
+import JobApplicationForm from "components/JobApplicationForms/JobApplicationForm";
+import ExternalJobApplicationForm from "components/JobApplicationForms/ExternalJobApplicationForm";
 import MyCVPage from "containers/MyCVPage";
 import UserProtectedRoute from "UserProtectedRoute";
 
@@ -22,6 +24,8 @@ const App = () => (
           <Route path="jobpostings" element={<JobPosting />} />
           <Route path="/jobapplicationviewedit" element={<JobApplicationViewEdit />} />
           <Route path="/jobapplications" element={<JobApplications />} />
+          <Route path="/jobapplicationform" element={<JobApplicationForm />} />
+          <Route path="/externaljobapplicationform" element={<ExternalJobApplicationForm />} />
           <Route path="cv" element={<MyCVPage />} />
         </Route>
       </Routes>
