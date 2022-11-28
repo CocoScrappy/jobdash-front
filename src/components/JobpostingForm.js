@@ -40,7 +40,7 @@ export default function JobpostingForm({ jobpostings, setJobpostings }) {
     if (uRole === "employer") {
       formData.employer = uId;
     }
-    formData.employer = 3; //FIXME: gotta be default internal Employer
+    formData.employer = 14; //14 will be default internal Employer
 
     axios
       .post(`${process.env.REACT_APP_API_URL}/api/postings/`, formData)
