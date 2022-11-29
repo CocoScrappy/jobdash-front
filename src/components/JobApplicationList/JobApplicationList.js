@@ -73,7 +73,6 @@ function JobApplicationList(props) {
       </ListGroup>
       
       <ListGroup>
-      {console.log(jobApplications)}
       {
         jobApplications.map((application) => (renderListGroupItem(application)))
         }</ListGroup>
