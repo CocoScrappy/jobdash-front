@@ -31,20 +31,23 @@ function JobApplicationList(props) {
   const renderListGroupItem = (t) => {
     return (
       <ListGroup.Item
-        key={t.id}
+        key={t.application.id}
         className="d-flex justify-content-between align-items-center"
       >
+      <div className="d-flex justify-content-center">
+          {t.title}
+        </div>
         <div className="d-flex justify-content-center">
           {t.company}
         </div>
         <div className="d-flex justify-content-center">
-          {t.job_title}
+          {t.application.application_date}
         </div>
         <div className="d-flex justify-content-center">
-          {t.notes}
+          {t.application.status}
         </div>
         <div className="d-flex justify-content-center">
-          {t.cv}
+          {"" + t.application.favorited}
         </div>
       </ListGroup.Item>
     );
@@ -54,17 +57,19 @@ function JobApplicationList(props) {
     <>
       <ListGroup>
         <ListGroup.Item
-          key={0}
           className="d-flex justify-content-between align-items-center"
         >
           <div className="d-flex justify-content-center">
-            <h4>Job</h4>
+            <h4>Title</h4>
           </div>
           <div className="d-flex justify-content-center">
-            <h4>Status</h4>
+            <h4>Company</h4>
           </div>
           <div className="d-flex justify-content-center">
             <h4>Date Applied</h4>
+          </div>
+          <div className="d-flex justify-content-center">
+            <h4>Status</h4>
           </div>
           <div className="d-flex justify-content-center">
             <h4>Favorite</h4>
