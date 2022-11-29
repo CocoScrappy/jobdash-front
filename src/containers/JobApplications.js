@@ -7,9 +7,6 @@ import { Container } from 'react-bootstrap'
 
 function JobApplications() {
 
-  const [jobApplications, setJobApplications] = useState([]);
-
-
   return (
 
     <Layout title="JobApplications" content="JobApplications">
@@ -18,8 +15,6 @@ function JobApplications() {
         <div>Search Bar</div>
         <Container>
             <JobApplicationList 
-              jobApplications={jobApplications}
-              setJobApplications={setJobApplications}
             />
         </Container>
     </Layout>

@@ -1,7 +1,32 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import ListGroup from "react-bootstrap/ListGroup";
+import axios from "axios"
 
-function JobApplicationList({ jobApplications = [], setJobApplications }) {
+function JobApplicationList(props) {
+
+  const [jobApplications, setJobApplications] = useState([]);
+
+  const fetchUserApplications = () => {
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/api/applications/get_user_applications/`, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("atoken"),
+        },
+      })
+      .then((response) => {
+        console.log(response);
+        setJobApplications(response.data);
+      })
+      .catch((error) => {
+        if(error.response.data && error.response.status === 404)
+        {
+          setJobApplications(error.response.data.data);
+        }
+        console.log(error);
+      });
+  };
+
+  useEffect(fetchUserApplications, []);
 
   const renderListGroupItem = (t) => {
     return (
@@ -47,7 +72,11 @@ function JobApplicationList({ jobApplications = [], setJobApplications }) {
         </ListGroup.Item>
       </ListGroup>
       
-      <ListGroup>{jobApplications.map(renderListGroupItem)}</ListGroup>
+      <ListGroup>
+      {console.log(jobApplications)}
+      {
+        jobApplications.map((application) => (renderListGroupItem(application)))
+        }</ListGroup>
     </>
   )
 }
