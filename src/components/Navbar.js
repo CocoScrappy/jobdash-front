@@ -44,6 +44,11 @@ const Navbar = () => {
           Applications
         </Link>
       </li>
+      <li className="nav-item">
+        <Link className="nav-link" to="/jobpostings">
+          Job Postings
+        </Link>
+      </li>
       <li className="nav-item ">
         <Link className="nav-link" href="#" onClick={logout}>
           LogOut

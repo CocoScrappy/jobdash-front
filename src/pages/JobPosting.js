@@ -6,6 +6,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { MdEdit } from "react-icons/md";
 import axios from "axios";
+import Layout from "components/Layout";
 
 export const JobPosting = () => {
   const [jobpostings, setJobpostings] = useState([]);
@@ -38,20 +39,23 @@ export const JobPosting = () => {
       password: "Qwert1234!",
     });
 
-    const tokenResp = await fetch(`${process.env.REACT_APP_API_URL}/api/token/`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body,
-    });
+    const tokenResp = await fetch(
+      `${process.env.REACT_APP_API_URL}/api/token/`,
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body,
+      }
+    );
     const token = await tokenResp.json();
     getUser(token.access);
   };
 
   const getUser = async (access) => {
-    const userResp = await fetch("/api/me", {
+    const userResp = await fetch(`${process.env.REACT_APP_API_URL}/api/me`, {
       method: "GET",
 
       headers: {
@@ -64,11 +68,14 @@ export const JobPosting = () => {
   };
 
   return (
-    <Container>
-      <div>JobPosting</div>
-      {/* Modal to add job posting form */}
-      <div>
-        <MdEdit
+    <Layout
+      title="Job Dash | Job Postings"
+      content="job offers application postings"
+    >
+      <Container>
+        <h2>Job Postings</h2>
+        {/* Modal to add job posting form */}
+        <div
           style={{
             cursor: "pointer",
             marginRight: "12px",
@@ -76,30 +83,32 @@ export const JobPosting = () => {
           onClick={() => {
             setShowAdd(true);
           }}
+        >
+          <strong>Add job posting</strong>
+        </div>
+        <Modal show={showAdd} onHide={handleCloseAdd}>
+          <Modal.Header closeButton>
+            <Modal.Title>Add Jobposting</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <JobpostingForm
+              jobpostings={jobpostings}
+              setJobpostings={setJobpostings}
+            />
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleCloseAdd}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+        {/* Listing jobs */}
+        <JobpostingList
+          jobpostings={jobpostings}
+          setJobpostings={setJobpostings}
         />
-      </div>
-      <Modal show={showAdd} onHide={handleCloseAdd}>
-        <Modal.Header closeButton>
-          <Modal.Title>Add Jobposting</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <JobpostingForm
-            jobpostings={jobpostings}
-            setJobpostings={setJobpostings}
-          />
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseAdd}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
-      {/* Listing jobs */}
-      <JobpostingList
-        jobpostings={jobpostings}
-        setJobpostings={setJobpostings}
-      />
-    </Container>
+      </Container>
+    </Layout>
   );
 };
 export default JobPosting;

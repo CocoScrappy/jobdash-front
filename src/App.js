@@ -13,23 +13,29 @@ import MyCVPage from "containers/MyCVPage";
 import UserProtectedRoute from "UserProtectedRoute";
 
 const App = () => (
-    <Router>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
+  <Router>
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
 
-        <Route path="/" element={<UserProtectedRoute/>}>
-          <Route path="dashboard" element={<DashboardPage />} />
-          <Route path="jobpostings" element={<JobPosting />} />
-          <Route path="/jobapplicationviewedit" element={<JobApplicationViewEdit />} />
-          <Route path="/jobapplications" element={<JobApplications />} />
-          <Route path="/jobapplicationform" element={<JobApplicationForm />} />
-          <Route path="/externaljobapplicationform" element={<ExternalJobApplicationForm />} />
-          <Route path="cv" element={<MyCVPage />} />
-        </Route>
-      </Routes>
-    </Router>
+      <Route path="/" element={<UserProtectedRoute />}>
+        <Route path="dashboard" element={<DashboardPage />} />
+        <Route path="jobpostings" element={<JobPosting />} />
+        <Route
+          path="/jobapplicationviewedit"
+          element={<JobApplicationViewEdit />}
+        />
+        <Route path="/jobapplications" element={<JobApplications />} />
+        <Route path="/jobapplicationform" element={<JobApplicationForm />} />
+        <Route
+          path="/externaljobapplicationform"
+          element={<ExternalJobApplicationForm />}
+        />
+        <Route path="cv" element={<MyCVPage />} />
+      </Route>
+    </Routes>
+  </Router>
 );
 
 export default App;
