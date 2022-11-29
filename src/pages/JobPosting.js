@@ -7,13 +7,13 @@ import Modal from "react-bootstrap/Modal";
 import { MdEdit } from "react-icons/md";
 import axios from "axios";
 import Layout from "components/Layout";
+import useStore from "store";
 
 export const JobPosting = () => {
+  var uRole = useStore((state) => state.role);
   const [jobpostings, setJobpostings] = useState([]);
   const [token, setToken] = useState("");
   const [me, setMe] = useState({});
-
-  const { first_name, email } = me;
 
   const [showAdd, setShowAdd] = useState(false);
 
@@ -22,50 +22,27 @@ export const JobPosting = () => {
   };
 
   useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/api/postings/default`) //FIXME : trailing / ?
-      .then((res) => {
-        setJobpostings(res.data);
-      })
-      .catch(() => {
-        alert("Something went wrong fetching the list of job postings.");
-      });
-    const access = getToken();
+    if (uRole === "employer") {
+      //FIXME: add filtered route here
+      axios
+        .get(`${process.env.REACT_APP_API_URL}/api/postings/default`) //FIXME : trailing / ?
+        .then((res) => {
+          setJobpostings(res.data);
+        })
+        .catch(() => {
+          alert("Something went wrong fetching the list of job postings.");
+        });
+    } else {
+      axios
+        .get(`${process.env.REACT_APP_API_URL}/api/postings/default`) //FIXME : trailing / ?
+        .then((res) => {
+          setJobpostings(res.data);
+        })
+        .catch(() => {
+          alert("Something went wrong fetching the list of job postings.");
+        });
+    }
   }, []);
-
-  const getToken = async () => {
-    const body = JSON.stringify({
-      email: "easyeasy@gmail.com",
-      password: "Qwert1234!",
-    });
-
-    const tokenResp = await fetch(
-      `${process.env.REACT_APP_API_URL}/api/token/`,
-      {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body,
-      }
-    );
-    const token = await tokenResp.json();
-    getUser(token.access);
-  };
-
-  const getUser = async (access) => {
-    const userResp = await fetch(`${process.env.REACT_APP_API_URL}/api/me`, {
-      method: "GET",
-
-      headers: {
-        Accept: "application/json",
-        Authorization: `Bearer ${access}`,
-      },
-    });
-    const user = await userResp.json();
-    setMe(await user);
-  };
 
   return (
     <Layout

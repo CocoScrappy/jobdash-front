@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState} from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ListGroup from "react-bootstrap/ListGroup";
 import Button from "react-bootstrap/Button";
@@ -14,10 +14,12 @@ import {
   MdDelete,
   MdSend,
 } from "react-icons/md";
+import useStore from "store";
 import JobApplicationForm from "./JobApplicationForms/JobApplicationForm";
 import { Link } from "react-router-dom";
 
 export default function JobpostingList({ jobpostings = [], setJobpostings }) {
+  var uId = useStore((state) => state.id);
   const [show, setShow] = useState(false);
   const [record, setRecord] = useState(null);
   const navigate = useNavigate();
@@ -100,39 +102,44 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
             {t.title} || {t.description} || {t.remote_option} || {t.company}
           </span>
         </div>
+        {/* display crud only for owner of posts */}
+        {uId === t.employer && (
+          <>
+            <div>
+              <MdEdit
+                style={{
+                  cursor: "pointer",
+                  marginRight: "12px",
+                }}
+                onClick={() => {
+                  setRecord(t);
+                  setShow(true);
+                }}
+              />
+            </div>
+            <div>
+              <MdDelete
+                style={{
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  handleDelete(t.id);
+                }}
+              />
+            </div>
+          </>
+        )}
         <div>
-          <MdEdit
+          <MdSend
             style={{
               cursor: "pointer",
-              marginRight: "12px",
             }}
-            onClick={() => {
-              setRecord(t);
-              setShow(true);
-            }}
-          />
-        </div>
-        <div>
-          <MdDelete
-            style={{
-              cursor: "pointer",
-            }}
-            onClick={() => {
-              handleDelete(t.id);
+            onClick={async () => {
+              const posting = await handleApply(t.id);
+              console.log(posting);
+              navigate("/jobapplicationform", { state: { ...posting } });
             }}
           />
-        </div>
-        <div>
-            <MdSend
-              style={{
-                cursor: "pointer",
-              }}
-              onClick={async () => {
-                const posting = await handleApply(t.id);
-                console.log(posting);
-                navigate('/jobapplicationform',{state:{...posting}});
-              }}
-            />
         </div>
       </ListGroup.Item>
     );
