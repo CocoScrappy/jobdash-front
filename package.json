@@ -21,6 +21,7 @@
     "react-bootstrap": "^2.6.0",
     "react-dom": "^18.2.0",
     "react-draft-wysiwyg": "^1.15.0",
+    "react-heart": "^1.0.6",
     "react-helmet": "^6.1.0",
     "react-icons": "^4.6.0",
     "react-redux": "^8.0.5",

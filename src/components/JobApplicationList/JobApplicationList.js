@@ -1,8 +1,11 @@
 import React, {useState, useEffect} from 'react'
 import ListGroup from "react-bootstrap/ListGroup";
 import axios from "axios"
+import { useNavigate } from 'react-router-dom';
 
 function JobApplicationList(props) {
+
+  const navigate = useNavigate()
 
   const [jobApplications, setJobApplications] = useState([]);
 
@@ -28,26 +31,30 @@ function JobApplicationList(props) {
 
   useEffect(fetchUserApplications, []);
 
-  const renderListGroupItem = (t) => {
+  const renderListGroupItem = (application) => {
     return (
       <ListGroup.Item
-        key={t.id}
+        key={application.id}
         className="d-flex justify-content-between align-items-center"
+        onClick={() => navigate(`/jobapplications/application/${application.id}`, {application: application})}
       >
       <div className="d-flex justify-content-center">
-          {t.job_posting.title}
+          {application.job_posting.title}
         </div>
         <div className="d-flex justify-content-center">
-          {t.job_posting.company}
+          {application.job_posting.company}
         </div>
         <div className="d-flex justify-content-center">
-          {t.application_date}
+          {application.job_posting.remote_option}
         </div>
         <div className="d-flex justify-content-center">
-          {t.status}
+          {application.application_date}
         </div>
         <div className="d-flex justify-content-center">
-          {"" + t.favorited}
+          {application.status}
+        </div>
+        <div className="d-flex justify-content-center">
+          {"" + application.favorited}
         </div>
       </ListGroup.Item>
     );
@@ -64,6 +71,9 @@ function JobApplicationList(props) {
           </div>
           <div className="d-flex justify-content-center">
             <h4>Company</h4>
+          </div>
+          <div className="d-flex justify-content-center">
+            <h4>Remote Option</h4>
           </div>
           <div className="d-flex justify-content-center">
             <h4>Date Applied</h4>
