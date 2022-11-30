@@ -22,33 +22,30 @@ export const JobPosting = () => {
   };
 
   useEffect(() => {
-    if (uRole === "employer") {
-      //FIXME: add filtered route here
-      axios
-        .get(
-          `${process.env.REACT_APP_API_URL}/api/postings/get_user_postings/`,
-          {
-            headers: {
-              Authorization: "Bearer " + localStorage.getItem("atoken"),
-            },
-          }
-        ) //FIXME : trailing / ?
-        .then((res) => {
-          setJobpostings(res.data);
-        })
-        .catch(() => {
-          alert("Something went wrong fetching the list of job postings.");
-        });
-    } else {
-      axios
-        .get(`${process.env.REACT_APP_API_URL}/api/postings/default`) //FIXME : trailing / ?
-        .then((res) => {
-          setJobpostings(res.data);
-        })
-        .catch(() => {
-          alert("Something went wrong fetching the list of job postings.");
-        });
-    }
+    // if (uRole === "employer") {
+    //FIXME: add filtered route here
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/api/postings/get_user_postings/`, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("atoken"),
+        },
+      }) //FIXME : trailing / ?
+      .then((res) => {
+        setJobpostings(res.data);
+      })
+      .catch(() => {
+        alert("Something went wrong fetching the list of job postings.");
+      });
+    // } else {
+    //   axios
+    //     .get(`${process.env.REACT_APP_API_URL}/api/postings/default`) //FIXME : trailing / ?
+    //     .then((res) => {
+    //       setJobpostings(res.data);
+    //     })
+    //     .catch(() => {
+    //       alert("Something went wrong fetching the list of job postings.");
+    //     });
+    // }
   }, []);
 
   return (
