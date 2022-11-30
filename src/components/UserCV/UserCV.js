@@ -13,7 +13,6 @@ import PreviewModal from "components/PreviewModal";
 
 function UserCV({ cv, setPageMsg, setPageMsgStyle, setUserCVInfo }) {
   // console.log(cv)
-  const [previewCV, setPreviewCV] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
   const [convertedContent, setConvertedContent] = useState("");
@@ -146,7 +145,7 @@ function UserCV({ cv, setPageMsg, setPageMsgStyle, setUserCVInfo }) {
         show={showModal}
         setShow={setShowModal}
         title={cv.name}
-        content={cv.content}
+        content={convertedContent}
       />
     </div>
   );
