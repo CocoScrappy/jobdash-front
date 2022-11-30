@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { format, parseISO } from "date-fns";
+import MyEditor from "./MyEditor";
+import { Button, Form } from "react-bootstrap";
+import PreviewModal from "./PreviewModal";
 
 function JobApplicationDetails(props) {
   const applicationId = props.applicationId;
@@ -8,6 +11,8 @@ function JobApplicationDetails(props) {
   const [applicationInfo, setApplicationInfo] = useState();
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState("");
+
+  const [convertedContent, setConvertedContent] = useState("");
 
   const getApplicationInfo = (applicationId) => {
     axios
@@ -35,6 +40,16 @@ function JobApplicationDetails(props) {
     getApplicationInfo(applicationId);
   }, []);
 
+  const previewJobDescription = () => {
+    setModalContent(applicationInfo.job_posting.description);
+    setShowModal(true);
+  };
+
+  const previewNotes = () => {
+    setModalContent(convertedContent);
+    setShowModal(true);
+  };
+
   if (applicationInfo === undefined) {
     return null;
   }
@@ -42,29 +57,51 @@ function JobApplicationDetails(props) {
     <div>
       <h3>Job Application Details</h3>
       <hr />
-      <h2>{applicationInfo.job_posting.title}</h2>
-      <h3 className="text-secondary">{applicationInfo.job_posting.company}</h3>
-      <p className="text-muted">
+      <div className="row">
+        <div className="col col-9">
+          <h2>{applicationInfo.job_posting.title}</h2>
+          <h3 className="text-secondary">
+            {applicationInfo.job_posting.company}
+          </h3>
+          <h6 className="mt-4">{applicationInfo.job_posting.location}</h6>
+          <h6 className="mb-4">{applicationInfo.job_posting.remote_option}</h6>
+        </div>
+        <div className="col">
+          <Form.Check
+            type="switch"
+            label="favorited"
+            checked={applicationInfo.favorited}
+            className="mb-4"
+          />
+          <Button variant="primary" onClick={() => previewJobDescription()}>
+            Job Description
+          </Button>
+        </div>
+      </div>
+      <p className="text-muted fst-italic">
+        <strong>Applied on: </strong>
         {format(
           parseISO(applicationInfo.application_date),
           "MMM dd yyyy h:mmaa"
         )}
       </p>
-      <div
-        className="modal fade"
-        id="detailModal"
-        tabindex="-1"
-        aria-labelledby="detailModal"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog modal-xl">
-          <div className="modal-content">
-            <div className="modal-body">
-              <p>{modalContent}</p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <br></br>
+      <h5>
+        Notes{" "}
+        <Button variant="primary" size="sm" onClick={() => previewNotes()}>
+          Preview
+        </Button>
+      </h5>
+      <MyEditor
+        content={applicationInfo.notes}
+        setConvertedContent={setConvertedContent}
+      />
+      <PreviewModal
+        show={showModal}
+        setShow={setShowModal}
+        title={""}
+        content={modalContent}
+      />
     </div>
   );
 }
