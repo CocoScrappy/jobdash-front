@@ -16,6 +16,9 @@ function JobApplicationForm({posting}) {
   const state = useStore();
   const location = useLocation();
 
+  const ISODate = new Date(state.date_created);
+  const shortDate = ISODate.toDateString();
+ 
   const [isLiked, setIsLiked] = useState(false);
   const [success, setSuccess] = useState(false);
 
@@ -62,20 +65,21 @@ function JobApplicationForm({posting}) {
           <h4>Job Application Form</h4>
         </div>
         <Container>
-            <Form>
-                <Form.Label>Company</Form.Label>
-                <Form.Control type='text' disabled value={state.company_name} />
-                <Form.Label>Job Title</Form.Label>
-                <Form.Control type="text" placeholder="Job Title" className="" disabled value={state.title}/>
-                
-                <Form.Label>Favorite</Form.Label>
-                <div style={{ width: "1.5rem" }}>
-                  <Heart isActive={isLiked} onClick={() => setIsLiked(!isLiked)}/>
-                </div>
-
-                <br/>
-
-                <Form.Label>Notes</Form.Label>
+            <div>
+              <h5>Company: {state.company_name}</h5>
+              <h5>Job Title: {state.title}</h5>
+            </div>
+            <div style={{ width: "1.5rem" }}>
+                <h5>Favorite: </h5>
+                <Heart isActive={isLiked} onClick={() => setIsLiked(!isLiked)}/>
+            </div>
+            <div>
+              <h5>Location: {state.location}</h5>
+              <h5>Remote Option: {state.remote_option}</h5>
+              <h5>Date Created: {shortDate}</h5>
+            </div>
+            <Form>                
+                <Form.Label>Notes: </Form.Label>
                 <Form.Control 
                     as="textarea" 
                     rows={3} 
