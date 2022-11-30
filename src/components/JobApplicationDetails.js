@@ -11,6 +11,8 @@ function JobApplicationDetails(props) {
   const [applicationInfo, setApplicationInfo] = useState();
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState("");
+  const [notesMsg, setNotesMsg] = useState("");
+  const [notesMsgStyle, setNotesMsgStyle] = useState("");
 
   const [convertedContent, setConvertedContent] = useState("");
 
@@ -68,8 +70,42 @@ function JobApplicationDetails(props) {
         console.log(response.data);
         setApplicationInfo({
           ...applicationInfo,
-          favorited: updatedStatus,
+          favorited: response.data.favorited,
         });
+        // console.log(applicationInfo.favorited);
+      })
+      .catch((error) => {
+        console.log(error);
+        if (error.response) {
+          console.log(error);
+        }
+      });
+  };
+
+  const updateNotes = () => {
+    // console.log(updatedStatus);
+    axios
+      .patch(
+        `${process.env.REACT_APP_API_URL}/api/applications/${applicationInfo.id}/`,
+        { notes: convertedContent },
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("atoken"),
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Notes updated successfully");
+        console.log(response.data);
+        setApplicationInfo({
+          ...applicationInfo,
+          notes: response.data.notes,
+        });
+        setNotesMsg(
+          "Notes successfully updated on " +
+            format(new Date(), "MMM dd yyyy h:mmaa")
+        );
+        setNotesMsgStyle("text-success");
         // console.log(applicationInfo.favorited);
       })
       .catch((error) => {
@@ -119,10 +155,24 @@ function JobApplicationDetails(props) {
       <br></br>
       <h5>
         Notes{" "}
-        <Button variant="primary" size="sm" onClick={() => previewNotes()}>
+        <Button
+          variant="primary"
+          size="sm"
+          className="mx-2"
+          onClick={() => previewNotes()}
+        >
           Preview
         </Button>
+        <Button
+          variant="primary"
+          size="sm"
+          className="mx-2"
+          onClick={() => updateNotes()}
+        >
+          Save
+        </Button>
       </h5>
+      <span className={notesMsgStyle}>{notesMsg}</span>
       <MyEditor
         content={applicationInfo.notes}
         setConvertedContent={setConvertedContent}
