@@ -1,11 +1,10 @@
-import React, {useState} from 'react'
 import Layout from 'components/Layout'
 import JobApplicationList from 'components/JobApplicationList/JobApplicationList'
 import { Container } from 'react-bootstrap'
 
 
 
-function JobApplications() {
+function JobApplicationListingPage() {
 
   return (
 
@@ -22,4 +21,4 @@ function JobApplications() {
   )
 }
 
-export default JobApplications
+export default JobApplicationListingPage
