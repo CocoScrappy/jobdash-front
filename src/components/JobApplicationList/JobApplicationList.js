@@ -45,6 +45,9 @@ function JobApplicationList(props) {
           {application.job_posting.company}
         </div>
         <div className="d-flex justify-content-center">
+          {application.job_posting.remote_option}
+        </div>
+        <div className="d-flex justify-content-center">
           {application.application_date}
         </div>
         <div className="d-flex justify-content-center">
@@ -68,6 +71,9 @@ function JobApplicationList(props) {
           </div>
           <div className="d-flex justify-content-center">
             <h4>Company</h4>
+          </div>
+          <div className="d-flex justify-content-center">
+            <h4>Remote Option</h4>
           </div>
           <div className="d-flex justify-content-center">
             <h4>Date Applied</h4>

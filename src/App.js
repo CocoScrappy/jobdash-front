@@ -11,7 +11,7 @@ import JobApplicationForm from "components/JobApplicationForms/JobApplicationFor
 import ExternalJobApplicationForm from "components/JobApplicationForms/ExternalJobApplicationForm";
 import MyCVPage from "containers/MyCVPage";
 import UserProtectedRoute from "UserProtectedRoute";
-import JobApplicationInfo from "components/JobApplicationDetails";
+import JobApplicationInfoPage from "containers/JobApplicationInfoPage";
 
 const App = () => (
   <Router>
@@ -24,8 +24,8 @@ const App = () => (
         <Route path="dashboard" element={<DashboardPage />} />
         <Route path="jobpostings" element={<JobPosting />} />
         <Route
-          path="/jobapplications/application/:id"
-          element={<JobApplicationInfo />}
+          path="/jobapplications/application/:appId"
+          element={<JobApplicationInfoPage />}
         />
         <Route path="/jobapplications" element={<JobApplications />} />
         <Route path="/jobapplicationform" element={<JobApplicationForm />} />
