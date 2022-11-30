@@ -16,44 +16,13 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import parse from "html-react-parser";
 import { format } from "date-fns";
 import "./UserCV.css";
+import MyEditor from "components/MyEditor";
 
 function UserCV({ cv, setPageMsg, setPageMsgStyle, setUserCVInfo }) {
   // console.log(cv)
   const [previewCV, setPreviewCV] = useState(false);
 
-  const sampleMarkup = cv.content == "" ? "<p></p>" : cv.content;
-
-  const blocksFromHTML = convertFromHTML(sampleMarkup);
-  const state = ContentState.createFromBlockArray(
-    blocksFromHTML.contentBlocks,
-    blocksFromHTML.entityMap
-  );
-
-  const [editorState, setEditorState] = useState(() =>
-    EditorState.createWithContent(state)
-  );
-
   const [convertedContent, setConvertedContent] = useState("");
-
-  useEffect(() => {
-    let currentContentAsHTML = draftToHtml(
-      convertToRaw(editorState.getCurrentContent())
-    );
-    setConvertedContent(currentContentAsHTML);
-    // console.log(convertedContent);
-  }, [editorState]);
-
-  const handleEditorChange = (state) => {
-    setEditorState(state);
-    // convertContentToHTML();
-  };
-
-  //   const convertContentToHTML = () => {
-  //     let currentContentAsHTML = draftToHtml(
-  //       convertToRaw(editorState.getCurrentContent())
-  //     );
-  //     setConvertedContent(currentContentAsHTML);
-  //   };
 
   const onSubmit = (data) => {
     // setPageMsg("");
@@ -156,19 +125,9 @@ function UserCV({ cv, setPageMsg, setPageMsgStyle, setUserCVInfo }) {
           <div className="mb-3">
             {/* <p className="text-danger">{EditorMsg}</p> */}
             <p className="h5 text-start my-3">Content</p>
-            <Editor
-              placeholder="CV content"
-              editorState={editorState}
-              onEditorStateChange={handleEditorChange}
-              // wrapperClassName="wrapper-class"
-              // editorClassName="demo-editor"
-              toolbarClassName="toolbar-class"
-              editorStyle={{
-                border: "1px solid",
-                borderStyle: "groove",
-                color: "black",
-                height: "200px",
-              }}
+            <MyEditor
+              content={cv.content}
+              setConvertedContent={setConvertedContent}
             />
           </div>
           <div className="d-grid gap-2  col-6 mx-auto">
