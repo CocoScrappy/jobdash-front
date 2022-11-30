@@ -3,24 +3,18 @@ import { useState, useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
-import { Button, Container, FloatingLabel, Modal } from "react-bootstrap";
-import {
-  EditorState,
-  convertToRaw,
-  ContentState,
-  convertFromHTML,
-} from "draft-js";
-import { Editor } from "react-draft-wysiwyg";
-import draftToHtml from "draftjs-to-html";
+import { Button, FloatingLabel } from "react-bootstrap";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import parse from "html-react-parser";
 import { format } from "date-fns";
 import "./UserCV.css";
 import MyEditor from "components/MyEditor";
+import PreviewModal from "components/PreviewModal";
 
 function UserCV({ cv, setPageMsg, setPageMsgStyle, setUserCVInfo }) {
   // console.log(cv)
   const [previewCV, setPreviewCV] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const [convertedContent, setConvertedContent] = useState("");
 
@@ -142,27 +136,18 @@ function UserCV({ cv, setPageMsg, setPageMsgStyle, setUserCVInfo }) {
             >
               Cancel
             </Button>
-            <Button variant="info" onClick={() => setPreviewCV(true)}>
+            <Button variant="info" onClick={() => setShowModal(true)}>
               Preview
             </Button>
           </div>
         </Form>
       </Formik>
-      {/* <div>{parse(convertedContent)}</div> */}
-      <Modal
-        // id="modal"
-        // fullscreen={true}
-        size="lg"
-        show={previewCV}
-        onHide={() => setPreviewCV(false)}
-        // dialogClassName="modal"
-        aria-labelledby="cv-preview"
-      >
-        <Modal.Header closeButton>
-          <Modal.Title id="cv-preview">{cv.name}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>{parse(convertedContent)}</Modal.Body>
-      </Modal>
+      <PreviewModal
+        show={showModal}
+        setShow={setShowModal}
+        title={cv.name}
+        content={cv.content}
+      />
     </div>
   );
 }
