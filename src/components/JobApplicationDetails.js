@@ -50,6 +50,36 @@ function JobApplicationDetails(props) {
     setShowModal(true);
   };
 
+  const updateFavoritedStatus = (event) => {
+    const updatedStatus = event.target.checked;
+    // console.log(updatedStatus);
+    axios
+      .patch(
+        `${process.env.REACT_APP_API_URL}/api/applications/${applicationInfo.id}/`,
+        { favorited: updatedStatus },
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("atoken"),
+          },
+        }
+      )
+      .then((response) => {
+        console.log("favorited status updated");
+        console.log(response.data);
+        setApplicationInfo({
+          ...applicationInfo,
+          favorited: updatedStatus,
+        });
+        // console.log(applicationInfo.favorited);
+      })
+      .catch((error) => {
+        console.log(error);
+        if (error.response) {
+          console.log(error);
+        }
+      });
+  };
+
   if (applicationInfo === undefined) {
     return null;
   }
@@ -72,6 +102,7 @@ function JobApplicationDetails(props) {
             label="favorited"
             checked={applicationInfo.favorited}
             className="mb-4"
+            onChange={updateFavoritedStatus}
           />
           <Button variant="primary" onClick={() => previewJobDescription()}>
             Job Description
