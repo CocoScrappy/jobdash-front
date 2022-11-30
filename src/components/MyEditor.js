@@ -1,44 +1,59 @@
-import React from "react";
-import {Editor, EditorState, ContentState, convertFromHTML} from "draft-js";
+import { useState, useEffect } from "react";
+import {
+  EditorState,
+  convertToRaw,
+  ContentState,
+  convertFromHTML,
+} from "draft-js";
+import { Editor } from "react-draft-wysiwyg";
+import draftToHtml from "draftjs-to-html";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import parse from "html-react-parser";
 
-class MyEditor extends React.Component {
-  constructor(props) {
-    super(props);
-    
-    // const sampleMarkup = `
-    // 	<div>
-    //   	<h2>Title</h2>
-    //     <i>some text</i>
-    //   </div>
-    // `;
-    const sampleMarkup = props.content;
+function MyEditor(props) {
+  const content = props.content;
+  const setConvertedContent = props.setConvertedContent;
 
-    const blocksFromHTML = convertFromHTML(sampleMarkup);
-    const state = ContentState.createFromBlockArray(
-      blocksFromHTML.contentBlocks,
-      blocksFromHTML.entityMap
+  const initialContent = content == "" ? "<p></p>" : content;
+  const blocksFromHTML = convertFromHTML(initialContent);
+  const state = ContentState.createFromBlockArray(
+    blocksFromHTML.contentBlocks,
+    blocksFromHTML.entityMap
+  );
+
+  const [editorState, setEditorState] = useState(() =>
+    EditorState.createWithContent(state)
+  );
+
+  useEffect(() => {
+    let currentContentAsHTML = draftToHtml(
+      convertToRaw(editorState.getCurrentContent())
     );
+    setConvertedContent(currentContentAsHTML);
+    // console.log(convertedContent);
+  }, [editorState]);
 
-    this.state = {
-      editorState: EditorState.createWithContent(state),
-    };
-  }
+  const handleEditorChange = (state) => {
+    setEditorState(state);
+    // convertContentToHTML();
+  };
 
-  _handleChange = (editorState) => {
-    this.setState({ editorState });
-    this.props.editorState = this.state.editorState;
-  }
-
-  render() {
-    return (
-        <Editor 
-          placeholder="Type"
-          editorState={this.state.editorState}
-          onChange={this._handleChange}
-        />
-    );
-  }
+  return (
+    <div className="mb-3">
+      <Editor
+        placeholder="CV content"
+        editorState={editorState}
+        onEditorStateChange={handleEditorChange}
+        toolbarClassName="toolbar-class"
+        editorStyle={{
+          border: "1px solid",
+          borderStyle: "groove",
+          color: "black",
+          height: "200px",
+        }}
+      />
+    </div>
+  );
 }
 
 export default MyEditor;
-
