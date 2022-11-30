@@ -6,12 +6,13 @@ import LoginPage from "containers/LoginPage";
 import RegisterPage from "containers/RegisterPage";
 import JobPosting from "containers/JobPosting";
 import JobApplicationViewEdit from "containers/JobApplicationViewEdit";
-import JobApplications from "containers/JobApplications";
+import JobApplications from "containers/JobApplicationListingPage";
 import JobApplicationForm from "components/JobApplicationForms/JobApplicationForm";
 import ExternalJobApplicationForm from "components/JobApplicationForms/ExternalJobApplicationForm";
 import MyCVPage from "containers/MyCVPage";
 import AllApplicationsForPosting from "containers/AllApplicationsForPosting";
 import UserProtectedRoute from "UserProtectedRoute";
+import JobApplicationInfoPage from "containers/JobApplicationInfoPage";
 
 const App = () => (
   <Router>
@@ -24,8 +25,8 @@ const App = () => (
         <Route path="dashboard" element={<DashboardPage />} />
         <Route path="jobpostings" element={<JobPosting />} />
         <Route
-          path="/jobapplicationviewedit"
-          element={<JobApplicationViewEdit />}
+          path="/jobapplications/application/:appId"
+          element={<JobApplicationInfoPage />}
         />
         <Route path="/jobapplications" element={<JobApplications />} />
         <Route path="/jobapplicationform" element={<JobApplicationForm />} />
