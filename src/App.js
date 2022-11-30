@@ -4,12 +4,13 @@ import HomePage from "containers/HomePage";
 import DashboardPage from "containers/DashboardPage";
 import LoginPage from "containers/LoginPage";
 import RegisterPage from "containers/RegisterPage";
-import JobPosting from "pages/JobPosting";
+import JobPosting from "containers/JobPosting";
 import JobApplicationViewEdit from "containers/JobApplicationViewEdit";
 import JobApplications from "containers/JobApplications";
 import JobApplicationForm from "components/JobApplicationForms/JobApplicationForm";
 import ExternalJobApplicationForm from "components/JobApplicationForms/ExternalJobApplicationForm";
 import MyCVPage from "containers/MyCVPage";
+import AllApplicationsForPosting from "containers/AllApplicationsForPosting";
 import UserProtectedRoute from "UserProtectedRoute";
 
 const App = () => (
@@ -33,6 +34,12 @@ const App = () => (
           element={<ExternalJobApplicationForm />}
         />
         <Route path="cv" element={<MyCVPage />} />
+
+        {/* employer only routes */}
+        <Route
+          path="/applicationForPosting"
+          element={<AllApplicationsForPosting />}
+        />
       </Route>
     </Routes>
   </Router>

@@ -14,12 +14,15 @@ import {
   MdDelete,
   MdSend,
 } from "react-icons/md";
+import { BsPersonLinesFill } from "react-icons/bs";
 import useStore from "store";
 import JobApplicationForm from "./JobApplicationForms/JobApplicationForm";
 import { Link } from "react-router-dom";
+import userEvent from "@testing-library/user-event";
 
 export default function JobpostingList({ jobpostings = [], setJobpostings }) {
   var uId = useStore((state) => state.id);
+  var uRole = useStore((state) => state.role);
   const [show, setShow] = useState(false);
   const [record, setRecord] = useState(null);
   const navigate = useNavigate();
@@ -84,7 +87,6 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
       .then((res) => {
         const { data } = res;
         return data;
-        console.log(data);
       })
       .catch(() => {
         alert("Something wrong with aplying to Job posting");
@@ -127,20 +129,30 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
                 }}
               />
             </div>
+            <BsPersonLinesFill
+              style={{
+                cursor: "pointer",
+              }}
+              onClick={() => {
+                navigate("/applicationForPosting", { state: { ...t } });
+              }}
+            />
           </>
         )}
-        <div>
-          <MdSend
-            style={{
-              cursor: "pointer",
-            }}
-            onClick={async () => {
-              const posting = await handleApply(t.id);
-              console.log(posting);
-              navigate("/jobapplicationform", { state: { ...posting } });
-            }}
-          />
-        </div>
+        {uRole == "user" && (
+          <div>
+            <MdSend
+              style={{
+                cursor: "pointer",
+              }}
+              onClick={async () => {
+                const posting = await handleApply(t.id);
+                console.log(posting);
+                navigate("/jobapplicationform", { state: { ...posting } });
+              }}
+            />
+          </div>
+        )}
       </ListGroup.Item>
     );
   };
