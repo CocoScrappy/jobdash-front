@@ -24,7 +24,6 @@ const LoginPage = () => {
       .catch((error) => {
         if(error.response.data.detail!=null){
           setErrorMsg(error.response.data.detail);
-          
         }
       })
       .then((response) => {
