@@ -59,7 +59,11 @@ export const JobPosting = () => {
 
     axios
       .get(
-        `${process.env.REACT_APP_API_URL}/api/postings/search/${searchString}`
+        `${process.env.REACT_APP_API_URL}/api/postings/search/${searchString}`, {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("atoken"),
+          },
+        }
       )
       .then((res) => {
         console.log(res.data);
