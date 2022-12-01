@@ -13,6 +13,8 @@ import MyCVPage from "containers/MyCVPage";
 import AllApplicationsForPosting from "containers/AllApplicationsForPosting";
 import UserProtectedRoute from "UserProtectedRoute";
 import JobApplicationInfoPage from "containers/JobApplicationInfoPage";
+// CSS
+import "./App.css";
 
 const App = () => (
   <Router>

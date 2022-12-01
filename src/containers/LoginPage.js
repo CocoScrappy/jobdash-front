@@ -70,7 +70,7 @@ const LoginPage = () => {
 
   return (
     <Layout title="AuthSite | LoginPage" content="Login Page">
-      <h1>Login</h1>
+      <h1>Welcome back</h1>
       <Formik
         onSubmit={onSubmit}
         validationSchema={validationSchema}
