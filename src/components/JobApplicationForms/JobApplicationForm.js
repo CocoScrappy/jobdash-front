@@ -1,54 +1,78 @@
 import React, {useState, useRef, useEffect} from 'react'
-import { useLocation } from 'react-router-dom'
 import Layout from 'components/Layout'
-import { Button, InputGroup, Form, Container } from 'react-bootstrap'
+import { Button, InputGroup, Container } from 'react-bootstrap'
 import Heart from "react-heart"
-
 import MyCVPage from 'containers/MyCVPage'
 
 import useStore from 'store'
 import axios from 'axios'
+import { Formik, Field, Form  } from 'formik'
+
 
 
 
 function JobApplicationForm({posting}) {
 
   const state = useStore();
-  const location = useLocation();
-
   const ISODate = new Date(state.date_created);
   const shortDate = ISODate.toDateString();
- 
+
   const [isLiked, setIsLiked] = useState(false);
   const [success, setSuccess] = useState(false);
-
+  
+  const[cv,setCv]=useState({})
+  
+  //handling form inputs
   const [formData, setFormData] = useState({});
   const {
     notes
   } = formData;
-
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+  
+  const getUserCV = async() => {
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/api/cvs/get_user_cvs/`, {
+        headers: { Authorization: "Bearer " + localStorage.getItem("atoken") },
+      })
+      .then((response) => {
+        setCv(response.data);
+      })
+      .catch((error) => {
+        console.log(error.response.data.message);
+        // console.log(UserCVInfo)
+      });
+  };
 
-  const applicationData = {};
+  useEffect(()=>{getUserCV()}, []);
+ 
+  
+  const submitApplication =  (data) => {
+    
+    var applicationData={}
 
-  const submitApplication = async (e) => {
-    e.preventDefault();
+    
+    console.log('cv ' +cv);
+    try{
     applicationData = {
-        notes: notes.value,
+        notes: data.notes,
         favorited: isLiked,
-        status: "Applied",
-        applicant_id: state.id,
-        cv_id: await MyCVPage.getUserCV().id,
-        job_posting_id: state.jpid,
+        status: "applied",
+        applicant: state.id,
+        cv: cv.id,
+        job_posting: state.jpid,
       }
 
+    } catch (err) {
+      console.log("Whoops, something went wrong while assigning the values for the request body")
+    }
+    console.log('application: ' + JSON.stringify(applicationData))
     console.log("submitting application")
     axios.post(`${process.env.REACT_APP_API_URL}/api/applications/`, applicationData)
           .then((res) => {
-            console.log(res)
-            setSuccess(true)
+            console.log(res);
+            setSuccess(true);
           })
           .catch(() => {
               alert("Something went wrong while calling database.");
@@ -78,21 +102,32 @@ function JobApplicationForm({posting}) {
               <h5>Remote Option: {state.remote_option}</h5>
               <h5>Date Created: {shortDate}</h5>
             </div>
-            <Form>                
-                <Form.Label>Notes: </Form.Label>
+            <div>
+              <h5>Job Description: </h5>
+              <p>{state.description}</p>
+            </div>
+            <Formik
+              initialValues={{notes: ''}}
+              onSubmit={submitApplication}
+            >
+            <Form>      
+            <label htmlFor="notes">Notes: </label>
+            <Field id="notes" name="notes" as="textarea" 
+                    rows={3}  placeholder="Notes go here" />        
+                {/* <Form.Label as="h5">Notes: </Form.Label>
                 <Form.Control 
-                    as="textarea" 
-                    rows={3} 
-                    placeholder="Add Notes..."
+                    
+                    placeholder="Add your notes here..."
                     onChange={handleChange}
                     name="notes"
-                    value={notes} />
+                    value={notes} /> */}
                 {/* Add CV selector <MyCVsPage/> */}
                 
-                <Button variant="primary" type="submit" onSubmit={submitApplication} >
+                <button variant="primary" type="submit"  >
                   Apply
-                </Button>
+                </button>
             </Form>
+            </Formik>
         </Container>
     </Layout>
   )

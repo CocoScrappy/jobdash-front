@@ -8,8 +8,8 @@ import { format } from "date-fns";
 import useStore from "store";
 
 export default function JobpostingForm({ jobpostings, setJobpostings }) {
-  const uRole = useStore((state) => state.addRole);
-  const uId = useStore((state) => state.addId);
+  var uId = useStore((state) => state.id);
+  var uRole = useStore((state) => state.role);
   const [success, setSuccess] = useState(false);
   const [formData, setFormData] = useState({});
 
@@ -39,8 +39,9 @@ export default function JobpostingForm({ jobpostings, setJobpostings }) {
 
     if (uRole === "employer") {
       formData.employer = uId;
+    } else {
+      formData.employer = 14; //14 will be default internal Employer
     }
-    formData.employer = 14; //14 will be default internal Employer
 
     axios
       .post(`${process.env.REACT_APP_API_URL}/api/postings/`, formData)
