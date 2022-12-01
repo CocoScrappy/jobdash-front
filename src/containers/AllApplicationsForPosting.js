@@ -6,6 +6,7 @@ import axios from "axios";
 const AllApplicationsForPosting = (props) => {
   const [listApplicants, setListApplications] = useState([]);
   const { state } = useLocation();
+  const [post, setPost] = useState(state);
   const id = useId();
 
   const fetchJobApplications = () => {
@@ -31,8 +32,8 @@ const AllApplicationsForPosting = (props) => {
 
   return (
     <Layout title="Job Dash | Your job applicants " content="applicants">
-      <h1>Your applicants for {state.title}</h1>
-      <p>My posting id {state.id}</p>
+      <h1>Your applicants for {post.title}</h1>
+      <p>My posting id {post.id}</p>
       {/* cv= a[0] user = a[1] */}
       {listApplicants.map((a, index) => (
         <div key={index}>
