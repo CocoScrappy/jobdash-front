@@ -7,33 +7,42 @@ import {Formik, Form, Field,ErrorMessage} from 'formik'
 
 const RegisterPage = ()=>{
     const navigate=useNavigate();
-    const [usernameTaken,setUsernameTaken]=useState("");
+    
     const [emailTaken,setEmailTaken]=useState("");
+    const [pwdError, setPwdError]=useState("");
+
     
     const onSubmit=(data)=>{
         data.summary="";
         console.log(data);
         axios.post(`${process.env.REACT_APP_API_URL}/api/register`,data)
+            .then((res)=>{
+                navigate('/login')
+            })
             .catch((error)=>{
                 //reset previous errors
                 setEmailTaken("");
-                setUsernameTaken("");
+                setPwdError("")
+                console.log(error)
 
-
-            switch(error.response.data){
-                case 'Email Already Taken':
-                    setEmailTaken('Email Already Taken');
-                    break;
-                case 'Username Already Taken':
-                    setUsernameTaken('Username Already Taken');
-                    break;
-                default:
-                    break;
-            }
+                if(error.response.data.email){
+                    error.response.data.email.forEach(emErr=>{
+                        if(emErr!=="This field may not be blank.")
+                            {
+                                setEmailTaken(emErr[0].toUpperCase()+emErr.slice(1));
+                            }
+                    })
+                }
+                if(error.response.data.password){    
+                    error.response.data.password.forEach((pwErr)=>{
+                        if(pwErr!=null)
+                        {
+                            setPwdError(pwErr)
+                        }
+                    })
+                }
+                        
             })
-            .then((res)=>{
-                navigate('/login')
-        }) 
     }
     const initialValues ={
         first_name:"",
@@ -88,9 +97,7 @@ const RegisterPage = ()=>{
                     </ErrorMessage>
                 </div>
 
-                <div className="row">
-                    <span className='errorMsg'>{usernameTaken}</span>
-                </div>
+                
 
                 <div className="row">
                     <label>Email:</label>    
@@ -106,7 +113,7 @@ const RegisterPage = ()=>{
                 <div className='row'>
                     <label>Select Role:</label>
                     <Field as="select" name="role">
-                        <option value="user">User</option>
+                        <option value="user">Applicant</option>
                         <option value="employer">Recruiter</option>
                     </Field>
                 </div>
@@ -115,10 +122,14 @@ const RegisterPage = ()=>{
                     <label>Password:</label>
                     <Field  name="password"
                             type="password"
-                            placeholder="Min 6 characters, Max 32 "/>
+                            placeholder="Min 8 characters"/>
                     <ErrorMessage name="password">
                                     {msg=><div className="errorMsg">{msg}</div>}
                     </ErrorMessage>
+                </div>
+
+                <div className="row">
+                    <span className='errorMsg'>{pwdError}</span>
                 </div>
                 
                 <div className="row">

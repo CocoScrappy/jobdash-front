@@ -4,30 +4,27 @@ import * as Yup from "yup";
 import axios from "axios";
 import useStore from "store";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const LoginPage = () => {
   const navigate = useNavigate();
 
-  const uId = useStore((state) => state.id);
   const addUId = useStore((state) => state.addId);
-
-  const uFirstName = useStore((state) => state.first_name);
   const addUFirstName = useStore((state) => state.addFirstName);
-
-  const uLastName = useStore((state) => state.last_name);
   const addULastName = useStore((state) => state.addLastName);
-
-  const uEmail = useStore((state) => state.email);
   const addUEmail = useStore((state) => state.addEmail);
-
   const addURole = useStore((state) => state.addRole);
+
+  const [errorMsg,setErrorMsg] = useState("");
 
   // const iniUser=useStore(state=>state.addUserInfo);
   const onSubmit = (data) => {
     axios
       .post(`${process.env.REACT_APP_API_URL}/api/token/`, data)
       .catch((error) => {
-        console.log(error);
+        if(error.response.data.detail!=null){
+          setErrorMsg(error.response.data.detail);
+        }
       })
       .then((response) => {
         console.log(response);
@@ -42,7 +39,7 @@ const LoginPage = () => {
             },
           })
           .catch((error) => {
-            console.log(error);
+            // console.log(error);
           })
           .then((res) => {
             // console.log("Response "+res.data.id);
@@ -83,6 +80,7 @@ const LoginPage = () => {
             <ErrorMessage name="email">
               {(msg) => <div className="errorMsg">{msg}</div>}
             </ErrorMessage>
+            
           </div>
           <div className="row">
             <label>Password</label>
@@ -91,7 +89,7 @@ const LoginPage = () => {
               {(msg) => <div className="errorMsg">{msg}</div>}
             </ErrorMessage>
           </div>
-
+          <div className="errorMsg">{errorMsg}</div>
           <div id="register-btn" className="row">
             <button className="btn btn-secondary" type="submit">
               Login
