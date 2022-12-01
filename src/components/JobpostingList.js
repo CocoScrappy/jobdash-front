@@ -27,6 +27,7 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
   const [record, setRecord] = useState(null);
   const navigate = useNavigate();
 
+
   // const {
   //   id,
   //   title,
@@ -114,6 +115,7 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
         alert("Something wrong with aplying to Job posting");
       });
   };
+
 
   const renderListGroupItem = (t) => {
     return (
