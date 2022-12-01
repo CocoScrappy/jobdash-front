@@ -133,10 +133,7 @@ export default function JobpostingForm({ jobpostings, setJobpostings }) {
       </InputGroup>
       <InputGroup className="mb-4">
         <InputGroup.Text>Description</InputGroup.Text>
-        <MyEditor
-          content={description}
-          setConvertedContent={setConvertedContent}
-        />
+        <MyEditor content={""} setConvertedContent={setConvertedContent} />
       </InputGroup>
 
       <InputGroup className="mb-4">
