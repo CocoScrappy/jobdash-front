@@ -69,7 +69,8 @@ function JobApplicationForm({posting}) {
     }
     console.log('application: ' + JSON.stringify(applicationData))
     console.log("submitting application")
-    axios.post(`${process.env.REACT_APP_API_URL}/api/applications/`, applicationData)
+    axios.post(`${process.env.REACT_APP_API_URL}/api/applications/`, applicationData,{
+      headers: { Authorization: "Bearer " + localStorage.getItem("atoken") }})
           .then((res) => {
             console.log(res);
             setSuccess(true);
