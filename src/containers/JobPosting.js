@@ -27,11 +27,14 @@ export const JobPosting = () => {
     // if (uRole === "employer") {
     //FIXME: add filtered route here
     axios
-      .get(`${process.env.REACT_APP_API_URL}/api/postings/get_user_postings/`, {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("atoken"),
-        },
-      }) //FIXME : trailing / ?
+      .get(
+        `${process.env.REACT_APP_API_URL}/api/postings/get_user_postings/?limit=5&offset=5`,
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("atoken"),
+          },
+        }
+      ) //FIXME : trailing / ?
       .then((res) => {
         setJobpostings(res.data);
       })

@@ -3,15 +3,18 @@ import Button from "react-bootstrap/Button";
 import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from "react-bootstrap/FormControl";
 import Form from "react-bootstrap/Form";
+import MyEditor from "components/MyEditor";
 import axios from "axios";
 import { format } from "date-fns";
 import useStore from "store";
+import parse from "html-react-parser";
 
 export default function JobpostingForm({ jobpostings, setJobpostings }) {
   var uId = useStore((state) => state.id);
   var uRole = useStore((state) => state.role);
   const [success, setSuccess] = useState(false);
   const [formData, setFormData] = useState({});
+  const [convertedContent, setConvertedContent] = useState("");
 
   const {
     id,
@@ -36,7 +39,7 @@ export default function JobpostingForm({ jobpostings, setJobpostings }) {
       alert("Please provide a valid value for jobposting");
       return;
     }
-
+    formData.description = convertedContent;
     if (uRole === "employer") {
       formData.employer = uId;
     } else {
@@ -47,12 +50,14 @@ export default function JobpostingForm({ jobpostings, setJobpostings }) {
       .post(`${process.env.REACT_APP_API_URL}/api/postings/`, formData)
       .then((res) => {
         const { data } = res;
-        setJobpostings([...jobpostings, data]).catch(() => {
-          alert("Something went wrong while calling database.");
-        });
-        //?
+
+        setJobpostings([...jobpostings, data]);
+        setSuccess(true);
+      })
+      .catch(() => {
+        alert("Something went wrong while calling database.");
       });
-    setSuccess(true);
+    //make sure this works since changing parentesis near catch?
   };
 
   return (
@@ -87,7 +92,7 @@ export default function JobpostingForm({ jobpostings, setJobpostings }) {
           required
         />
       </InputGroup>
-      <InputGroup className="mb-4">
+      {/* <InputGroup className="mb-4">
         <InputGroup.Text>Description</InputGroup.Text>
         <FormControl
           placeholder="enter description"
@@ -96,7 +101,7 @@ export default function JobpostingForm({ jobpostings, setJobpostings }) {
           value={description}
           required
         />
-      </InputGroup>
+      </InputGroup> */}
       <InputGroup className="mb-4">
         <InputGroup.Text>Company Name</InputGroup.Text>
         <FormControl
@@ -125,6 +130,13 @@ export default function JobpostingForm({ jobpostings, setJobpostings }) {
           <option value="hybrid">Hybrid</option>
           <option value="in-person">In-Person</option>
         </Form.Select>
+      </InputGroup>
+      <InputGroup className="mb-4">
+        <InputGroup.Text>Description</InputGroup.Text>
+        <MyEditor
+          content={description}
+          setConvertedContent={setConvertedContent}
+        />
       </InputGroup>
 
       <InputGroup className="mb-4">

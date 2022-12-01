@@ -7,6 +7,7 @@ import Modal from "react-bootstrap/Modal";
 import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from "react-bootstrap/FormControl";
 import Form from "react-bootstrap/Form";
+import MyEditor from "components/MyEditor";
 import {
   MdCheckBox,
   MdCheckBoxOutlineBlank,
@@ -23,8 +24,11 @@ import userEvent from "@testing-library/user-event";
 export default function JobpostingList({ jobpostings = [], setJobpostings }) {
   var uId = useStore((state) => state.id);
   var uRole = useStore((state) => state.role);
+
   const [show, setShow] = useState(false);
   const [record, setRecord] = useState(null);
+  const [convertedContent, setConvertedContent] = useState("");
+
   const navigate = useNavigate();
 
   // const {
@@ -37,7 +41,7 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
   //   employer,
   // } = record;
 
-  const addJPId = useStore((state) => state.addJpId); 
+  const addJPId = useStore((state) => state.addJpId);
   const addJPTitle = useStore((state) => state.addTitle);
   const addJPLogoUrl = useStore((state) => state.addLogo_url);
   const addJPLocation = useStore((state) => state.addLocation);
@@ -46,8 +50,6 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
   const addJPRemoteOption = useStore((state) => state.addRemoteOption);
   const addJPEmployerId = useStore((state) => state.addEmployerId);
   const addJPCompanyName = useStore((state) => state.addCompanyName);
-
-
 
   const handleChange = (e) => {
     setRecord({ ...record, [e.target.name]: e.target.value });
@@ -178,6 +180,7 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
   };
 
   const handleSaveChanges = async () => {
+    record.description = convertedContent;
     await handleUpdate(record.id, { record });
     handleClose();
   };
@@ -218,15 +221,6 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
             />
           </InputGroup>
           <InputGroup className="mb-4">
-            <InputGroup.Text>Description</InputGroup.Text>
-            <FormControl
-              placeholder="enter description"
-              onChange={handleChange}
-              name="description"
-              value={record ? record.description : ""}
-            />
-          </InputGroup>
-          <InputGroup className="mb-4">
             <InputGroup.Text>Company Name</InputGroup.Text>
             <FormControl
               placeholder="enter Company Name"
@@ -247,6 +241,19 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
               <option value="hybrid">Hybrid</option>
               <option value="in-person">In-Person</option>
             </Form.Select>
+          </InputGroup>
+          <InputGroup className="mb-4">
+            <InputGroup.Text>Description</InputGroup.Text>
+            {/* <FormControl
+              placeholder="enter description"
+              onChange={handleChange}
+              name="description"
+              value={record ? record.description : ""}
+            /> */}
+            <MyEditor
+              content={record ? record.description : ""}
+              setConvertedContent={setConvertedContent}
+            />
           </InputGroup>
         </Modal.Body>
         <Modal.Footer>
