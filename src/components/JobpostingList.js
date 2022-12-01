@@ -16,6 +16,7 @@ import {
 } from "react-icons/md";
 import { BsPersonLinesFill } from "react-icons/bs";
 import useStore from "store";
+import Heart from "react-heart";
 import JobApplicationForm from "./JobApplicationForms/JobApplicationForm";
 import { Link } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
@@ -26,6 +27,7 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
   const [show, setShow] = useState(false);
   const [record, setRecord] = useState(null);
   const navigate = useNavigate();
+  const [isLiked, setIsLiked] = useState(false);
 
   // const {
   //   id,
@@ -115,6 +117,11 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
       });
   };
 
+// function heanle like button click
+function handleLikeClick() {
+  setIsLiked(!isLiked);
+}
+
   const renderListGroupItem = (t) => {
     return (
       <ListGroup.Item
@@ -122,6 +129,9 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
         className="d-flex justify-content-between align-items-center"
       >
         <div className="d-flex justify-content-center">
+        <div style={{ width: "1.5rem" }}>
+                <Heart key={t.id} isActive={isLiked} onClick={() => setIsLiked(!isLiked)}/>
+            </div>
           <span>
             {t.title} || {t.description} || {t.remote_option} || {t.company}
           </span>
