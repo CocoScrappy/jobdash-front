@@ -1,4 +1,5 @@
 import Navigation from "components/Navbar";
+import Footer from "components/Footer";
 import { Helmet } from "react-helmet";
 
 const Layout = ({ children, title, content }) => (
@@ -8,7 +9,8 @@ const Layout = ({ children, title, content }) => (
       <meta name="description" content={content} />
     </Helmet>
     <Navigation />
-    <div className="container mt-5">{children}</div>
+    <div>{children}</div>
+    <Footer />
   </>
 );
 

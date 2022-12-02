@@ -1,0 +1,22 @@
+.large-banner {
+  /* background-image: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.5),
+      rgba(255, 255, 255, 0)
+    ),
+    url("../../assets/girlwithcomp.jpeg"); */
+  /* background-color: #d6dfdc; */
+  background-position: center;
+  background-size: cover;
+}
+
+.large-banner img {
+  width: 60%;
+  object-fit: cover;
+  border-radius: 50px;
+}
+
+.large-banner .container {
+  margin: auto;
+  max-width: 500px;
+}

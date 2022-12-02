@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Layout from "components/Layout";
+import Layout from "layouts/MainLayout";
 import UserCV from "components/UserCV/UserCV";
 import axios from "axios";
 import useStore from "store";
@@ -23,7 +23,7 @@ const MyCVPage = () => {
       })
       .catch((error) => {
         console.log(error.response.data.message);
-        setUserCVInfo({name: "Default CV", content:""});
+        setUserCVInfo({ name: "Default CV", content: "" });
         // console.log(UserCVInfo)
       });
   };

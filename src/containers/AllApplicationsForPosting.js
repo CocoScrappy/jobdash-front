@@ -1,4 +1,4 @@
-import Layout from "components/Layout";
+import Layout from "layouts/MainLayout";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";

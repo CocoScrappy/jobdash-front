@@ -1,9 +1,17 @@
-import Layout from "components/Layout";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import Layout from "layouts/MainLayout";
+import { Formik, Field, ErrorMessage } from "formik"; // Removed Form import from Formik
 import * as Yup from "yup";
 import axios from "axios";
 import useStore from "store";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import LargeBannerLayout from "layouts/LargeBannerLayout";
+// Bootstrap
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+import FloatingLabel from "react-bootstrap/FloatingLabel";
+
+// CSS
+import "../css/components/Stylized-letters.css";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -69,21 +77,79 @@ const LoginPage = () => {
   };
 
   return (
-    <Layout title="AuthSite | LoginPage" content="Login Page">
-      <h1>Welcome back</h1>
-      <Formik
-        onSubmit={onSubmit}
-        validationSchema={validationSchema}
-        initialValues={initialValues}
-      >
-        <Form>
-          <div className="row">
+    <Layout title="JOBDASH - Login" content="Login Page">
+      <LargeBannerLayout>
+        <h1>Welcome back</h1>
+
+        <Formik
+          onSubmit={onSubmit}
+          validationSchema={validationSchema}
+          initialValues={initialValues}
+        >
+          <Form>
+            {/* New form */}
+            <FloatingLabel
+              controlId="floatingInput"
+              label="Email"
+              className="mb-3"
+            >
+              <Form.Control
+                name="email"
+                type="email"
+                placeholder="email@provider.com,"
+              />
+              <ErrorMessage name="email">
+                {(msg) => <div className="errorMsg">{msg}</div>}
+              </ErrorMessage>
+            </FloatingLabel>
+
+            <FloatingLabel
+              controlId="floatingPassword"
+              label="Password"
+              className="mb-3"
+            >
+              <Form.Control
+                name="password"
+                type="password"
+                placeholder="Password"
+              />
+              <ErrorMessage name="password">
+                {(msg) => <div className="errorMsg">{msg}</div>}
+              </ErrorMessage>
+            </FloatingLabel>
+
+            <Form.Group
+              className="mb-3 d-flex justify-content-between w-100"
+              controlId="formBasicCheckbox"
+            >
+              <Form.Check type="checkbox" label="Remember me" />
+              <p>Forgot password</p>
+            </Form.Group>
+
+            <div className="d-grid gap-2 mb-3">
+              <Button
+                variant="dark"
+                className="btn-jobdash"
+                size="lg"
+                type="submit"
+              >
+                Login
+              </Button>
+            </div>
+            <p>
+              Don't have an account? <Link to="/register">Register</Link>
+            </p>
+            <span className="errorMsg"></span>
+
+            {/* Old form */}
+            {/* <div className="row">
             <label>Email</label>
             <Field name="email"></Field>
             <ErrorMessage name="email">
               {(msg) => <div className="errorMsg">{msg}</div>}
             </ErrorMessage>
           </div>
+
           <div className="row">
             <label>Password</label>
             <Field name="password" type="password" />
@@ -100,9 +166,11 @@ const LoginPage = () => {
 
           <div className="row">
             <span className="errorMsg"></span>
-          </div>
-        </Form>
-      </Formik>
+          </div> */}
+          </Form>
+        </Formik>
+        {/* <h2 className="stylized-letters">JD</h2> */}
+      </LargeBannerLayout>
     </Layout>
   );
 };

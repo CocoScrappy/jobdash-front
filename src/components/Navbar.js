@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import useStore from "store";
 // React-Bootstrap
 import Container from "react-bootstrap/Container";
@@ -7,7 +7,7 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 // Custom CSS
-import "../components/css/components/Navbar.css";
+import "../css/components/Navbar.css";
 
 const Navigation = () => {
   const uId = useStore((state) => state.id);

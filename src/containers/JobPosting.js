@@ -6,7 +6,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { MdEdit } from "react-icons/md";
 import axios from "axios";
-import Layout from "components/Layout";
+import Layout from "layouts/MainLayout";
 import useStore from "store";
 import { Formik, Field, Form } from "formik";
 
