@@ -35,3 +35,28 @@ export const updateFavoritedStatus = ({
       }
     });
 };
+
+/**
+ * A function that gets the job applications of the currently loggedin user
+ */
+export const fetchUserApplications = ({ setJobApplications }) => {
+  axios
+    .get(
+      `${process.env.REACT_APP_API_URL}/api/applications/get_user_applications/`,
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("atoken"),
+        },
+      }
+    )
+    .then((response) => {
+      console.log(response);
+      setJobApplications(response.data.results);
+    })
+    .catch((error) => {
+      if (error.response.data && error.response.status === 404) {
+        setJobApplications(error.response.data.data);
+      }
+      console.log(error);
+    });
+};
