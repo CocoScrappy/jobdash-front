@@ -2,8 +2,8 @@
 import "../css/layouts/Banners.css";
 import girlwithcomp from "../assets/girlwithcomp.jpeg";
 
-const LargeBannerLayout = ({ children }) => (
-  <div className="container-fluid large-banner d-flex h-100">
+const LargeBannerLayout = ({ children, header }) => (
+  <div className="container-fluid large-banner d-flex flex-column flex-lg-row h-100">
     <img
       alt="user avatar"
       src={girlwithcomp}
@@ -11,7 +11,10 @@ const LargeBannerLayout = ({ children }) => (
       // height="35"
       // className="rounded-circle avatar"
     />
-    <div className="container">{children}</div>
+    <div className="py-4 px-0 p-lg-4 container-fluid layout-content">
+      <h1 className="d-none d-lg-block">{header}</h1>
+      {children}
+    </div>
   </div>
 );
 

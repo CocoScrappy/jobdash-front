@@ -11,12 +11,24 @@
 }
 
 .large-banner img {
-  width: 60%;
+  width: 100%;
   object-fit: cover;
   border-radius: 50px;
+  height: 100%;
 }
 
-.large-banner .container {
+.large-banner .layout-content {
   margin: auto;
-  max-width: 500px;
+  width: 100%;
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 992px) {
+  .large-banner img {
+    width: 60%;
+  }
+
+  .large-banner .layout-content {
+    max-width: 600px;
+  }
 }

@@ -12,6 +12,8 @@ import FloatingLabel from "react-bootstrap/FloatingLabel";
 
 // CSS
 import "../css/components/Stylized-letters.css";
+import "../css/components/Link.css";
+import "../css/components/Button.css";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -78,9 +80,7 @@ const LoginPage = () => {
 
   return (
     <Layout title="JOBDASH - Login" content="Login Page">
-      <LargeBannerLayout>
-        <h1>Welcome back</h1>
-
+      <LargeBannerLayout header="Welcome back">
         <Formik
           onSubmit={onSubmit}
           validationSchema={validationSchema}
@@ -137,7 +137,10 @@ const LoginPage = () => {
               </Button>
             </div>
             <p>
-              Don't have an account? <Link to="/register">Register</Link>
+              Don't have an account?{" "}
+              <Link to="/register" className="jobdash-link">
+                Register
+              </Link>
             </p>
             <span className="errorMsg"></span>
 

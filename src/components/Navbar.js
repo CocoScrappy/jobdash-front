@@ -78,7 +78,7 @@ const Navigation = () => {
 
   return (
     <Navbar expand="lg">
-      <Container>
+      <Container fluid>
         <Navbar.Brand>
           <Link className="navbar-brand" to="/">
             Jobdash

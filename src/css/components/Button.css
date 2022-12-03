@@ -1,7 +1,9 @@
-.btn-dark .btn-jobdash {
-  background-color: #2622cf;
+.btn-dark.btn-jobdash {
+  background-color: var(--color-main);
+  border-color: var(--color-main);
 }
 
-.btn-dark .btn-jobdash:hover {
-  background-color: #4c48eb;
+.btn-dark.btn-jobdash:hover {
+  background-color: var(--color-main-lighter);
+  border-color: var(--color-main-lighter);
 }
