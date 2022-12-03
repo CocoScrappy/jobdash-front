@@ -1,9 +1,9 @@
 import React, {useState, useEffect, useRef} from 'react'
 import ListGroup from "react-bootstrap/ListGroup";
 import axios from "axios"
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import Heart from "react-heart";
-import { BsCursor } from 'react-icons/bs';
+import { Button } from "react-bootstrap";
 
 function JobApplicationList(props) {
 
@@ -83,6 +83,13 @@ function JobApplicationList(props) {
 
   return (
     <>
+      <div>
+      <Button variant="secondary" onClick={() => {
+        navigate("/externaljobapplicationform") }} >
+              + Application
+            </Button>
+      </div>
+
       <ListGroup>
         <ListGroup.Item
           className="d-flex justify-content-between align-items-center"
