@@ -4,6 +4,8 @@ import { format, parseISO } from "date-fns";
 import MyEditor from "./MyEditor";
 import { Button, Form } from "react-bootstrap";
 import PreviewModal from "./PreviewModal";
+import { updateFavoritedStatus } from "../helpers/Utils";
+import Heart from "react-heart";
 
 function JobApplicationDetails(props) {
   const applicationId = props.applicationId;
@@ -52,35 +54,35 @@ function JobApplicationDetails(props) {
     setShowModal(true);
   };
 
-  const updateFavoritedStatus = (event) => {
-    const updatedStatus = event.target.checked;
-    // console.log(updatedStatus);
-    axios
-      .patch(
-        `${process.env.REACT_APP_API_URL}/api/applications/${applicationInfo.id}/`,
-        { favorited: updatedStatus },
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("atoken"),
-          },
-        }
-      )
-      .then((response) => {
-        console.log("favorited status updated");
-        console.log(response.data);
-        setApplicationInfo({
-          ...applicationInfo,
-          favorited: response.data.favorited,
-        });
-        // console.log(applicationInfo.favorited);
-      })
-      .catch((error) => {
-        console.log(error);
-        if (error.response) {
-          console.log(error);
-        }
-      });
-  };
+  // const updateFavoritedStatus = (event) => {
+  //   const updatedStatus = !applicationInfo.favorited;
+  //   // console.log(updatedStatus);
+  //   axios
+  //     .patch(
+  //       `${process.env.REACT_APP_API_URL}/api/applications/${applicationInfo.id}/`,
+  //       { favorited: updatedStatus },
+  //       {
+  //         headers: {
+  //           Authorization: "Bearer " + localStorage.getItem("atoken"),
+  //         },
+  //       }
+  //     )
+  //     .then((response) => {
+  //       console.log("favorited status updated");
+  //       console.log(response.data);
+  //       setApplicationInfo({
+  //         ...applicationInfo,
+  //         favorited: response.data.favorited,
+  //       });
+  //       // console.log(applicationInfo.favorited);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       if (error.response) {
+  //         console.log(error);
+  //       }
+  //     });
+  // };
 
   const updateNotes = () => {
     // console.log(updatedStatus);
@@ -124,7 +126,7 @@ function JobApplicationDetails(props) {
       <h3>Job Application Details</h3>
       <hr />
       <div className="row">
-        <div className="col col-9">
+        <div className="col col-10">
           <h2>{applicationInfo.job_posting.title}</h2>
           <h3 className="text-secondary">
             {applicationInfo.job_posting.company}
@@ -133,13 +135,24 @@ function JobApplicationDetails(props) {
           <h6 className="mb-4">{applicationInfo.job_posting.remote_option}</h6>
         </div>
         <div className="col">
-          <Form.Check
+          <Heart
+            style={{ cursor: "default" }}
+            // ref={likeBtn}
+            key={applicationInfo.id}
+            isActive={applicationInfo.favorited}
+            onClick={() =>
+              updateFavoritedStatus({ applicationInfo, setApplicationInfo })
+            }
+          />
+          {/* <Form.Check
             type="switch"
             label="favorited"
             checked={applicationInfo.favorited}
             className="mb-4"
-            onChange={updateFavoritedStatus}
-          />
+            onChange={() =>
+              updateFavoritedStatus({ applicationInfo, setApplicationInfo })
+            }
+          /> */}
           <Button variant="primary" onClick={() => previewJobDescription()}>
             Job Description
           </Button>
