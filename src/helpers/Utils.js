@@ -24,7 +24,7 @@ export const updateFavoritedStatus = ({
       console.log(response.data);
       setApplicationInfo({
         ...applicationInfo,
-        favorited: response.data.favorited,
+        favorited: updatedStatus,
       });
       // console.log(applicationInfo.favorited);
     })

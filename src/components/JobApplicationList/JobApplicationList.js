@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import ListGroup from "react-bootstrap/ListGroup";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Heart from "react-heart";
 import { BsCursor } from "react-icons/bs";
+import JobApplicationItem from "./JobApplicationItem";
 
 function JobApplicationList(props) {
   const navigate = useNavigate();
@@ -42,44 +42,44 @@ function JobApplicationList(props) {
     setIsLiked(!isLiked);
   }
 
-  const renderListGroupItem = (application) => {
-    // change date format
-    var ISODate = new Date(application.application_date);
-    var shortDate = ISODate.toLocaleDateString();
+  // const renderListGroupItem = (application) => {
+  //   // change date format
+  //   var ISODate = new Date(application.application_date);
+  //   var shortDate = ISODate.toLocaleDateString();
 
-    function redirectToInfoPage() {
-      navigate(`/jobapplications/application/${application.id}`, {
-        application: application,
-      });
-    }
+  //   function redirectToInfoPage() {
+  //     navigate(`/jobapplications/application/${application.id}`, {
+  //       application: application,
+  //     });
+  //   }
 
-    // const [applicationInfo, setApplicationInfo] = useState(application);
+  //   // const [applicationInfo, setApplicationInfo] = useState(application);
 
-    return (
-      <tr key={application.id}>
-        <td onClick={() => redirectToInfoPage()}>
-          {application.job_posting.title}
-        </td>
-        <td onClick={() => redirectToInfoPage()}>
-          {application.job_posting.company}
-        </td>
-        <td onClick={() => redirectToInfoPage()}>
-          {application.job_posting.remote_option}
-        </td>
-        <td onClick={() => redirectToInfoPage()}>{shortDate}</td>
-        <td onClick={() => redirectToInfoPage()}>{application.status}</td>
-        <td style={{ width: "1.5rem" }}>
-          <Heart
-            style={{ cursor: "default" }}
-            ref={likeBtn}
-            key={application.id}
-            isActive={application.favorited}
-            onClick={() => setIsLiked(application.id)}
-          />
-        </td>
-      </tr>
-    );
-  };
+  //   return (
+  //     <tr key={application.id}>
+  //       <td onClick={() => redirectToInfoPage()}>
+  //         {application.job_posting.title}
+  //       </td>
+  //       <td onClick={() => redirectToInfoPage()}>
+  //         {application.job_posting.company}
+  //       </td>
+  //       <td onClick={() => redirectToInfoPage()}>
+  //         {application.job_posting.remote_option}
+  //       </td>
+  //       <td onClick={() => redirectToInfoPage()}>{shortDate}</td>
+  //       <td onClick={() => redirectToInfoPage()}>{application.status}</td>
+  //       <td style={{ width: "1.5rem" }}>
+  //         <Heart
+  //           style={{ cursor: "default" }}
+  //           ref={likeBtn}
+  //           key={application.id}
+  //           isActive={application.favorited}
+  //           onClick={() => setIsLiked(application.id)}
+  //         />
+  //       </td>
+  //     </tr>
+  //   );
+  // };
 
   return (
     <>
@@ -95,9 +95,12 @@ function JobApplicationList(props) {
           </tr>
         </thead>
         <tbody>
-          {jobApplications.map((application) =>
-            renderListGroupItem(application)
-          )}
+          {jobApplications.map((application) => (
+            <JobApplicationItem
+              application={application}
+              key={application.id}
+            />
+          ))}
         </tbody>
       </table>
     </>

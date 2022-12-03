@@ -144,15 +144,6 @@ function JobApplicationDetails(props) {
               updateFavoritedStatus({ applicationInfo, setApplicationInfo })
             }
           />
-          {/* <Form.Check
-            type="switch"
-            label="favorited"
-            checked={applicationInfo.favorited}
-            className="mb-4"
-            onChange={() =>
-              updateFavoritedStatus({ applicationInfo, setApplicationInfo })
-            }
-          /> */}
           <Button variant="primary" onClick={() => previewJobDescription()}>
             Job Description
           </Button>
