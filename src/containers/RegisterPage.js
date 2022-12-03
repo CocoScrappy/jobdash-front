@@ -5,6 +5,14 @@ import React, { useState } from "react";
 import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import LargeBannerLayout from "layouts/LargeBannerLayout";
+// Bootstrap
+import Button from "react-bootstrap/Button";
+// import Form from "react-bootstrap/Form";
+// import FloatingLabel from "react-bootstrap/FloatingLabel";
+
+// CSS
+import "../css/components/Link.css";
+import "../css/components/Button.css";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -61,85 +69,123 @@ const RegisterPage = () => {
   });
   return (
     <Layout title="AuthSite | Register page" content="Register page">
-      <LargeBannerLayout>
-        <h1>Create an account</h1>
-        <div className="container">
-          <Formik
-            onSubmit={onSubmit}
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-          >
-            <Form>
-              <div className="row">
-                <label>First Name:</label>
-                <Field name="first_name" />
-                <ErrorMessage name="first_name">
-                  {(msg) => <div className="errorMsg">{msg}</div>}
-                </ErrorMessage>
-              </div>
+      <LargeBannerLayout header="Create an account">
+        <Formik
+          onSubmit={onSubmit}
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+        >
+          <Form>
+            <div className="form-floating mb-3">
+              <Field
+                name="first_name"
+                className="form-control"
+                id="floatingPassword"
+                placeholder="Jane"
+              />
+              <label for="floatingPassword">First name</label>
+              <ErrorMessage name="first_name">
+                {(msg) => <div className="errorMsg">{msg}</div>}
+              </ErrorMessage>
+            </div>
 
-              <div className="row">
-                <label>Last Name:</label>
-                <Field name="last_name" />
-                <ErrorMessage name="last_name">
-                  {(msg) => <div className="errorMsg">{msg}</div>}
-                </ErrorMessage>
-              </div>
+            <div className="form-floating mb-3">
+              <Field
+                name="last_name"
+                className="form-control"
+                id="floatingPassword"
+                placeholder="Doe"
+              />
+              <label for="floatingPassword">Last name</label>
+              <ErrorMessage name="last_name">
+                {(msg) => <div className="errorMsg">{msg}</div>}
+              </ErrorMessage>
+            </div>
 
-              <div className="row">
-                <span className="errorMsg">{usernameTaken}</span>
-              </div>
+            <div className="mb-3">
+              <span className="errorMsg">{usernameTaken}</span>
+            </div>
 
-              <div className="row">
-                <label>Email:</label>
-                <Field name="email" />
-                <ErrorMessage name="email">
-                  {(msg) => <div className="errorMsg">{msg}</div>}
-                </ErrorMessage>
-              </div>
-              <div className="row">
-                <span className="errorMsg">{emailTaken}</span>
-              </div>
+            <div className="form-floating mb-3">
+              <Field
+                name="email"
+                className="form-control"
+                id="floatingPassword"
+                placeholder="jd@email.com"
+              />
+              <label for="floatingPassword">Email</label>
+              <ErrorMessage name="email">
+                {(msg) => <div className="errorMsg">{msg}</div>}
+              </ErrorMessage>
+            </div>
 
-              <div className="row">
-                <label>Select Role:</label>
-                <Field as="select" name="role">
-                  <option value="user">User</option>
-                  <option value="employer">Recruiter</option>
-                </Field>
-              </div>
+            <div className="mb-3">
+              <span className="errorMsg">{emailTaken}</span>
+            </div>
 
-              <div className="row">
-                <label>Password:</label>
-                <Field
-                  name="password"
-                  type="password"
-                  placeholder="Min 6 characters, Max 32 "
-                />
-                <ErrorMessage name="password">
-                  {(msg) => <div className="errorMsg">{msg}</div>}
-                </ErrorMessage>
-              </div>
+            <div className="mb-3">
+              <label for="roleSelect" class="form-label">
+                I am a...
+              </label>
+              <Field
+                as="select"
+                name="role"
+                className="form-select"
+                aria-label="Role select"
+                id="roleSelect"
+              >
+                <option value="user">Job seeker</option>
+                <option value="employer">Recruiter</option>
+              </Field>
+            </div>
 
-              <div className="row">
-                <label>Confirm Password:</label>
-                <Field name="confirmPass" type="password" />
-                <ErrorMessage name="confirmPass">
-                  {(msg) => <div className="errorMsg">{msg}</div>}
-                </ErrorMessage>
-              </div>
+            <div className="form-floating mb-3">
+              <Field
+                name="password"
+                type="password"
+                className="form-control"
+                id="floatingPassword"
+                placeholder="Password"
+              />
+              <label for="floatingPassword">Password (6 - 32 characters)</label>
+              <ErrorMessage name="password">
+                {(msg) => <div className="errorMsg">{msg}</div>}
+              </ErrorMessage>
+            </div>
 
-              <div id="register-btn" className="row">
-                <button className="btn btn-secondary" type="submit">
-                  Register
-                </button>
-              </div>
-              <p>
-                Already have an account? <Link to="/login">Login</Link>
-              </p>
-            </Form>
-          </Formik>
-        </div>
+            <div className="form-floating mb-3">
+              <Field
+                name="confirmPass"
+                type="password"
+                className="form-control"
+                id="floatingPassword"
+                placeholder="Password"
+              />
+              <label for="floatingPassword">Confirm password</label>
+              <ErrorMessage name="password"></ErrorMessage>
+              <ErrorMessage name="confirmPass">
+                {(msg) => <div className="errorMsg">{msg}</div>}
+              </ErrorMessage>
+            </div>
+
+            <div id="register-btn" className="d-grid gap-2 mb-3">
+              <Button
+                variant="dark"
+                className="btn-jobdash"
+                size="lg"
+                type="submit"
+              >
+                Get started
+              </Button>
+            </div>
+            <p>
+              Already have an account?{" "}
+              <Link to="/login" className="jobdash-link">
+                Login
+              </Link>
+            </p>
+          </Form>
+        </Formik>
       </LargeBannerLayout>
     </Layout>
   );

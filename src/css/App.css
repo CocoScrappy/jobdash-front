@@ -1,5 +1,7 @@
 /* Fonts */
 @import url("https://fonts.googleapis.com/css2?family=Archivo+Black&family=Roboto:wght@300;400;700&display=swap");
+/* Bootstrap icons */
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css");
 
 :root {
   --color-main: #2622cf;
@@ -22,6 +24,7 @@
   color: var(--color-text);
   /* background-color: #d6dfdc; */
 }
+
 #root {
   display: grid;
   height: 100vh;

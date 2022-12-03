@@ -1,5 +1,5 @@
 import Layout from "layouts/MainLayout";
-import { Formik, Field, ErrorMessage } from "formik"; // Removed Form import from Formik
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import useStore from "store";
@@ -7,11 +7,10 @@ import { Link, useNavigate } from "react-router-dom";
 import LargeBannerLayout from "layouts/LargeBannerLayout";
 // Bootstrap
 import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import FloatingLabel from "react-bootstrap/FloatingLabel";
+// import Form from "react-bootstrap/Form";
+// import FloatingLabel from "react-bootstrap/FloatingLabel";
 
 // CSS
-import "../css/components/Stylized-letters.css";
 import "../css/components/Link.css";
 import "../css/components/Button.css";
 
@@ -87,8 +86,8 @@ const LoginPage = () => {
           initialValues={initialValues}
         >
           <Form>
-            {/* New form */}
-            <FloatingLabel
+            {/* New form - Uses React-Bootstrap - NOT FUNCTIONAL*/}
+            {/* <FloatingLabel
               controlId="floatingInput"
               label="Email"
               className="mb-3"
@@ -142,9 +141,75 @@ const LoginPage = () => {
                 Register
               </Link>
             </p>
+            <span className="errorMsg"></span> */}
+
+            {/* Intermediary form - uses Formik & Reg. Bootstrap CSS - FUNCTIONAL */}
+            <div className="form-floating mb-3">
+              <Field
+                name="email"
+                className="form-control"
+                id="floatingInput"
+                placeholder="name@example.com"
+              />
+              <label for="floatingInput">Email</label>
+              <ErrorMessage name="email">
+                {(msg) => <div className="errorMsg">{msg}</div>}
+              </ErrorMessage>
+            </div>
+
+            <div className="form-floating mb-3">
+              <Field
+                name="password"
+                type="password"
+                className="form-control"
+                id="floatingPassword"
+                placeholder="Password"
+              />
+              <label for="floatingPassword">Password</label>
+              <ErrorMessage name="password">
+                {(msg) => <div className="errorMsg">{msg}</div>}
+              </ErrorMessage>
+            </div>
+
+            <div
+              className="mb-3 d-flex justify-content-between w-100"
+              controlId="formBasicCheckbox"
+            >
+              {/* <Form.Check type="checkbox" label="Remember me" /> */}
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  value=""
+                  id="flexCheckDefault"
+                />
+                <label className="form-check-label" for="flexCheckDefault">
+                  Remember me
+                </label>
+              </div>
+              <p>Forgot password</p>
+            </div>
+
+            <div id="register-btn" className="d-grid gap-2 mb-3">
+              <Button
+                variant="dark"
+                className="btn-jobdash"
+                size="lg"
+                type="submit"
+              >
+                Login
+              </Button>
+            </div>
+            <p>
+              Don't have an account?{" "}
+              <Link to="/register" className="jobdash-link">
+                Register
+              </Link>
+            </p>
+
             <span className="errorMsg"></span>
 
-            {/* Old form */}
+            {/* Old form - FUNCTIONAL BUT NO STYLE*/}
             {/* <div className="row">
             <label>Email</label>
             <Field name="email"></Field>
@@ -172,7 +237,6 @@ const LoginPage = () => {
           </div> */}
           </Form>
         </Formik>
-        {/* <h2 className="stylized-letters">JD</h2> */}
       </LargeBannerLayout>
     </Layout>
   );

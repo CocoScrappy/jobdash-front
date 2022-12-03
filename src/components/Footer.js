@@ -5,34 +5,31 @@ import "../css/components/Footer.css";
 
 const Footer = () => {
   return (
-    // <footer className="d-none d-lg-block">
-    //   <Container fluid style={{ height: "50px" }} className="d-flex">
-    //     <p>Made with ❤️ at JAC|FSD-04</p>
-    //   </Container>
-    // </footer>
-
-    <div class="footer">
-      <div className="footer-links">
-        <a href="#">
-          <i className="fab fa-github"></i>
-        </a>
-        <a href="#">
-          <i className="fab fa-instagram"></i>
-        </a>
-        <a href="#">
-          <i className="fab fa-facebook"></i>
-        </a>
-        <a href="#">
-          <i className="fab fa-twitter"></i>
-        </a>
-        <a href="#">
-          <i className="fab fa-linkedin"></i>
-        </a>
+    <footer className="d-none d-lg-block mt-3">
+      <div class="footer">
+        <div className="footer-links">
+          <a href="#">
+            <i className="bi bi-instagram"></i>
+          </a>
+          <a href="#">
+            <i className="bi bi-facebook"></i>
+          </a>
+          <a href="#">
+            <i className="bi bi-tiktok"></i>
+          </a>
+          <a href="#">
+            <i className="bi bi-linkedin"></i>
+          </a>
+          <a href="#">
+            <i className="bi bi-twitter"></i>
+          </a>
+        </div>
+        <div className="footer-copyright">
+          <span>&#169;</span> 2022. Made with{" "}
+          <i className="bi bi-heart-fill"></i> at JAC
+        </div>
       </div>
-      <div className="footer-copyright">
-        This footer is made with <i className="fas fa-heart"></i> at JAC
-      </div>
-    </div>
+    </footer>
   );
 };
 
