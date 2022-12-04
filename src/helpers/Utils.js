@@ -2,7 +2,12 @@
  * A list of utility functions to be used on multiple occassions in the project
  */
 import axios from "axios";
+import { format, parseISO } from "date-fns";
 
+/**
+ * update favorited status
+ * @param {*} param0
+ */
 export const updateFavoritedStatus = ({
   applicationInfo,
   setApplicationInfo,
@@ -113,6 +118,10 @@ export const getStatusOptions = ({ setStatusOptions }) => {
     });
 };
 
+/**
+ * update application status
+ * @param {*} param0
+ */
 export const updateApplicationStatus = ({
   updatedStatus,
   applicationId,
@@ -139,6 +148,49 @@ export const updateApplicationStatus = ({
         status: updatedStatus,
       });
       // console.log(applicationInfo.favorited);
+    })
+    .catch((error) => {
+      console.log(error);
+      if (error.response) {
+        console.log(error);
+      }
+    });
+};
+
+/**
+ * update application notes
+ * @param {*} param0
+ */
+export const updateApplicationNotes = ({
+  applicationId,
+  convertedContent,
+  applicationInfo,
+  setApplicationInfo,
+  setNotesMsg,
+}) => {
+  // console.log(updatedStatus);
+  axios
+    .patch(
+      `${process.env.REACT_APP_API_URL}/api/applications/${applicationId}/`,
+      { notes: convertedContent },
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("atoken"),
+        },
+      }
+    )
+    .then((response) => {
+      console.log("Notes updated successfully");
+      console.log(response.data);
+      setApplicationInfo({
+        ...applicationInfo,
+        notes: response.data.notes,
+      });
+      setNotesMsg(
+        "Notes successfully updated on " +
+          format(new Date(), "MMM dd, yyyy, h:mm:ss aa")
+      );
+      // setNotesMsgStyle("text-success");
     })
     .catch((error) => {
       console.log(error);
