@@ -207,3 +207,99 @@ export const updateApplicationNotes = ({
       }
     });
 };
+
+/**
+ * Pagination navigation
+ * @param {*} url
+ */
+export const paginationNavigator = ({
+  url,
+  dataSetter,
+  paginationLinksSetter,
+}) => {
+  axios
+    .get(url, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("atoken"),
+      },
+    })
+    .then((response) => {
+      console.log(response);
+      dataSetter(response.data.results);
+      paginationLinksSetter({
+        count: response.data.count,
+        next: response.data.next,
+        previous: response.data.previous,
+      });
+    })
+    .catch((error) => {
+      if (error.response.data && error.response.status === 404) {
+        dataSetter(error.response.data.data);
+      }
+      console.log(error);
+    });
+};
+
+/**
+ * jump to a pagination item
+ * @param {*} param0
+ */
+export const jumpToPaginationItem = ({
+  apiBaseUrl,
+  itemNumber,
+  dataSetter,
+  paginationLinksSetter,
+}) => {
+  console.log(apiBaseUrl);
+  axios
+    .get(
+      `${process.env.REACT_APP_API_URL}/${apiBaseUrl}/?limit=10&offset=${itemNumber}`,
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("atoken"),
+        },
+      }
+    )
+    .then((response) => {
+      console.log(response);
+      dataSetter(response.data.results);
+      paginationLinksSetter({
+        count: response.data.count,
+        next: response.data.next,
+        previous: response.data.previous,
+      });
+    })
+    .catch((error) => {
+      if (error.response.data && error.response.status === 404) {
+        dataSetter(error.response.data.data);
+      }
+      console.log(error);
+    });
+};
+
+export const searchList = ({
+  apiBaseUrl,
+  data,
+  dataSetter,
+  responseMsgSetter,
+  responseMsgStyleSetter,
+}) => {
+  axios
+    .post(`${process.env.REACT_APP_API_URL}/${apiBaseUrl}/`, data, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("atoken"),
+      },
+    })
+    .then((res) => {
+      console.log(res.data);
+      dataSetter(res.data);
+      responseMsgSetter(res.data.length + " results found");
+      responseMsgStyleSetter("text-success");
+    })
+    .catch((err) => {
+      console.log(err);
+      responseMsgSetter(err.response.data.message);
+      responseMsgStyleSetter("text-danger");
+      dataSetter(err.response.data.data);
+    });
+};
