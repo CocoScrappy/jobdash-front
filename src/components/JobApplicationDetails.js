@@ -8,6 +8,8 @@ import {
   updateFavoritedStatus,
   getApplicationInfo,
   getStatusOptions,
+  updateApplicationStatus,
+  updateApplicationNotes,
 } from "../helpers/Utils";
 import Heart from "react-heart";
 import Select from "react-select";
@@ -19,7 +21,7 @@ function JobApplicationDetails(props) {
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState("");
   const [notesMsg, setNotesMsg] = useState("");
-  const [notesMsgStyle, setNotesMsgStyle] = useState("");
+  // const [notesMsgStyle, setNotesMsgStyle] = useState("");
   const [statusOptions, setStatusOptions] = useState([]);
   const [statusMsg, setStatusMsg] = useState("");
 
@@ -38,68 +40,6 @@ function JobApplicationDetails(props) {
   const previewNotes = () => {
     setModalContent(convertedContent);
     setShowModal(true);
-  };
-
-  const updateNotes = () => {
-    // console.log(updatedStatus);
-    axios
-      .patch(
-        `${process.env.REACT_APP_API_URL}/api/applications/${applicationInfo.id}/`,
-        { notes: convertedContent },
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("atoken"),
-          },
-        }
-      )
-      .then((response) => {
-        console.log("Notes updated successfully");
-        console.log(response.data);
-        setApplicationInfo({
-          ...applicationInfo,
-          notes: response.data.notes,
-        });
-        setNotesMsg(
-          "Notes successfully updated on " +
-            format(new Date(), "MMM dd yyyy h:mmaa")
-        );
-        setNotesMsgStyle("text-success");
-        // console.log(applicationInfo.favorited);
-      })
-      .catch((error) => {
-        console.log(error);
-        if (error.response) {
-          console.log(error);
-        }
-      });
-  };
-
-  const updateStatus = (updatedStatus) => {
-    axios
-      .patch(
-        `${process.env.REACT_APP_API_URL}/api/applications/${applicationInfo.id}/`,
-        { status: updatedStatus },
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("atoken"),
-          },
-        }
-      )
-      .then((response) => {
-        setStatusMsg("Application status updated");
-        console.log(response.data);
-        setApplicationInfo({
-          ...applicationInfo,
-          status: updatedStatus,
-        });
-        // console.log(applicationInfo.favorited);
-      })
-      .catch((error) => {
-        console.log(error);
-        if (error.response) {
-          console.log(error);
-        }
-      });
   };
 
   if (applicationInfo === undefined) {
@@ -156,7 +96,15 @@ function JobApplicationDetails(props) {
                 })
               ]
             }
-            onChange={(e) => updateStatus(e.value)}
+            onChange={(e) =>
+              updateApplicationStatus({
+                updatedStatus: e.value,
+                applicationId,
+                setApplicationInfo,
+                setStatusMsg,
+                applicationInfo,
+              })
+            }
           />
         </div>
         <p className="col-6 text-success">{statusMsg}</p>
@@ -176,12 +124,20 @@ function JobApplicationDetails(props) {
           variant="primary"
           size="sm"
           className="mx-2"
-          onClick={() => updateNotes()}
+          onClick={() =>
+            updateApplicationNotes({
+              applicationId,
+              convertedContent,
+              applicationInfo,
+              setApplicationInfo,
+              setNotesMsg,
+            })
+          }
         >
           Save
         </Button>
       </h5>
-      <span className={notesMsgStyle}>{notesMsg}</span>
+      <span className="text-success">{notesMsg}</span>
       <MyEditor
         content={applicationInfo.notes}
         setConvertedContent={setConvertedContent}
