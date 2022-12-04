@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import JobApplicationItem from "./JobApplicationItem";
-import { fetchUserApplications } from "../../helpers/Utils";
+import {
+  fetchUserApplications,
+  paginationNavigator,
+} from "../../helpers/Utils";
 import { Formik, Field, Form } from "formik";
 import axios from "axios";
 import { set } from "date-fns";
@@ -20,54 +23,6 @@ function JobApplicationList(props) {
     () => fetchUserApplications({ setJobApplications, setPaginationLinks }),
     [toggleState]
   );
-
-  const fetchNextPage = () => {
-    axios
-      .get(paginationLinks.next, {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("atoken"),
-        },
-      })
-      .then((response) => {
-        console.log(response);
-        setJobApplications(response.data.results);
-        setPaginationLinks({
-          count: response.data.count,
-          next: response.data.next,
-          previous: response.data.previous,
-        });
-      })
-      .catch((error) => {
-        if (error.response.data && error.response.status === 404) {
-          setJobApplications(error.response.data.data);
-        }
-        console.log(error);
-      });
-  };
-
-  const fetchPreviousPage = () => {
-    axios
-      .get(paginationLinks.previous, {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("atoken"),
-        },
-      })
-      .then((response) => {
-        console.log(response);
-        setJobApplications(response.data.results);
-        setPaginationLinks({
-          count: response.data.count,
-          next: response.data.next,
-          previous: response.data.previous,
-        });
-      })
-      .catch((error) => {
-        if (error.response.data && error.response.status === 404) {
-          setJobApplications(error.response.data.data);
-        }
-        console.log(error);
-      });
-  };
 
   const jumpToApplication = (data) => {
     const applicationNumber = data.applicationNumber - 1;
@@ -166,7 +121,16 @@ function JobApplicationList(props) {
                   : "page-item"
               }
             >
-              <a className="page-link" onClick={() => fetchPreviousPage()}>
+              <a
+                className="page-link"
+                onClick={() =>
+                  paginationNavigator({
+                    url: paginationLinks.previous,
+                    dataSetter: setJobApplications,
+                    paginationLinksSetter: setPaginationLinks,
+                  })
+                }
+              >
                 Previous
               </a>
             </li>
@@ -177,7 +141,16 @@ function JobApplicationList(props) {
                   : "page-item"
               }
             >
-              <a className="page-link" onClick={() => fetchNextPage()}>
+              <a
+                className="page-link"
+                onClick={() =>
+                  paginationNavigator({
+                    url: paginationLinks.next,
+                    dataSetter: setJobApplications,
+                    paginationLinksSetter: setPaginationLinks,
+                  })
+                }
+              >
                 Next
               </a>
             </li>
