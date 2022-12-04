@@ -9,9 +9,6 @@ import { Container } from "react-bootstrap";
 function JobApplicationListingPage() {
   return (
     <Layout title="JobApplications" content="JobApplications">
-      <div>Job Applications</div>
-      <div>Submenu</div>
-      <div>Search Bar</div>
       <Container>
         <JobApplicationList />
       </Container>
