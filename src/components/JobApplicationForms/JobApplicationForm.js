@@ -55,6 +55,24 @@ function JobApplicationForm({ posting }) {
         applicant: state.id,
         cv: cv.id,
         job_posting: state.jpid,
+      }
+
+    } catch (err) {
+      console.log("Whoops, something went wrong while assigning the values for the request body")
+    }
+    console.log('application: ' + JSON.stringify(applicationData))
+    console.log("submitting application")
+    axios.post(`${process.env.REACT_APP_API_URL}/api/applications/`, applicationData,{
+      headers: { Authorization: "Bearer " + localStorage.getItem("atoken") }})
+          .then((res) => {
+            console.log(res);
+            setSuccess(true);
+          })
+          .catch(() => {
+              alert("Something went wrong while calling database.");
+            });
+
+        setSuccess(true);
       };
     } catch (err) {
       console.log(

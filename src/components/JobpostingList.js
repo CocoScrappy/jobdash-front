@@ -1,12 +1,22 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import userEvent from "@testing-library/user-event";
+
+//react components
 import ListGroup from "react-bootstrap/ListGroup";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from "react-bootstrap/FormControl";
 import Form from "react-bootstrap/Form";
+//zustand
+import useStore from "store";
+// custom components
+import MyEditor from "components/MyEditor";
+import PreviewModal from "./PreviewModal";
+
+//icons
 import {
   MdCheckBox,
   MdCheckBoxOutlineBlank,
@@ -15,16 +25,19 @@ import {
   MdSend,
 } from "react-icons/md";
 import { BsPersonLinesFill } from "react-icons/bs";
-import useStore from "store";
-import JobApplicationForm from "./JobApplicationForms/JobApplicationForm";
-import { Link } from "react-router-dom";
-import userEvent from "@testing-library/user-event";
 
 export default function JobpostingList({ jobpostings = [], setJobpostings }) {
   var uId = useStore((state) => state.id);
   var uRole = useStore((state) => state.role);
+
   const [show, setShow] = useState(false);
   const [record, setRecord] = useState(null);
+  const [convertedContent, setConvertedContent] = useState("");
+
+  const [showModal, setShowModal] = useState(false);
+  const [modalContent, setModalContent] = useState("");
+  const [modalTitle, setModalTitle] = useState("");
+
   const navigate = useNavigate();
 
   // const {
@@ -37,7 +50,7 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
   //   employer,
   // } = record;
 
-  const addJPId = useStore((state) => state.addJpId); 
+  const addJPId = useStore((state) => state.addJpId);
   const addJPTitle = useStore((state) => state.addTitle);
   const addJPLogoUrl = useStore((state) => state.addLogo_url);
   const addJPLocation = useStore((state) => state.addLocation);
@@ -46,8 +59,6 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
   const addJPRemoteOption = useStore((state) => state.addRemoteOption);
   const addJPEmployerId = useStore((state) => state.addEmployerId);
   const addJPCompanyName = useStore((state) => state.addCompanyName);
-
-
 
   const handleChange = (e) => {
     setRecord({ ...record, [e.target.name]: e.target.value });
@@ -115,6 +126,13 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
       });
   };
 
+  //on click event to open job description in a modal
+  const previewJobDescription = (post) => {
+    setModalContent(post.description);
+    setModalTitle(post.title);
+    setShowModal(true);
+  };
+
   const renderListGroupItem = (t) => {
     return (
       <ListGroup.Item
@@ -123,18 +141,25 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
       >
         <div className="d-flex justify-content-center">
           <span>
-            {t.title} || {t.description} || {t.remote_option} || {t.company}
+            {t.title} || {t.remote_option} || {t.company} ||
           </span>
+
+          <p
+            variant="primary"
+            onClick={() => previewJobDescription(t)}
+            style={{
+              cursor: "pointer",
+              marginRight: "12px",
+            }}
+          >
+            <strong> Job Description</strong>
+          </p>
         </div>
         {/* display crud only for owner of posts */}
         {uId === t.employer && (
           <>
             <div>
               <MdEdit
-                style={{
-                  cursor: "pointer",
-                  marginRight: "12px",
-                }}
                 onClick={() => {
                   setRecord(t);
                   setShow(true);
@@ -178,6 +203,7 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
   };
 
   const handleSaveChanges = async () => {
+    record.description = convertedContent;
     await handleUpdate(record.id, { record });
     handleClose();
   };
@@ -218,15 +244,6 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
             />
           </InputGroup>
           <InputGroup className="mb-4">
-            <InputGroup.Text>Description</InputGroup.Text>
-            <FormControl
-              placeholder="enter description"
-              onChange={handleChange}
-              name="description"
-              value={record ? record.description : ""}
-            />
-          </InputGroup>
-          <InputGroup className="mb-4">
             <InputGroup.Text>Company Name</InputGroup.Text>
             <FormControl
               placeholder="enter Company Name"
@@ -248,6 +265,13 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
               <option value="in-person">In-Person</option>
             </Form.Select>
           </InputGroup>
+          <div className="mb-4">
+            <p>Description</p>
+            <MyEditor
+              content={record ? record.description : ""}
+              setConvertedContent={setConvertedContent}
+            />
+          </div>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
@@ -258,6 +282,12 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
           </Button>
         </Modal.Footer>
       </Modal>
+      <PreviewModal
+        show={showModal}
+        setShow={setShowModal}
+        title={modalTitle}
+        content={modalContent}
+      />
     </div>
   );
 }
