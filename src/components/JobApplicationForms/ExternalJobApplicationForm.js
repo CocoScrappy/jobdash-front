@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Layout from "layouts/MainLayout";
+import Layout from "../../layouts/MainLayout";
 import { Button, InputGroup, Form, Container } from "react-bootstrap";
 
 {
