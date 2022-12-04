@@ -239,3 +239,36 @@ export const paginationNavigator = ({
       console.log(error);
     });
 };
+
+export const jumpToPaginationItem = ({
+  apiBaseUrl,
+  itemNumber,
+  dataSetter,
+  paginationLinksSetter,
+}) => {
+  console.log(apiBaseUrl);
+  axios
+    .get(
+      `${process.env.REACT_APP_API_URL}/${apiBaseUrl}/?limit=10&offset=${itemNumber}`,
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("atoken"),
+        },
+      }
+    )
+    .then((response) => {
+      console.log(response);
+      dataSetter(response.data.results);
+      paginationLinksSetter({
+        count: response.data.count,
+        next: response.data.next,
+        previous: response.data.previous,
+      });
+    })
+    .catch((error) => {
+      if (error.response.data && error.response.status === 404) {
+        dataSetter(error.response.data.data);
+      }
+      console.log(error);
+    });
+};
