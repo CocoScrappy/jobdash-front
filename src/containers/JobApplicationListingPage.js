@@ -1,4 +1,4 @@
-import Layout from "components/Layout";
+import Layout from "layouts/MainLayout";
 import JobApplicationList from "components/JobApplicationList/JobApplicationList";
 import { Container } from "react-bootstrap";
 

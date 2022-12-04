@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Layout from "components/Layout";
+import Layout from "layouts/MainLayout";
 import axios from "axios";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
@@ -35,9 +35,7 @@ const MyCVsPage = () => {
             <Card style={{ width: "24rem" }}>
               <Card.Body>
                 <Card.Title className="">{cv.name}</Card.Title>
-                <Card.Text className="text-truncate">
-                  {cv.content}
-                </Card.Text>
+                <Card.Text className="text-truncate">{cv.content}</Card.Text>
               </Card.Body>
             </Card>
           </Col>

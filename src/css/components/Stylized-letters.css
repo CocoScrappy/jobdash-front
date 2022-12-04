@@ -1,0 +1,15 @@
+.stylized-letters {
+  font-size: 900px;
+  font-weight: 900;
+  background-image: url(../../assets/girlwithcomp.jpeg);
+  background-size: cover;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  font-family: "Archivo Black", sans-serif;
+  letter-spacing: -86px;
+  /* position: fixed; */
+  width: 100%;
+  /* right: 0; */
+  /* text-align: center;*/
+}

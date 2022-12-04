@@ -1,0 +1,45 @@
+.large-banner {
+  /* background-image: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.5),
+      rgba(255, 255, 255, 0)
+    ),
+    url("../../assets/girlwithcomp.jpeg"); */
+  /* background-color: #d6dfdc; */
+  background-position: center;
+  background-size: cover;
+}
+
+.large-banner img {
+  width: 100%;
+  object-fit: cover;
+  border-radius: 50px;
+  height: 60vh;
+  flex-shrink: 0;
+}
+
+.large-banner .layout-content {
+  margin: auto;
+  width: 100%;
+}
+
+.large-banner h1 {
+  font-size: 1.5rem;
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 992px) {
+  .large-banner img {
+    width: 60%;
+    height: 100%;
+    flex-shrink: 1;
+  }
+
+  .large-banner .layout-content {
+    max-width: 600px;
+  }
+
+  .large-banner h1 {
+    font-size: 2rem;
+  }
+}
