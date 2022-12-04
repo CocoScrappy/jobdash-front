@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import axios from "axios";
 import useStore from "store";
 import { Link, useNavigate } from "react-router-dom";
-import LargeBannerLayout from "layouts/LargeBannerLayout";
+import LargeBannerLayout from "../layouts/LargeBannerLayout";
 // Bootstrap
 import Button from "react-bootstrap/Button";
 // import Form from "react-bootstrap/Form";
