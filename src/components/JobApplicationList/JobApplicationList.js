@@ -4,6 +4,7 @@ import {
   fetchUserApplications,
   paginationNavigator,
   jumpToPaginationItem,
+  searchList,
 } from "../../helpers/Utils";
 import { Formik, Field, Form } from "formik";
 import axios from "axios";
@@ -43,24 +44,13 @@ function JobApplicationList(props) {
       setToggleState((t) => !t);
       return;
     }
-    axios
-      .post(`${process.env.REACT_APP_API_URL}/api/applications/search/`, data, {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("atoken"),
-        },
-      })
-      .then((res) => {
-        console.log(res.data);
-        setJobApplications(res.data);
-        setSearchMsg(res.data.length + " results found");
-        setSearchMsgStyle("text-success");
-      })
-      .catch((err) => {
-        console.log(err);
-        setSearchMsg(err.response.data.message);
-        setSearchMsgStyle("text-danger");
-        setJobApplications(err.response.data.data);
-      });
+    searchList({
+      apiBaseUrl: "api/applications/search",
+      data: data,
+      dataSetter: setJobApplications,
+      responseMsgSetter: setSearchMsg,
+      responseMsgStyleSetter: setSearchMsgStyle,
+    });
   };
 
   const resetSearch = () => {
