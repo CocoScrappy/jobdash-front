@@ -33,30 +33,6 @@ function JobApplicationList(props) {
       dataSetter: setJobApplications,
       paginationLinksSetter: setPaginationLinks,
     });
-    // axios
-    //   .get(
-    //     `${process.env.REACT_APP_API_URL}/api/applications/get_user_applications/?limit=10&offset=${applicationNumber}`,
-    //     {
-    //       headers: {
-    //         Authorization: "Bearer " + localStorage.getItem("atoken"),
-    //       },
-    //     }
-    //   )
-    //   .then((response) => {
-    //     console.log(response);
-    //     setJobApplications(response.data.results);
-    //     setPaginationLinks({
-    //       count: response.data.count,
-    //       next: response.data.next,
-    //       previous: response.data.previous,
-    //     });
-    //   })
-    //   .catch((error) => {
-    //     if (error.response.data && error.response.status === 404) {
-    //       setJobApplications(error.response.data.data);
-    //     }
-    //     console.log(error);
-    //   });
   };
 
   const searchApplications = (data) => {
