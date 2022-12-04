@@ -84,7 +84,7 @@ function JobApplicationDetails(props) {
           "MMM dd yyyy h:mmaa"
         )}
       </p>
-      <div className="row">
+      <div className="row my-3">
         <p className="col-2">Status</p>
         <div className="col-4" style={{ "z-index": "100" }}>
           <Select
@@ -108,6 +108,24 @@ function JobApplicationDetails(props) {
           />
         </div>
         <p className="col-6 text-success">{statusMsg}</p>
+      </div>
+      <div className="row">
+        <p className="col-2">Important Dates: </p>
+        <div className="col">
+          {applicationInfo.saved_dates.map((date, index) => (
+            <div className="row">
+              <p className="col-6">{date.name}</p>
+              <Button
+                variant="primary"
+                size="sm"
+                className="col-2"
+                onClick={() => previewNotes()}
+              >
+                View
+              </Button>
+            </div>
+          ))}
+        </div>
       </div>
       <br></br>
       <h5>
