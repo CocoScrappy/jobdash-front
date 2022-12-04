@@ -4,7 +4,11 @@ import { format, parseISO } from "date-fns";
 import MyEditor from "./MyEditor";
 import { Button, Form } from "react-bootstrap";
 import PreviewModal from "./PreviewModal";
-import { updateFavoritedStatus, getApplicationInfo } from "../helpers/Utils";
+import {
+  updateFavoritedStatus,
+  getApplicationInfo,
+  getStatusOptions,
+} from "../helpers/Utils";
 import Heart from "react-heart";
 import Select from "react-select";
 
@@ -21,31 +25,9 @@ function JobApplicationDetails(props) {
 
   const [convertedContent, setConvertedContent] = useState("");
 
-  const getStatusOptions = () => {
-    axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/api/applications/get_status_options/`,
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("atoken"),
-          },
-        }
-      )
-      .then((response) => {
-        console.log(response.data);
-        setStatusOptions(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-        if (error.response) {
-          console.log(error);
-        }
-      });
-  };
-
   useEffect(() => {
     getApplicationInfo({ applicationId, setApplicationInfo });
-    getStatusOptions();
+    getStatusOptions({ setStatusOptions });
   }, []);
 
   const previewJobDescription = () => {

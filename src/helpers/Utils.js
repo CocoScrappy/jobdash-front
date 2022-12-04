@@ -86,3 +86,25 @@ export const getApplicationInfo = ({ applicationId, setApplicationInfo }) => {
       console.log(error);
     });
 };
+
+export const getStatusOptions = ({ setStatusOptions }) => {
+  axios
+    .get(
+      `${process.env.REACT_APP_API_URL}/api/applications/get_status_options/`,
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("atoken"),
+        },
+      }
+    )
+    .then((response) => {
+      console.log(response.data);
+      setStatusOptions(response.data);
+    })
+    .catch((error) => {
+      console.log(error);
+      if (error.response) {
+        console.log(error);
+      }
+    });
+};
