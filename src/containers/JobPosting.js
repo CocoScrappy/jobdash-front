@@ -13,8 +13,10 @@ import { Formik, Field, Form } from "formik";
 export const JobPosting = () => {
   var uRole = useStore((state) => state.role);
   const [jobpostings, setJobpostings] = useState([]);
-  const [token, setToken] = useState("");
-  const [me, setMe] = useState({});
+  const [postCount, setPostCount] = useState(0);
+  const [offset, setOffset] = useState(0);
+  const [limit, setLimit] = useState(5);
+  const [pages, setPages] = useState([]);
   const [toggleState, setToggleState] = useState(false);
 
   const [showAdd, setShowAdd] = useState(false);
@@ -23,12 +25,28 @@ export const JobPosting = () => {
     setShowAdd(false);
   };
 
+  const handlePages = () => {
+    //Calculate the number of page objects needed
+    let leftOver = postCount % limit;
+    let extraPage = 0;
+    if (leftOver) extraPage = 1;
+    let totalPages = postCount / limit + extraPage;
+
+    //Create each page button object to be mapped
+    let pageArray = [];
+    for (let i = 1; i <= totalPages; i++) {
+      pageArray.push({ page: i, offset: limit * (i - 1) });
+      console.log(`pageArray[${i - 1}].offset = ${pageArray[i - 1].offset}`);
+    }
+    setPages(pageArray);
+  };
+
   useEffect(() => {
     // if (uRole === "employer") {
     //FIXME: add filtered route here
     axios
       .get(
-        `${process.env.REACT_APP_API_URL}/api/postings/get_user_postings/?limit=5&offset=5`,
+        `${process.env.REACT_APP_API_URL}/api/postings/get_user_postings/?limit=${limit}&offset=${offset}`,
         {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("atoken"),
@@ -36,7 +54,9 @@ export const JobPosting = () => {
         }
       ) //FIXME : trailing / ?
       .then((res) => {
-        setJobpostings(res.data);
+        setJobpostings(res.data.results);
+        setPostCount(res.data.count);
+        handlePages();
       })
       .catch(() => {
         alert("Something went wrong fetching the list of job postings.");
@@ -51,7 +71,7 @@ export const JobPosting = () => {
     //       alert("Something went wrong fetching the list of job postings.");
     //     });
     // }
-  }, [toggleState]);
+  }, [toggleState, offset]);
 
   const searchJobs = (data) => {
     const searchString = data.search;
@@ -62,7 +82,8 @@ export const JobPosting = () => {
 
     axios
       .get(
-        `${process.env.REACT_APP_API_URL}/api/postings/search/${searchString}`, {
+        `${process.env.REACT_APP_API_URL}/api/postings/search/${searchString}`,
+        {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("atoken"),
           },
@@ -78,6 +99,25 @@ export const JobPosting = () => {
       .catch((err) => {
         console.log(err);
       });
+  };
+
+  const renderPagination = (p) => {
+    return (
+      <li
+        key={p.page}
+        style={{
+          cursor: "pointer",
+          listStyle: "none",
+          marginRight: 1,
+          marginLeft: 1,
+        }}
+        onClick={() => {
+          setOffset(p.offset);
+        }}
+      >
+        {p.page}
+      </li>
+    );
   };
 
   return (
@@ -128,6 +168,40 @@ export const JobPosting = () => {
           jobpostings={jobpostings}
           setJobpostings={setJobpostings}
         />
+        <ul
+          style={{
+            display: "inline-flex",
+          }}
+        >
+          {offset > 0 && (
+            <li
+              style={{
+                cursor: "pointer",
+                listStyle: "none",
+              }}
+              onClick={() => {
+                setOffset(offset - limit);
+              }}
+            >
+              Previous
+            </li>
+          )}
+          {pages.map(renderPagination)}
+
+          {offset < postCount - limit && (
+            <li
+              style={{
+                cursor: "pointer",
+                listStyle: "none",
+              }}
+              onClick={() => {
+                setOffset(offset + limit);
+              }}
+            >
+              Next
+            </li>
+          )}
+        </ul>
       </Container>
     </Layout>
   );
