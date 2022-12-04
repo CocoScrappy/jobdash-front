@@ -44,7 +44,10 @@ export const updateFavoritedStatus = ({
 /**
  * A function that gets the job applications of the currently loggedin user
  */
-export const fetchUserApplications = ({ setJobApplications }) => {
+export const fetchUserApplications = ({
+  setJobApplications,
+  setPaginationLinks,
+}) => {
   axios
     .get(
       `${process.env.REACT_APP_API_URL}/api/applications/get_user_applications/`,
@@ -57,6 +60,11 @@ export const fetchUserApplications = ({ setJobApplications }) => {
     .then((response) => {
       console.log(response);
       setJobApplications(response.data.results);
+      setPaginationLinks({
+        count: response.data.count,
+        next: response.data.next,
+        previous: response.data.previous,
+      });
     })
     .catch((error) => {
       if (error.response.data && error.response.status === 404) {
