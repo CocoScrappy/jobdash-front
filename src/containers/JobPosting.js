@@ -9,6 +9,7 @@ import axios from "axios";
 import Layout from "../layouts/MainLayout";
 import useStore from "store";
 import { Formik, Field, Form } from "formik";
+import { set } from "date-fns";
 
 export const JobPosting = () => {
   var uRole = useStore((state) => state.role);
@@ -16,6 +17,13 @@ export const JobPosting = () => {
   const [postCount, setPostCount] = useState(0);
   const [offset, setOffset] = useState(0);
   const [limit, setLimit] = useState(5);
+  const [limitRanges, setLimitRanges] = useState([
+    { value: 5 },
+    { value: 15 },
+    { value: 30 },
+    { value: 50 },
+    { value: 100 },
+  ]);
   const [pages, setPages] = useState([]);
   const [toggleState, setToggleState] = useState(false);
 
@@ -71,7 +79,7 @@ export const JobPosting = () => {
     //       alert("Something went wrong fetching the list of job postings.");
     //     });
     // }
-  }, [toggleState, offset]);
+  }, [toggleState, offset, limit]);
 
   const searchJobs = (data) => {
     const searchString = data.search;
@@ -186,6 +194,7 @@ export const JobPosting = () => {
               Previous
             </li>
           )}
+          <p> Page: </p>
           {pages.map(renderPagination)}
 
           {offset < postCount - limit && (
@@ -201,6 +210,35 @@ export const JobPosting = () => {
               Next
             </li>
           )}
+        </ul>
+        <br />
+        <ul
+          style={{
+            display: "inline-flex",
+          }}
+        >
+          Limit:
+          {limitRanges.map((l) => {
+            return (
+              <li
+                key={l.value}
+                style={{
+                  cursor: "pointer",
+                  listStyle: "none",
+                  marginRight: 1,
+                  marginLeft: 1,
+                }}
+                onClick={() => {
+                  setLimit(l.value);
+                  if (postCount < l.value) {
+                    setOffset(0);
+                  }
+                }}
+              >
+                {l.value}
+              </li>
+            );
+          })}
         </ul>
       </Container>
     </Layout>
