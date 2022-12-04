@@ -8,6 +8,7 @@ import {
   updateFavoritedStatus,
   getApplicationInfo,
   getStatusOptions,
+  updateApplicationStatus,
 } from "../helpers/Utils";
 import Heart from "react-heart";
 import Select from "react-select";
@@ -74,33 +75,33 @@ function JobApplicationDetails(props) {
       });
   };
 
-  const updateStatus = (updatedStatus) => {
-    axios
-      .patch(
-        `${process.env.REACT_APP_API_URL}/api/applications/${applicationInfo.id}/`,
-        { status: updatedStatus },
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("atoken"),
-          },
-        }
-      )
-      .then((response) => {
-        setStatusMsg("Application status updated");
-        console.log(response.data);
-        setApplicationInfo({
-          ...applicationInfo,
-          status: updatedStatus,
-        });
-        // console.log(applicationInfo.favorited);
-      })
-      .catch((error) => {
-        console.log(error);
-        if (error.response) {
-          console.log(error);
-        }
-      });
-  };
+  // const updateApplicationStatus = ({ updatedStatus, applicationId }) => {
+  //   axios
+  //     .patch(
+  //       `${process.env.REACT_APP_API_URL}/api/applications/${applicationId}/`,
+  //       { status: updatedStatus },
+  //       {
+  //         headers: {
+  //           Authorization: "Bearer " + localStorage.getItem("atoken"),
+  //         },
+  //       }
+  //     )
+  //     .then((response) => {
+  //       setStatusMsg("Application status updated");
+  //       console.log(response.data);
+  //       setApplicationInfo({
+  //         ...applicationInfo,
+  //         status: updatedStatus,
+  //       });
+  //       // console.log(applicationInfo.favorited);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       if (error.response) {
+  //         console.log(error);
+  //       }
+  //     });
+  // };
 
   if (applicationInfo === undefined) {
     return null;
@@ -156,7 +157,15 @@ function JobApplicationDetails(props) {
                 })
               ]
             }
-            onChange={(e) => updateStatus(e.value)}
+            onChange={(e) =>
+              updateApplicationStatus({
+                updatedStatus: e.value,
+                applicationId,
+                setApplicationInfo,
+                setStatusMsg,
+                applicationInfo,
+              })
+            }
           />
         </div>
         <p className="col-6 text-success">{statusMsg}</p>

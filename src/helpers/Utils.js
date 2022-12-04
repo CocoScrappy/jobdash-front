@@ -87,6 +87,10 @@ export const getApplicationInfo = ({ applicationId, setApplicationInfo }) => {
     });
 };
 
+/**
+ * get application status and set state in current page
+ * @param {*} param0
+ */
 export const getStatusOptions = ({ setStatusOptions }) => {
   axios
     .get(
@@ -100,6 +104,41 @@ export const getStatusOptions = ({ setStatusOptions }) => {
     .then((response) => {
       console.log(response.data);
       setStatusOptions(response.data);
+    })
+    .catch((error) => {
+      console.log(error);
+      if (error.response) {
+        console.log(error);
+      }
+    });
+};
+
+export const updateApplicationStatus = ({
+  updatedStatus,
+  applicationId,
+  setApplicationInfo,
+  setStatusMsg,
+  applicationInfo,
+}) => {
+  console.log(updatedStatus);
+  axios
+    .patch(
+      `${process.env.REACT_APP_API_URL}/api/applications/${applicationId}/`,
+      { status: updatedStatus },
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("atoken"),
+        },
+      }
+    )
+    .then((response) => {
+      setStatusMsg(`Application status updated to: ${updatedStatus}`);
+      console.log(response.data);
+      setApplicationInfo({
+        ...applicationInfo,
+        status: updatedStatus,
+      });
+      // console.log(applicationInfo.favorited);
     })
     .catch((error) => {
       console.log(error);
