@@ -1,88 +1,74 @@
 import React, { useState, useEffect, useRef } from "react";
-import ListGroup from "react-bootstrap/ListGroup";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { BsCursor } from "react-icons/bs";
 import JobApplicationItem from "./JobApplicationItem";
+import { fetchUserApplications } from "../../helpers/Utils";
+import { Formik, Field, Form } from "formik";
+import axios from "axios";
 
 function JobApplicationList(props) {
-  const navigate = useNavigate();
-
   const [jobApplications, setJobApplications] = useState([]);
+  const [toggleState, setToggleState] = useState(false);
+  const [searchMsg, setSearchMsg] = useState("");
+  const [searchMsgStyle, setSearchMsgStyle] = useState("");
 
-  const [isLiked, setIsLiked] = useState(false);
-  const likeBtn = useRef(null);
+  useEffect(() => fetchUserApplications({ setJobApplications }), [toggleState]);
 
-  const fetchUserApplications = () => {
+  const searchApplications = (data) => {
+    setSearchMsg("");
+    setSearchMsgStyle("");
+    // const searchString = data.search;
+    if (data.searchString === "") {
+      setToggleState((t) => !t);
+      return;
+    }
     axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/api/applications/get_user_applications/`,
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("atoken"),
-          },
-        }
-      )
-      .then((response) => {
-        console.log(response);
-        setJobApplications(response.data.results);
+      .post(`${process.env.REACT_APP_API_URL}/api/applications/search/`, data, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("atoken"),
+        },
       })
-      .catch((error) => {
-        if (error.response.data && error.response.status === 404) {
-          setJobApplications(error.response.data.data);
-        }
-        console.log(error);
+      .then((res) => {
+        console.log(res.data);
+        setJobApplications(res.data);
+        setSearchMsg(res.data.length + " results found");
+        setSearchMsgStyle("text-success");
+      })
+      .catch((err) => {
+        console.log(err);
+        setSearchMsg(err.response.data.message);
+        setSearchMsgStyle("text-danger");
+        setJobApplications(err.response.data.data);
       });
   };
 
-  useEffect(fetchUserApplications, []);
-
-  // function heanle like button click
-  function handleClick(appId) {
-    setIsLiked(!isLiked);
-  }
-
-  // const renderListGroupItem = (application) => {
-  //   // change date format
-  //   var ISODate = new Date(application.application_date);
-  //   var shortDate = ISODate.toLocaleDateString();
-
-  //   function redirectToInfoPage() {
-  //     navigate(`/jobapplications/application/${application.id}`, {
-  //       application: application,
-  //     });
-  //   }
-
-  //   // const [applicationInfo, setApplicationInfo] = useState(application);
-
-  //   return (
-  //     <tr key={application.id}>
-  //       <td onClick={() => redirectToInfoPage()}>
-  //         {application.job_posting.title}
-  //       </td>
-  //       <td onClick={() => redirectToInfoPage()}>
-  //         {application.job_posting.company}
-  //       </td>
-  //       <td onClick={() => redirectToInfoPage()}>
-  //         {application.job_posting.remote_option}
-  //       </td>
-  //       <td onClick={() => redirectToInfoPage()}>{shortDate}</td>
-  //       <td onClick={() => redirectToInfoPage()}>{application.status}</td>
-  //       <td style={{ width: "1.5rem" }}>
-  //         <Heart
-  //           style={{ cursor: "default" }}
-  //           ref={likeBtn}
-  //           key={application.id}
-  //           isActive={application.favorited}
-  //           onClick={() => setIsLiked(application.id)}
-  //         />
-  //       </td>
-  //     </tr>
-  //   );
-  // };
+  const resetSearch = () => {
+    setSearchMsg("");
+    setToggleState((t) => !t);
+  };
 
   return (
     <>
+      <h3>Search by Keyword</h3>
+      <Formik
+        initialValues={{ searchString: "" }}
+        onSubmit={searchApplications}
+      >
+        <Form>
+          <label htmlFor="searchString">Search</label>
+          <Field
+            id="searchString"
+            name="searchString"
+            placeholder="Search Applications..."
+            className="mx-3"
+          />
+          <button type="submit" className="mx-3">
+            Search
+          </button>
+          <button className="me-2" type="reset" onClick={() => resetSearch()}>
+            Reset
+          </button>
+          <span className={searchMsgStyle}>{searchMsg}</span>
+        </Form>
+      </Formik>
       <table className="table table-striped">
         <thead>
           <tr>

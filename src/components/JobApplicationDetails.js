@@ -4,8 +4,15 @@ import { format, parseISO } from "date-fns";
 import MyEditor from "./MyEditor";
 import { Button, Form } from "react-bootstrap";
 import PreviewModal from "./PreviewModal";
-import { updateFavoritedStatus } from "../helpers/Utils";
+import {
+  updateFavoritedStatus,
+  getApplicationInfo,
+  getStatusOptions,
+  updateApplicationStatus,
+  updateApplicationNotes,
+} from "../helpers/Utils";
 import Heart from "react-heart";
+import Select from "react-select";
 
 function JobApplicationDetails(props) {
   const applicationId = props.applicationId;
@@ -14,34 +21,15 @@ function JobApplicationDetails(props) {
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState("");
   const [notesMsg, setNotesMsg] = useState("");
-  const [notesMsgStyle, setNotesMsgStyle] = useState("");
+  // const [notesMsgStyle, setNotesMsgStyle] = useState("");
+  const [statusOptions, setStatusOptions] = useState([]);
+  const [statusMsg, setStatusMsg] = useState("");
 
   const [convertedContent, setConvertedContent] = useState("");
 
-  const getApplicationInfo = (applicationId) => {
-    axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/api/applications/${applicationId}/details/`,
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("atoken"),
-          },
-        }
-      )
-      .then((response) => {
-        console.log(response);
-        setApplicationInfo(response.data);
-      })
-      .catch((error) => {
-        if (error.response.data && error.response.status === 404) {
-          setApplicationInfo(error.response.data.data);
-        }
-        console.log(error);
-      });
-  };
-
   useEffect(() => {
-    getApplicationInfo(applicationId);
+    getApplicationInfo({ applicationId, setApplicationInfo });
+    getStatusOptions({ setStatusOptions });
   }, []);
 
   const previewJobDescription = () => {
@@ -52,70 +40,6 @@ function JobApplicationDetails(props) {
   const previewNotes = () => {
     setModalContent(convertedContent);
     setShowModal(true);
-  };
-
-  // const updateFavoritedStatus = (event) => {
-  //   const updatedStatus = !applicationInfo.favorited;
-  //   // console.log(updatedStatus);
-  //   axios
-  //     .patch(
-  //       `${process.env.REACT_APP_API_URL}/api/applications/${applicationInfo.id}/`,
-  //       { favorited: updatedStatus },
-  //       {
-  //         headers: {
-  //           Authorization: "Bearer " + localStorage.getItem("atoken"),
-  //         },
-  //       }
-  //     )
-  //     .then((response) => {
-  //       console.log("favorited status updated");
-  //       console.log(response.data);
-  //       setApplicationInfo({
-  //         ...applicationInfo,
-  //         favorited: response.data.favorited,
-  //       });
-  //       // console.log(applicationInfo.favorited);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //       if (error.response) {
-  //         console.log(error);
-  //       }
-  //     });
-  // };
-
-  const updateNotes = () => {
-    // console.log(updatedStatus);
-    axios
-      .patch(
-        `${process.env.REACT_APP_API_URL}/api/applications/${applicationInfo.id}/`,
-        { notes: convertedContent },
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("atoken"),
-          },
-        }
-      )
-      .then((response) => {
-        console.log("Notes updated successfully");
-        console.log(response.data);
-        setApplicationInfo({
-          ...applicationInfo,
-          notes: response.data.notes,
-        });
-        setNotesMsg(
-          "Notes successfully updated on " +
-            format(new Date(), "MMM dd yyyy h:mmaa")
-        );
-        setNotesMsgStyle("text-success");
-        // console.log(applicationInfo.favorited);
-      })
-      .catch((error) => {
-        console.log(error);
-        if (error.response) {
-          console.log(error);
-        }
-      });
   };
 
   if (applicationInfo === undefined) {
@@ -144,7 +68,11 @@ function JobApplicationDetails(props) {
               updateFavoritedStatus({ applicationInfo, setApplicationInfo })
             }
           />
-          <Button variant="primary" onClick={() => previewJobDescription()}>
+          <Button
+            className="my-3"
+            variant="primary"
+            onClick={() => previewJobDescription()}
+          >
             Job Description
           </Button>
         </div>
@@ -156,6 +84,31 @@ function JobApplicationDetails(props) {
           "MMM dd yyyy h:mmaa"
         )}
       </p>
+      <div className="row">
+        <p className="col-2">Status</p>
+        <div className="col-4" style={{ "z-index": "100" }}>
+          <Select
+            options={statusOptions}
+            defaultValue={
+              statusOptions[
+                statusOptions.findIndex(function (option) {
+                  return option.value == applicationInfo.status;
+                })
+              ]
+            }
+            onChange={(e) =>
+              updateApplicationStatus({
+                updatedStatus: e.value,
+                applicationId,
+                setApplicationInfo,
+                setStatusMsg,
+                applicationInfo,
+              })
+            }
+          />
+        </div>
+        <p className="col-6 text-success">{statusMsg}</p>
+      </div>
       <br></br>
       <h5>
         Notes{" "}
@@ -171,12 +124,20 @@ function JobApplicationDetails(props) {
           variant="primary"
           size="sm"
           className="mx-2"
-          onClick={() => updateNotes()}
+          onClick={() =>
+            updateApplicationNotes({
+              applicationId,
+              convertedContent,
+              applicationInfo,
+              setApplicationInfo,
+              setNotesMsg,
+            })
+          }
         >
           Save
         </Button>
       </h5>
-      <span className={notesMsgStyle}>{notesMsg}</span>
+      <span className="text-success">{notesMsg}</span>
       <MyEditor
         content={applicationInfo.notes}
         setConvertedContent={setConvertedContent}
