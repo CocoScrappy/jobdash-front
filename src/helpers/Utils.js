@@ -60,3 +60,29 @@ export const fetchUserApplications = ({ setJobApplications }) => {
       console.log(error);
     });
 };
+
+/**
+ * A function that gets applicationInfo (by ID) and set the applicationInfo State of the current page
+ * @param {*} param0
+ */
+export const getApplicationInfo = ({ applicationId, setApplicationInfo }) => {
+  axios
+    .get(
+      `${process.env.REACT_APP_API_URL}/api/applications/${applicationId}/details/`,
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("atoken"),
+        },
+      }
+    )
+    .then((response) => {
+      console.log(response);
+      setApplicationInfo(response.data);
+    })
+    .catch((error) => {
+      if (error.response.data && error.response.status === 404) {
+        setApplicationInfo(error.response.data.data);
+      }
+      console.log(error);
+    });
+};
