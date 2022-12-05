@@ -18,6 +18,7 @@ function JobApplicationForm({ posting }) {
   const [success, setSuccess] = useState(false);
   const [convertedNoteContent, setConvertedNoteContent] = useState("");
   const [cv, setCv] = useState({});
+  const [modalShow, setModalShow] = useState(false);
 
   //handling form inputs
   const [formData, setFormData] = useState({});
@@ -137,6 +138,10 @@ function JobApplicationForm({ posting }) {
           </Button>
           </Form>
       </Container>
+      <MyVerticallyCenteredModal
+        show={modalShow}
+        onHide={() => setModalShow(false)}
+      />
     </Layout>
   );
 }
