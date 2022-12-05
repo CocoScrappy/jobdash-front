@@ -3,7 +3,7 @@ import Layout from "layouts/MainLayout";
 import { Button, InputGroup, Container } from "react-bootstrap";
 import Heart from "react-heart";
 import MyCVPage from "containers/MyCVPage";
-
+import { Modal } from "react-bootstrap";
 import useStore from "store";
 import axios from "axios";
 import { Form } from "react-bootstrap";
@@ -60,6 +60,33 @@ function JobApplicationForm({ posting }) {
 
     setSuccess(true);
   };
+
+  function MyVerticallyCenteredModal(props) {
+    return (
+      <Modal
+        {...props}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Info
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <h4>Good Luck!</h4>
+          <p>
+            Job application record created successfully!
+          </p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={props.onHide}>Close</Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  }
+
 
   return (
     <Layout title="JobApplicationForm" content="JobApplicationForm">
