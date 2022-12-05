@@ -1,21 +1,33 @@
+//React imports
 import { useState, useEffect } from "react";
 import Container from "react-bootstrap/Container";
-import JobpostingList from "../components/JobpostingList";
-import JobpostingForm from "../components/JobpostingForm";
+import ProgressBar from "react-bootstrap/ProgressBar";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import { MdEdit } from "react-icons/md";
-import axios from "axios";
+// import Alert from "react-bootstrap/Alert";
+
+//custom imports
 import Layout from "../layouts/MainLayout";
-import useStore from "store";
+import JobpostingList from "../components/JobpostingList";
+import JobpostingForm from "../components/JobpostingForm";
+import FlashAlert from "components/FlashAlert";
+
+//other dependancies
 import { Formik, Field, Form } from "formik";
+import axios from "axios";
+import useStore from "store";
+
+//unused?
 import { set } from "date-fns";
-import ProgressBar from 'react-bootstrap/ProgressBar';
 
 export const JobPosting = () => {
+  //user
   var uRole = useStore((state) => state.role);
   const uId = useStore((state) => state.id);
+  //job posting list
   const [jobpostings, setJobpostings] = useState([]);
+  //pagination
+  const [pages, setPages] = useState([]);
   const [postCount, setPostCount] = useState(0);
   const [offset, setOffset] = useState(0);
   const [limit, setLimit] = useState(5);
@@ -26,13 +38,17 @@ export const JobPosting = () => {
     { value: 50 },
     { value: 100 },
   ]);
-  const [pages, setPages] = useState([]);
+  //search
   const [toggleState, setToggleState] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [percent, setPercent] = useState(0);
 
+  //add posting modal
   const [showAdd, setShowAdd] = useState(false);
 
-  const[loading,setLoading]=useState(false);
-  const[percent,setPercent]=useState(0);
+  //alerts
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMsg, setAlertMsg] = useState(false);
 
   const handleCloseAdd = () => {
     setShowAdd(false);
@@ -53,10 +69,8 @@ export const JobPosting = () => {
     }
     setPages(pageArray);
   };
-
+  //fetch job posting list and render page
   useEffect(() => {
-    // if (uRole === "employer") {
-    //FIXME: add filtered route here
     axios
       .get(
         `${process.env.REACT_APP_API_URL}/api/postings/get_user_postings/?limit=${limit}&offset=${offset}`,
@@ -65,26 +79,19 @@ export const JobPosting = () => {
             Authorization: "Bearer " + localStorage.getItem("atoken"),
           },
         }
-      ) //FIXME : trailing / ?
+      )
       .then((res) => {
-        console.log(JSON.stringify(res.data.results))
+        console.log(JSON.stringify(res.data.results));
         setJobpostings(res.data.results);
         setPostCount(res.data.count);
         handlePages();
       })
-      .catch(() => {
-        alert("Something went wrong fetching the list of job postings.");
+      .catch((error) => {
+        if (error.response.status != 404) {
+          setShowAlert(true);
+          setAlertMsg("Could not retrieve job posting from database.");
+        }
       });
-    // } else {
-    //   axios
-    //     .get(`${process.env.REACT_APP_API_URL}/api/postings/default`) //FIXME : trailing / ?
-    //     .then((res) => {
-    //       setJobpostings(res.data);
-    //     })
-    //     .catch(() => {
-    //       alert("Something went wrong fetching the list of job postings.");
-    //     });
-    // }
   }, [toggleState, offset, limit]);
 
   const searchJobs = (data) => {
@@ -92,47 +99,47 @@ export const JobPosting = () => {
     const searchLocation = data.location;
     const searchEngine = data.searchEngineSelect;
 
-    if(searchEngine==="monster")
-    {
+    if (searchEngine === "monster") {
       const message = {
-        searchTerm:searchString,
-        searchLocation:searchLocation
-      }
+        searchTerm: searchString,
+        searchLocation: searchLocation,
+      };
       setJobpostings([]);
-      const socket = new WebSocket(`${process.env.REACT_APP_API_URL_WS}/ws/search/userId/${uId}/`);
-      socket.onopen = function(e){
+      const socket = new WebSocket(
+        `${process.env.REACT_APP_API_URL_WS}/ws/search/userId/${uId}/`
+      );
+      socket.onopen = function (e) {
         console.log("connection established");
-        socket.send(JSON.stringify(message))
-      }
+        socket.send(JSON.stringify(message));
+      };
 
-      socket.onmessage=function(event){
-        var res=JSON.parse(event.data);
+      socket.onmessage = function (event) {
+        var res = JSON.parse(event.data);
         // console.log("event occured, data is ="+res.message)
-        if(res.message==="Beginning search"){
+        if (res.message === "Beginning search") {
           console.log("Recognized Begin Search");
           setLoading(true);
         }
-        if(res.percent!==undefined){
+        if (res.percent !== undefined) {
           setPercent(res.percent);
           console.log("Recognized Begin Percentage");
         }
 
-        if(res.payload!==undefined){
+        if (res.payload !== undefined) {
           setLoading(false);
-          console.log(res.payload)
-          setJobpostings(JSON.parse(res.payload)) //res
-          setPercent(0)
+          console.log(res.payload);
+          setJobpostings(JSON.parse(res.payload)); //res
+          setPercent(0);
         }
-      }
+      };
 
-      socket.onclose = function (event){
-        if(event.wasClean){
+      socket.onclose = function (event) {
+        if (event.wasClean) {
           console.log("Clean Exit");
+        } else {
+          console.log("Connection died");
         }
-        else{
-          console.log("Connection died")
-        }
-      }
+      };
       return;
     }
 
@@ -151,7 +158,7 @@ export const JobPosting = () => {
         }
       )
       .then((res) => {
-        console.log("Result")
+        console.log("Result");
         console.log(res.data);
         const result = [];
         //res.data.results.forEach((match) => result.push(match.fields));
@@ -190,13 +197,21 @@ export const JobPosting = () => {
       content="job offers application postings"
     >
       <Container>
+        {showAlert && <FlashAlert setShowAlert={setShowAlert} msg={alertMsg} />}
         <h2>Job Postings</h2>
         <h3>Search by Keyword</h3>
-        <Formik initialValues={{ search: "",location:"" }} onSubmit={searchJobs}>
+        <Formik
+          initialValues={{ search: "", location: "" }}
+          onSubmit={searchJobs}
+        >
           <Form>
             <Field id="search" name="search" placeholder="Search Jobs..." />
             &nbsp;
-            <Field id="location" name="location" placeholder="Job Location..." />
+            <Field
+              id="location"
+              name="location"
+              placeholder="Job Location..."
+            />
             &nbsp;
             <Field
               as="select"
@@ -223,9 +238,7 @@ export const JobPosting = () => {
           <strong>Add job posting</strong>
         </div>
 
-        {loading===true &&
-          <ProgressBar animated now={percent} />
-        }
+        {loading === true && <ProgressBar animated now={percent} />}
 
         <Modal show={showAdd} onHide={handleCloseAdd}>
           <Modal.Header closeButton>
