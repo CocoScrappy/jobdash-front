@@ -1,126 +1,187 @@
-import React, {useState, useEffect, useRef} from 'react'
-import ListGroup from "react-bootstrap/ListGroup";
-import axios from "axios"
-import { Navigate, useNavigate } from 'react-router-dom';
-import Heart from "react-heart";
-import { Button } from "react-bootstrap";
+import React, { useState, useEffect, useRef } from "react";
+import JobApplicationItem from "./JobApplicationItem";
+import {
+  fetchUserApplications,
+  paginationNavigator,
+  jumpToPaginationItem,
+  searchList,
+} from "../../helpers/Utils";
+import { Formik, Field, Form } from "formik";
+import axios from "axios";
+import { set } from "date-fns";
 
 function JobApplicationList(props) {
-
-  const navigate = useNavigate()
-
   const [jobApplications, setJobApplications] = useState([]);
+  const [toggleState, setToggleState] = useState(false);
+  const [searchMsg, setSearchMsg] = useState("");
+  const [searchMsgStyle, setSearchMsgStyle] = useState("");
+  const [paginationLinks, setPaginationLinks] = useState({
+    count: 0,
+    next: null,
+    previous: null,
+  });
 
-  const [isLiked, setIsLiked] = useState(false);
-  const likeBtn = useRef(null);
+  useEffect(
+    () => fetchUserApplications({ setJobApplications, setPaginationLinks }),
+    [toggleState]
+  );
 
-  const fetchUserApplications = () => {
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/api/applications/get_user_applications/`, {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("atoken"),
-        },
-      })
-      .then((response) => {
-        console.log(response);
-        setJobApplications(response.data);
-      })
-      .catch((error) => {
-        if(error.response.data && error.response.status === 404)
-        {
-          setJobApplications(error.response.data.data);
-        }
-        console.log(error);
-      });
+  const jumpToApplication = (data) => {
+    const applicationNumber = data.applicationNumber - 1;
+    jumpToPaginationItem({
+      apiBaseUrl: "api/applications/get_user_applications",
+      itemNumber: applicationNumber,
+      dataSetter: setJobApplications,
+      paginationLinksSetter: setPaginationLinks,
+    });
   };
 
-  useEffect(fetchUserApplications, []);
+  const searchApplications = (data) => {
+    setSearchMsg("");
+    setSearchMsgStyle("");
+    // const searchString = data.search;
+    if (data.searchString === "") {
+      setToggleState((t) => !t);
+      return;
+    }
+    searchList({
+      apiBaseUrl: "api/applications/search",
+      data: data,
+      dataSetter: setJobApplications,
+      responseMsgSetter: setSearchMsg,
+      responseMsgStyleSetter: setSearchMsgStyle,
+    });
+  };
 
-  const renderListGroupItem = (application) => {
-
-    // change date format
-    var ISODate = new Date(application.application_date);
-    var shortDate = ISODate.toLocaleDateString();
-
-
-    return (
-      <ListGroup.Item
-        key={application.id}
-        className="d-flex justify-content-between align-items-center"
-        onClick={() => navigate(`/jobapplications/application/${application.id}`, {application: application})}
-      >
-
-        <div className="d-flex justify-content-center">
-          {application.job_posting.title}
-        </div>
-        <div className="d-flex justify-content-center">
-          {application.job_posting.company}
-        </div>
-        <div className="d-flex justify-content-center">
-          {application.job_posting.remote_option}
-        </div>
-        <div className="d-flex justify-content-center">
-          {shortDate}
-        </div>
-        <div className="d-flex justify-content-center">
-          {application.status}
-        </div>
-        <div style={{ width: "1.5rem" }} >
-            <Heart style={{ cursor: "default" }} ref={likeBtn} key={application.id} isActive={application.favorited} onClick={() => setIsLiked(!isLiked)}  />
-        </div>
-        {/* <div className="d-flex justify-content-center">
-          {"" + application.favorited}
-        </div> */}
-      </ListGroup.Item>
-    );
-  }
-
-    // function heanle like button click
-  function handleLikeClick() {
-    setIsLiked(!isLiked);
-  }
-
+  const resetSearch = () => {
+    setSearchMsg("");
+    setToggleState((t) => !t);
+  };
 
   return (
     <>
-      <div>
-      <Button variant="secondary" onClick={() => {
-        navigate("/externaljobapplicationform") }} >
-              + Application
-            </Button>
+      <h2>Job Applications ({paginationLinks.count})</h2>
+      <hr />
+      <h3>Search by Keyword</h3>
+      <Formik
+        initialValues={{ searchString: "" }}
+        onSubmit={searchApplications}
+      >
+        <Form>
+          <label htmlFor="searchString">Search</label>
+          <Field
+            id="searchString"
+            name="searchString"
+            placeholder="Search Applications..."
+            className="mx-3"
+          />
+          <button type="submit" className="mx-3">
+            Search
+          </button>
+          <button className="me-2" type="reset" onClick={() => resetSearch()}>
+            Reset
+          </button>
+          <span className={searchMsgStyle}>{searchMsg}</span>
+        </Form>
+      </Formik>
+      <div className="row my-3">
+        <nav aria-label="Page navigation" className="col-4">
+          <ul className="pagination">
+            <li
+              className={
+                paginationLinks.previous === null
+                  ? "page-item disabled"
+                  : "page-item"
+              }
+            >
+              <a
+                className="page-link"
+                onClick={() =>
+                  paginationNavigator({
+                    url: paginationLinks.previous,
+                    dataSetter: setJobApplications,
+                    paginationLinksSetter: setPaginationLinks,
+                  })
+                }
+              >
+                Previous
+              </a>
+            </li>
+            <li
+              className={
+                paginationLinks.next === null
+                  ? "page-item disabled"
+                  : "page-item"
+              }
+            >
+              <a
+                className="page-link"
+                onClick={() =>
+                  paginationNavigator({
+                    url: paginationLinks.next,
+                    dataSetter: setJobApplications,
+                    paginationLinksSetter: setPaginationLinks,
+                  })
+                }
+              >
+                Next
+              </a>
+            </li>
+          </ul>
+        </nav>
+        <div className="col">
+          <Formik
+            initialValues={{ applicationNumber: 1 }}
+            onSubmit={jumpToApplication}
+          >
+            <Form>
+              <label htmlFor="applicationNumber">Jump to application</label>
+              <Field
+                id="applicationNumber"
+                name="applicationNumber"
+                type="number"
+                max={paginationLinks.count}
+                min="1"
+                // placeholder="jump to Application..."
+                className="mx-3"
+              />
+              <button type="submit" className="mx-3">
+                Jump
+              </button>
+              <button
+                className="me-2"
+                type="reset"
+                onClick={() => resetSearch()}
+              >
+                Reset
+              </button>
+              {/* <span className={searchMsgStyle}>{searchMsg}</span> */}
+            </Form>
+          </Formik>
+        </div>
       </div>
-
-      <ListGroup>
-        <ListGroup.Item
-          className="d-flex justify-content-between align-items-center"
-        >
-          <div className="d-flex justify-content-center">
-            <h4>Title</h4>
-          </div>
-          <div className="d-flex justify-content-center">
-            <h4>Company</h4>
-          </div>
-          <div className="d-flex justify-content-center">
-            <h4>Remote Option</h4>
-          </div>
-          <div className="d-flex justify-content-center">
-            <h4>Date Applied</h4>
-          </div>
-          <div className="d-flex justify-content-center">
-            <h4>Status</h4>
-          </div>
-          <div className="d-flex justify-content-center">
-            <h4>I Like It!</h4>
-          </div>
-        </ListGroup.Item>
-      </ListGroup>
-      
-      <ListGroup>
-      {
-        jobApplications.map((application) => (renderListGroupItem(application)))
-        }</ListGroup>
+      <table className="table table-striped">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Company</th>
+            <th>Remote Option</th>
+            <th>Date Applied</th>
+            <th>Status</th>
+            <th>Liked</th>
+          </tr>
+        </thead>
+        <tbody>
+          {jobApplications.map((application) => (
+            <JobApplicationItem
+              application={application}
+              key={application.id}
+            />
+          ))}
+        </tbody>
+      </table>
     </>
-  )
+  );
 }
 
-export default JobApplicationList
+export default JobApplicationList;

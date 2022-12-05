@@ -1,7 +1,7 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom'
-import Layout from 'components/Layout'
-import { Button, InputGroup, Form, Container } from 'react-bootstrap'
+import Layout from "../../layouts/MainLayout";
+import { Button, InputGroup, Form, Container } from "react-bootstrap";
 import Modal from 'react-bootstrap/Modal';
 import { FormControl } from 'react-bootstrap'
 import Heart from "react-heart"
@@ -248,4 +248,4 @@ function ExternalJobApplicationForm() {
   )
 }
 
-export default ExternalJobApplicationForm
+export default ExternalJobApplicationForm;
