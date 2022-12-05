@@ -7,8 +7,10 @@
   --color-main: #2622cf;
   --color-main-lighter: #4c48eb;
   --color-text: #1d1d1d;
+  /* --color-gray: #f4f4f4; */
+  --color-gray: #e9f3ff;
+  /* --color-bg: #d9dedc; */
   /* --color-dark: #1f2124;
-  --color-gray: #677;
   --color-bg: #f3f6f9;
   --color-light: #acb4bd;
   --color-lighter: #f9f9f9;
@@ -22,13 +24,13 @@
   padding: 0;
   margin: 0;
   color: var(--color-text);
-  /* background-color: #d6dfdc; */
 }
 
 #root {
   display: grid;
   height: 100vh;
   grid-template-rows: auto 1fr auto;
+  background-color: var(--color-gray);
 }
 
 h1 {
@@ -37,4 +39,19 @@ h1 {
 
 a {
   text-decoration: none;
+}
+
+.main-content {
+  background-color: var(--color-gray);
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 992px) {
+  #root {
+    background-color: white;
+  }
+
+  .main-content {
+    background-color: white;
+  }
 }
