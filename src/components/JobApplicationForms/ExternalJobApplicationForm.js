@@ -16,14 +16,14 @@ import {JobpostingForm} from 'components/JobpostingForm';
 function ExternalJobApplicationForm() {
 
   var uId = useStore((state) => state.id);
-  const [cv,setCv] = useState({});
+  var uCv = useStore((state) => state.cv_id);
   const [convertedDescContent, setConvertedDescContent] = useState("");
   const [convertedNoteContent, setConvertedNoteContent] = useState("");
   const [formData, setFormData] = useState({});
   const [isLiked, setIsLiked] = useState(false);
   const [error, setError] = useState(false);
   const [errors, setErrors] = useState({});
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
   const [modalShow, setModalShow] = useState(false);
   const [modalContent, setModalContent] = useState("");
   const {
@@ -37,21 +37,6 @@ function ExternalJobApplicationForm() {
     remote_option,
   } = formData;
 
-  const getUserCV = async() => {
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/api/cvs/get_user_cvs/`, {
-        headers: { Authorization: "Bearer " + localStorage.getItem("atoken") },
-      })
-      .then((response) => {
-        setCv(response.data);
-      })
-      .catch((error) => {
-        console.log(error.response.data.message);
-        // console.log(UserCVInfo)
-      });
-  };
-
-  useEffect(()=>{getUserCV()}, [uId]);
   
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -73,17 +58,25 @@ function ExternalJobApplicationForm() {
             favorited: isLiked,
             status: "applied",
             applicant: uId,
-            cv: cv.id,
+            cv: uCv,
             job_posting: res.data.id
           }
           axios.post(`${process.env.REACT_APP_API_URL}/api/applications/`, formAppData,{
             headers: { Authorization: "Bearer " + localStorage.getItem("atoken") },
           })
-      })
+          .then((res) => {
+            setModalContent("Application submitted successfully!");
+            setModalShow(true);
+            //navigate('/applications');
+          })
+          .catch((error) => {
+            console.log(error.response.data.message);
+            setModalContent(error.response.data.message);
+            setModalShow(true);
+          });
+        })
       .then((res) => {
         console.log(res.data);
-        setModalShow(true);
-        //navigate("/applications");
       })
       .catch(() => {
         alert("Something wrong with creating job posting record");
@@ -133,7 +126,7 @@ function ExternalJobApplicationForm() {
               placeholder="enter title"
               onChange={handleChange}
               name="title"
-              defaultValue={title||""}
+              defaultValue={title || ""}
             />
             <Form.Control.Feedback type="invalid">
               {errors.title}
@@ -147,7 +140,7 @@ function ExternalJobApplicationForm() {
               placeholder="ex. yourHosting/yourImage.ext"
               onChange={handleChange}
               name="logo_url"
-              defaultValue={logo_url||""}
+              defaultValue={logo_url || ""}
             />
           </InputGroup>
           <Form.Control.Feedback type="invalid">
@@ -161,7 +154,7 @@ function ExternalJobApplicationForm() {
               placeholder="ex. Montreal"
               onChange={handleChange}
               name="location"
-              defaultValue={location||""}
+              defaultValue={location || ""}
             />
           <Form.Control.Feedback type="invalid">
             {errors.location}
@@ -175,7 +168,7 @@ function ExternalJobApplicationForm() {
               placeholder="enter Company Name"
               onChange={handleChange}
               name="company"
-              defaultValue={company||""}
+              defaultValue={company || ""}
             />
             <Form.Control.Feedback type="invalid">
               {errors.company}
@@ -189,7 +182,6 @@ function ExternalJobApplicationForm() {
               aria-label="Default select example"
               onChange={handleChange}
               name="remote_option"
-              value={remote_option||""}
               defaultValue={"#"}
             >
               <option disabled value="#">
@@ -209,8 +201,9 @@ function ExternalJobApplicationForm() {
           <h4>Job Description</h4>
             <MyEditor 
               content={""}
+              name="description"
               setConvertedContent={setConvertedDescContent}
-              defaultValue={description||""}
+              defaultValue={description || ""}
 
             />
           </div>
@@ -223,6 +216,7 @@ function ExternalJobApplicationForm() {
           <h4>Notes</h4>
             <MyEditor
               content={""}
+              name="notes"
               placeholder={"Notes..."}
               setConvertedContent={setConvertedNoteContent}
             />

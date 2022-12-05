@@ -23,7 +23,7 @@ const LoginPage = () => {
   const addULastName = useStore((state) => state.addLastName);
   const addUEmail = useStore((state) => state.addEmail);
   const addURole = useStore((state) => state.addRole);
-
+  const addCVId = useStore((state) => state.addCVId);
   const [errorMsg, setErrorMsg] = useState("");
 
   // const iniUser=useStore(state=>state.addUserInfo);
@@ -61,7 +61,23 @@ const LoginPage = () => {
             addURole(res.data.role);
             navigate("/dashboard");
           });
+      })
+      .then(() => {
+        axios
+      .get(`${process.env.REACT_APP_API_URL}/api/cvs/get_user_cvs/`, {
+        headers: { Authorization: "Bearer " + localStorage.getItem("atoken") },
+      })
+      .then((response) => {
+        if (response.data.id != null) {
+        addCVId(response.data.id);
+        } else {
+          addCVId("");
+        }
+      })
+      .catch((error) => {
+        console.log(error.response.data.message);
       });
+      })
   };
 
   const validationSchema = Yup.object().shape({
