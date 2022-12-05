@@ -100,8 +100,10 @@ export const JobPosting = () => {
       .then((res) => {
         console.log(res.data);
         const result = [];
-        res.data.forEach((match) => result.push(match.fields));
+        res.data.results.forEach((match) => result.push(match.fields));
         setJobpostings(result);
+        setPostCount(res.data.count);
+        handlePages();
         // res.data.foreach(match=>console.log(match.fields));
       })
       .catch((err) => {
