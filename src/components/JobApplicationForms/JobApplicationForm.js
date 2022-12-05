@@ -19,6 +19,7 @@ function JobApplicationForm({ posting }) {
   const [convertedNoteContent, setConvertedNoteContent] = useState("");
   const [cv, setCv] = useState({});
   const [modalShow, setModalShow] = useState(false);
+  const [modalContent, setModalContent] = useState("");
 
   //handling form inputs
   const [formData, setFormData] = useState({});
@@ -52,11 +53,14 @@ function JobApplicationForm({ posting }) {
         applicationData
       )
       .then((res) => {
-        console.log(res);
-        setSuccess(true);
+        setModalContent("Application submitted successfully!");
+        setModalShow(true);
+        //navigate('/applications');
       })
-      .catch(() => {
-        alert("Something went wrong while calling database.");
+      .catch((error) => {
+        console.log(error.response.data.message);
+        setModalContent(error.response.data.message);
+        setModalShow(true);
       });
 
     setSuccess(true);
