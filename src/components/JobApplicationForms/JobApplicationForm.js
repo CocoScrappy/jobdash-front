@@ -8,6 +8,7 @@ import useStore from "store";
 import axios from "axios";
 import { Form } from "react-bootstrap";
 import MyEditor from "components/MyEditor";
+import { useNavigate } from "react-router-dom";
 
 function JobApplicationForm({ posting }) {
   var uCv = useStore((state) => state.cv_id);
@@ -20,6 +21,7 @@ function JobApplicationForm({ posting }) {
   const [cv, setCv] = useState({});
   const [modalShow, setModalShow] = useState(false);
   const [modalContent, setModalContent] = useState("");
+  const navigate = useNavigate();
 
   //handling form inputs
   const [formData, setFormData] = useState({});
@@ -55,7 +57,6 @@ function JobApplicationForm({ posting }) {
       .then((res) => {
         setModalContent("Application submitted successfully!");
         setModalShow(true);
-        //navigate('/applications');
       })
       .catch((error) => {
         console.log(error.response.data.message);
@@ -144,7 +145,7 @@ function JobApplicationForm({ posting }) {
       </Container>
       <MyVerticallyCenteredModal
         show={modalShow}
-        onHide={() => setModalShow(false)}
+        onHide={() => {setModalShow(false); navigate('/jobpostings')}}
       />
     </Layout>
   );
