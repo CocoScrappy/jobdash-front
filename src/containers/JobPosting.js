@@ -202,7 +202,13 @@ export const JobPosting = () => {
       color="var(--color-gray)"
     >
       <GenericPageLayout>
-        {showAlert && <FlashAlert setShowAlert={setShowAlert} msg={alertMsg} />}
+        {showAlert && (
+          <FlashAlert
+            setShowAlert={setShowAlert}
+            msg={alertMsg}
+            variant={"danger"}
+          />
+        )}
         <div className="pb-5">
           <h2>What kind of job are you looking for?</h2>
           {/* <p className="stylized-letters">JD</p> */}
@@ -286,7 +292,7 @@ export const JobPosting = () => {
               Previous
             </li>
           )}
-          <p> Page: </p>
+          {pages.length !== 0 && <p> Page: </p>}
           {pages.map(renderPagination)}
 
           {offset < postCount - limit && (
