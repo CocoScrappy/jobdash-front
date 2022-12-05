@@ -61,6 +61,36 @@ const SavedDateDetails = (props) => {
       });
   };
 
+  const handleDelete = () => {
+    const confirmed = window.confirm("Are you sure you want to delete?");
+    if (confirmed) {
+      deleteDate();
+    }
+  };
+
+  const deleteDate = () => {
+    window.alert("deleted");
+    props.onHide();
+    // axios
+    //   .delete(
+    //     `${process.env.REACT_APP_API_URL}/api/dates/${savedDateInfo.id}/`,
+    //     {
+    //       headers: {
+    //         Authorization: "Bearer " + localStorage.getItem("atoken"),
+    //       },
+    //     }
+    //   )
+    //   .then((response) => {
+    //     window.location.reload(false);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //     if (error.response) {
+    //       console.log(error);
+    //     }
+    //   });
+  };
+
   return (
     <Modal
       size="lg"
@@ -105,6 +135,15 @@ const SavedDateDetails = (props) => {
           }}
         >
           Save Changes
+        </Button>
+        <Button
+          variant="danger"
+          className="mx-3"
+          onClick={() => {
+            handleDelete();
+          }}
+        >
+          Delete Date
         </Button>
       </Modal.Body>
     </Modal>
