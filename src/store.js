@@ -51,7 +51,13 @@ const useStore = create(
       remote_option: "",
       employer_id: -1,
       company_name: "",
+      link:"",
 
+      addLink:(link)=>{
+        set(()=>({
+          link:link
+        }))
+      },
       // Job Post (jp) Info
       addJpId: (jpid) => {
         set(() => ({

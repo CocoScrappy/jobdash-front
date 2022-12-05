@@ -59,6 +59,7 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
   const addJPRemoteOption = useStore((state) => state.addRemoteOption);
   const addJPEmployerId = useStore((state) => state.addEmployerId);
   const addJPCompanyName = useStore((state) => state.addCompanyName);
+  const addJPLink = useStore((state) => state.addLink);
 
   const handleChange = (e) => {
     setRecord({ ...record, [e.target.name]: e.target.value });
@@ -118,6 +119,7 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
         addJPRemoteOption(res.data.remote_option);
         addJPEmployerId(res.data.employer_id);
         addJPCompanyName(company);
+        addJPLink(res.data.link);
         navigate("/jobapplicationform");
         return;
       })
