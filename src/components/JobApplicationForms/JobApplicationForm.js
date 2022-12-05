@@ -27,9 +27,9 @@ function JobApplicationForm({posting}) {
   const {
     notes
   } = formData;
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  // const handleChange = (e) => {
+  //   setFormData({ ...formData, [e.target.name]: e.target.value });
+  // };
   
   const getUserCV = async() => {
     axios
