@@ -83,6 +83,7 @@ export const JobPosting = () => {
 
   const searchJobs = (data) => {
     const searchString = data.search;
+    const searchLocation = data.location
     if (searchString === "") {
       setToggleState((t) => !t);
       return;
@@ -90,7 +91,7 @@ export const JobPosting = () => {
 
     axios
       .get(
-        `${process.env.REACT_APP_API_URL}/api/postings/search/${searchString}`,
+        `${process.env.REACT_APP_API_URL}/api/postings/search/${searchString}/${searchLocation}`,
         {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("atoken"),
@@ -140,8 +141,9 @@ export const JobPosting = () => {
         <h3>Search by Keyword</h3>
         <Formik initialValues={{ search: "" }} onSubmit={searchJobs}>
           <Form>
-            <label htmlFor="search">Search</label>
             <Field id="search" name="search" placeholder="Search Jobs..." />
+            &nbsp;
+            <Field id="location" name="location" placeholder="Job Location..." />
             <button type="submit">Search</button>
           </Form>
         </Formik>
