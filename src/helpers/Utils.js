@@ -26,7 +26,7 @@ export const updateFavoritedStatus = ({
     )
     .then((response) => {
       console.log("favorited status updated");
-      console.log(response.data);
+      // console.log(response.data);
       setApplicationInfo({
         ...applicationInfo,
         favorited: updatedStatus,
@@ -58,7 +58,7 @@ export const fetchUserApplications = ({
       }
     )
     .then((response) => {
-      console.log(response);
+      // console.log(response);
       setJobApplications(response.data.results);
       setPaginationLinks({
         count: response.data.count,
@@ -89,7 +89,7 @@ export const getApplicationInfo = ({ applicationId, setApplicationInfo }) => {
       }
     )
     .then((response) => {
-      console.log(response);
+      // console.log(response);
       setApplicationInfo(response.data);
     })
     .catch((error) => {
@@ -115,7 +115,7 @@ export const getStatusOptions = ({ setStatusOptions }) => {
       }
     )
     .then((response) => {
-      console.log(response.data);
+      // console.log(response.data);
       setStatusOptions(response.data);
     })
     .catch((error) => {
@@ -150,7 +150,7 @@ export const updateApplicationStatus = ({
     )
     .then((response) => {
       setStatusMsg(`Application status updated to: ${updatedStatus}`);
-      console.log(response.data);
+      // console.log(response.data);
       setApplicationInfo({
         ...applicationInfo,
         status: updatedStatus,
@@ -188,8 +188,8 @@ export const updateApplicationNotes = ({
       }
     )
     .then((response) => {
-      console.log("Notes updated successfully");
-      console.log(response.data);
+      // console.log("Notes updated successfully");
+      // console.log(response.data);
       setApplicationInfo({
         ...applicationInfo,
         notes: response.data.notes,
@@ -224,7 +224,7 @@ export const paginationNavigator = ({
       },
     })
     .then((response) => {
-      console.log(response);
+      // console.log(response);
       dataSetter(response.data.results);
       paginationLinksSetter({
         count: response.data.count,
@@ -261,7 +261,7 @@ export const jumpToPaginationItem = ({
       }
     )
     .then((response) => {
-      console.log(response);
+      // console.log(response);
       dataSetter(response.data.results);
       paginationLinksSetter({
         count: response.data.count,
@@ -277,6 +277,10 @@ export const jumpToPaginationItem = ({
     });
 };
 
+/**
+ * Search a table in the database using a search string
+ * @param {} param0
+ */
 export const searchList = ({
   apiBaseUrl,
   data,
@@ -291,7 +295,7 @@ export const searchList = ({
       },
     })
     .then((res) => {
-      console.log(res.data);
+      // console.log(res.data);
       dataSetter(res.data);
       responseMsgSetter(res.data.length + " results found");
       responseMsgStyleSetter("text-success");
@@ -301,5 +305,24 @@ export const searchList = ({
       responseMsgSetter(err.response.data.message);
       responseMsgStyleSetter("text-danger");
       dataSetter(err.response.data.data);
+    });
+};
+
+export const getSavedDateInfo = ({ dateId, dataSetter }) => {
+  axios
+    .get(`${process.env.REACT_APP_API_URL}/api/dates/${dateId}/`, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("atoken"),
+      },
+    })
+    .then((response) => {
+      // console.log(response);
+      dataSetter(response.data);
+    })
+    .catch((error) => {
+      if (error.response.data) {
+        console.log(error.response.data.message);
+      }
+      console.log(error);
     });
 };

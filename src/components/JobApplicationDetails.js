@@ -4,6 +4,7 @@ import { format, parseISO } from "date-fns";
 import MyEditor from "./MyEditor";
 import { Button, Form } from "react-bootstrap";
 import PreviewModal from "./PreviewModal";
+import SavedDateDetails from "./SavedDateDetails";
 import {
   updateFavoritedStatus,
   getApplicationInfo,
@@ -13,17 +14,26 @@ import {
 } from "../helpers/Utils";
 import Heart from "react-heart";
 import Select from "react-select";
+import { useNavigate } from "react-router-dom";
 
 function JobApplicationDetails(props) {
+  const navigate = useNavigate();
+
   const applicationId = props.applicationId;
 
   const [applicationInfo, setApplicationInfo] = useState();
+
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState("");
+
   const [notesMsg, setNotesMsg] = useState("");
   // const [notesMsgStyle, setNotesMsgStyle] = useState("");
+
   const [statusOptions, setStatusOptions] = useState([]);
   const [statusMsg, setStatusMsg] = useState("");
+
+  const [dateModalInfo, setDateModalInfo] = useState();
+  const [showDateModal, setShowDateModal] = useState(false);
 
   const [convertedContent, setConvertedContent] = useState("");
 
@@ -42,6 +52,18 @@ function JobApplicationDetails(props) {
     setShowModal(true);
   };
 
+  const viewDateModal = ({ dateInfo }) => {
+    // console.log(dateInfo);
+    setDateModalInfo(dateInfo);
+    setShowDateModal(true);
+  };
+
+  const resetDateModalInfo = () => {
+    setDateModalInfo();
+    setShowDateModal(false);
+  };
+
+  // console.log(applicationInfo);
   if (applicationInfo === undefined) {
     return null;
   }
@@ -109,17 +131,20 @@ function JobApplicationDetails(props) {
         </div>
         <p className="col-6 text-success">{statusMsg}</p>
       </div>
-      <div className="row">
-        <p className="col-2">Important Dates: </p>
-        <div className="col">
+      <div>
+        <p>Important Dates: </p>
+        <div>
           {applicationInfo.saved_dates.map((date, index) => (
             <div className="row">
-              <p className="col-6">{date.name}</p>
+              <p className="col-8">{date.name}</p>
+              <p className="col-3">
+                {format(parseISO(date.datetime), "MMM dd yyyy h:mmaa")}
+              </p>
               <Button
                 variant="primary"
                 size="sm"
-                className="col-2"
-                onClick={() => previewNotes()}
+                className="col-1"
+                onClick={() => viewDateModal({ dateInfo: date })}
               >
                 View
               </Button>
@@ -166,6 +191,18 @@ function JobApplicationDetails(props) {
         title={""}
         content={modalContent}
       />
+      {dateModalInfo !== undefined ? (
+        <SavedDateDetails
+          show={showDateModal}
+          setShow={setShowDateModal}
+          savedDateInfo={dateModalInfo}
+          onHide={resetDateModalInfo}
+          setApplicationInfo={setApplicationInfo}
+          applicationInfo={applicationInfo}
+        />
+      ) : (
+        <></>
+      )}
     </div>
   );
 }

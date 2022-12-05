@@ -13,6 +13,7 @@ import MyCVPage from "containers/MyCVPage";
 import AllApplicationsForPosting from "containers/AllApplicationsForPosting";
 import UserProtectedRoute from "UserProtectedRoute";
 import JobApplicationInfoPage from "containers/JobApplicationInfoPage";
+import SavedDateInfoPage from "containers/SavedDateInfoPage";
 // CSS
 import "./css/App.css";
 
@@ -30,6 +31,10 @@ const App = () => (
           path="/jobapplications/application/:appId"
           element={<JobApplicationInfoPage />}
         />
+        {/* <Route
+          path="/jobapplications/application/saved-date/:dateId"
+          element={<SavedDateInfoPage />}
+        /> */}
         <Route path="/jobapplications" element={<JobApplications />} />
         <Route path="/jobapplicationform" element={<JobApplicationForm />} />
         <Route
