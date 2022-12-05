@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { Button } from "react-bootstrap";
 import JobApplicationItem from "./JobApplicationItem";
 import {
   fetchUserApplications,
@@ -9,6 +10,8 @@ import {
 import { Formik, Field, Form } from "formik";
 import axios from "axios";
 import { set } from "date-fns";
+import { useNavigate } from "react-router-dom";
+
 
 function JobApplicationList(props) {
   const [jobApplications, setJobApplications] = useState([]);
@@ -35,6 +38,8 @@ function JobApplicationList(props) {
       paginationLinksSetter: setPaginationLinks,
     });
   };
+
+  const navigate = useNavigate();
 
   const searchApplications = (data) => {
     setSearchMsg("");
@@ -63,6 +68,12 @@ function JobApplicationList(props) {
       <h2>Job Applications ({paginationLinks.count})</h2>
       <hr />
       <h3>Search by Keyword</h3>
+      <div>
+      <Button variant="secondary" onClick={() => {
+        navigate("/externaljobapplicationform") }} >
+              + Application
+            </Button>
+      </div>
       <Formik
         initialValues={{ searchString: "" }}
         onSubmit={searchApplications}
