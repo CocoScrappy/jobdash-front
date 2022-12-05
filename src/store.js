@@ -42,62 +42,62 @@ const useStore = create(
       },
 
 
-      jpid: -1,
-      title: "",
-      logo_url: "",
-      location: "",
-      description: "",
-      date_created: "",
-      remote_option: "",
-      employer_id: -1,
-      company_name: "",
+      // jpid: -1,
+      // title: "",
+      // logo_url: "",
+      // location: "",
+      // description: "",
+      // date_created: "",
+      // remote_option: "",
+      // employer_id: -1,
+      // company_name: "",
 
       // Job Post (jp) Info
-      addJpId: (jpid) => {
-        set(() => ({
-          jpid: jpid,
-        }));
-      },
-      addTitle: (jpTitle) => {
-        set(() => ({
-          title: jpTitle,
-        }));
-      },
-      addLogoUrl: (jpLogoUrl) => {
-        set(() => ({
-          logo_url: jpLogoUrl,
-        }));
-      },
-      addLocation: (jpLocation) => {
-        set(() => ({
-          location: jpLocation,
-        }));
-      },
-      addDescription: (jpDescription) => {
-        set(() => ({
-          description: jpDescription,
-        }));
-      },
-      addDateCreated: (jpDateCreated) => {
-        set(() => ({
-          date_created: jpDateCreated,
-        }));
-      },
-      addRemoteOption: (jpRemoteOption) => {
-        set(() => ({
-          remote_option: jpRemoteOption,
-        }));
-      },
-      addEmployerId: (jpEmployerId) => {
-        set(() => ({
-          employer_id: jpEmployerId,
-        }));
-      },
-      addCompanyName: (jpCompanyName) => {
-        set(() => ({
-          company_name: jpCompanyName,
-        }));
-      },
+      // addJpId: (jpid) => {
+      //   set(() => ({
+      //     jpid: jpid,
+      //   }));
+      // },
+      // addTitle: (jpTitle) => {
+      //   set(() => ({
+      //     title: jpTitle,
+      //   }));
+      // },
+      // addLogoUrl: (jpLogoUrl) => {
+      //   set(() => ({
+      //     logo_url: jpLogoUrl,
+      //   }));
+      // },
+      // addLocation: (jpLocation) => {
+      //   set(() => ({
+      //     location: jpLocation,
+      //   }));
+      // },
+      // addDescription: (jpDescription) => {
+      //   set(() => ({
+      //     description: jpDescription,
+      //   }));
+      // },
+      // addDateCreated: (jpDateCreated) => {
+      //   set(() => ({
+      //     date_created: jpDateCreated,
+      //   }));
+      // },
+      // addRemoteOption: (jpRemoteOption) => {
+      //   set(() => ({
+      //     remote_option: jpRemoteOption,
+      //   }));
+      // },
+      // addEmployerId: (jpEmployerId) => {
+      //   set(() => ({
+      //     employer_id: jpEmployerId,
+      //   }));
+      // },
+      // addCompanyName: (jpCompanyName) => {
+      //   set(() => ({
+      //     company_name: jpCompanyName,
+      //   }));
+      // },
     
 
 

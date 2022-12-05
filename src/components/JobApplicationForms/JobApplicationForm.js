@@ -8,17 +8,20 @@ import useStore from "store";
 import axios from "axios";
 import { Form } from "react-bootstrap";
 import MyEditor from "components/MyEditor";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation  } from "react-router-dom";
 
-function JobApplicationForm({ posting }) {
-  var uCv = useStore((state) => state.cv_id);
-  const state = useStore();
-  const ISODate = new Date(state.date_created);
+
+function JobApplicationForm(props) {
+  const uId = useStore((state) => state.uId);
+  const uCv = useStore((state) => state.cv_id);
+  const { jobPostingInfo } = useLocation();
+  const [post, setPost] = useState(jobPostingInfo);
+  // const state = useStore();
+  const ISODate = new Date(post.date_created);
   const shortDate = ISODate.toDateString();
   const [isLiked, setIsLiked] = useState(false);
   const [success, setSuccess] = useState(false);
   const [convertedNoteContent, setConvertedNoteContent] = useState("");
-  const [cv, setCv] = useState({});
   const [modalShow, setModalShow] = useState(false);
   const [modalContent, setModalContent] = useState("");
   const navigate = useNavigate();
@@ -30,17 +33,38 @@ function JobApplicationForm({ posting }) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // const getJobPostingInfo = (post) => {
+  //   return axios
+  //     .get(`${process.env.REACT_APP_API_URL}/api/postings/${post.id}/`)
+  //     .then((res) => {
+  //       console.log(res);
+  //       // addJPId(res.data.id);
+  //       // addJPTitle(res.data.title);
+  //       // //addJPLogoUrl(res.data.logo_url);
+  //       // addJPLocation(res.data.location);
+  //       // addJPDescription(res.data.description);
+  //       // addJPDateCreated(res.data.date_created);
+  //       // addJPRemoteOption(res.data.remote_option);
+  //       // addJPEmployerId(res.data.employer_id);
+  //       // addJPCompanyName(company);
+  //       navigate("/jobapplicationform", { state: { ...t } });
+  //       return;
+  //     })
+  //     .catch(() => {
+  //       alert("Something wrong with aplying to Job posting");
+  //     });
+  // };
 
-  const submitApplication = (data) => {
+  const submitApplication = () => {
     var applicationData = {};
     try {
       applicationData = {
         notes: convertedNoteContent,
         favorited: isLiked,
         status: "applied",
-        applicant: state.id,
+        applicant: uId,
         cv: uCv,
-        job_posting: state.jpid,
+        job_posting: post.id,
       };
     } catch (err) {
       console.log(
@@ -101,21 +125,21 @@ function JobApplicationForm({ posting }) {
       </div>
       <Container>
         <div>
-          <h5>Company: {state.company_name}</h5>
-          <h5>Job Title: {state.title}</h5>
+          <h5>Company: {post.company_name}</h5>
+          <h5>Job Title: {post.title}</h5>
         </div>
         <div style={{ width: "1.5rem" }}>
           <h5>Favorite: </h5>
           <Heart isActive={isLiked} onClick={() => setIsLiked(!isLiked)} />
         </div>
         <div>
-          <h5>Location: {state.location}</h5>
-          <h5>Remote Option: {state.remote_option}</h5>
+          <h5>Location: {post.location}</h5>
+          <h5>Remote Option: {post.remote_option}</h5>
           <h5>Date Created: {shortDate}</h5>
         </div>
         <div>
           <h5>Job Description: </h5>
-          <p>{state.description}</p>
+          <p>{post.description}</p>
         </div>
           <Form>
             {/* Notes */}
