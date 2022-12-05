@@ -48,10 +48,15 @@ function ExternalJobApplicationForm() {
     formData.description = convertedDescContent;
     formData.employer = 14; //14 will be default internal Employer
 
+
+    console.log("this func is running");
+    console.log(formData);
     axios.post(`${process.env.REACT_APP_API_URL}/api/postings/`, formData, {
       headers: { Authorization: "Bearer " + localStorage.getItem("atoken") },
     })
       .then((res) => {
+        console.log("job posting : " + res.data);
+
         //adding application
           const formAppData = {
             notes: convertedNoteContent,
@@ -65,20 +70,21 @@ function ExternalJobApplicationForm() {
             headers: { Authorization: "Bearer " + localStorage.getItem("atoken") },
           })
           .then((res) => {
+            console.log("application:"+res.data);
             setModalContent("Application submitted successfully!");
             setModalShow(true);
             //navigate('/applications');
           })
           .catch((error) => {
-            console.log(error.response.data.message);
-            setModalContent(error.response.data.message);
+            console.log(error);
+            setModalContent(error);
             setModalShow(true);
           });
         })
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch(() => {
+      // .then((res) => {
+      //   console.log(res.data);
+      // })
+      .catch((error) => {
         alert("Something wrong with creating job posting record");
       });
     }
@@ -117,7 +123,8 @@ function ExternalJobApplicationForm() {
         <div>External Job Application Form</div>
         <Container>
         <Form
-            onSubmit={handleCreateRecord}>
+            // onSubmit={handleCreateRecord}
+            >
 
           {/* Title */}
           <InputGroup className="mb-4">
@@ -228,7 +235,7 @@ function ExternalJobApplicationForm() {
           </div>
 
           {/* Save Button */}
-          <Button variant="primary" type="submit">
+          <Button variant="primary" type="submit" onClick={() => {handleCreateRecord()}}>
               Save External Application
           </Button>
         </Form>
