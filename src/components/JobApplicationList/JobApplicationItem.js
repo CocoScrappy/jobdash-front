@@ -12,9 +12,7 @@ const JobApplicationItem = ({ application }) => {
   var shortDate = ISODate.toLocaleDateString();
 
   function redirectToInfoPage() {
-    navigate(`/jobapplications/application/${applicationInfo.id}`, {
-      application: applicationInfo,
-    });
+    navigate(`/jobapplications/application/${applicationInfo.id}`);
   }
 
   return (

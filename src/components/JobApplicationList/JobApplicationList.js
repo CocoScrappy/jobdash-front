@@ -1,6 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import JobApplicationItem from "./JobApplicationItem";
-import { fetchUserApplications } from "../../helpers/Utils";
+import {
+  fetchUserApplications,
+  paginationNavigator,
+  jumpToPaginationItem,
+  searchList,
+} from "../../helpers/Utils";
 import { Formik, Field, Form } from "formik";
 import axios from "axios";
 import { set } from "date-fns";
@@ -21,80 +26,14 @@ function JobApplicationList(props) {
     [toggleState]
   );
 
-  const fetchNextPage = () => {
-    axios
-      .get(paginationLinks.next, {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("atoken"),
-        },
-      })
-      .then((response) => {
-        console.log(response);
-        setJobApplications(response.data.results);
-        setPaginationLinks({
-          count: response.data.count,
-          next: response.data.next,
-          previous: response.data.previous,
-        });
-      })
-      .catch((error) => {
-        if (error.response.data && error.response.status === 404) {
-          setJobApplications(error.response.data.data);
-        }
-        console.log(error);
-      });
-  };
-
-  const fetchPreviousPage = () => {
-    axios
-      .get(paginationLinks.previous, {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("atoken"),
-        },
-      })
-      .then((response) => {
-        console.log(response);
-        setJobApplications(response.data.results);
-        setPaginationLinks({
-          count: response.data.count,
-          next: response.data.next,
-          previous: response.data.previous,
-        });
-      })
-      .catch((error) => {
-        if (error.response.data && error.response.status === 404) {
-          setJobApplications(error.response.data.data);
-        }
-        console.log(error);
-      });
-  };
-
   const jumpToApplication = (data) => {
     const applicationNumber = data.applicationNumber - 1;
-    axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/api/applications/get_user_applications/?limit=10&offset=${applicationNumber}`,
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("atoken"),
-          },
-        }
-      )
-      .then((response) => {
-        console.log(response);
-        setJobApplications(response.data.results);
-        setPaginationLinks({
-          count: response.data.count,
-          next: response.data.next,
-          previous: response.data.previous,
-        });
-      })
-      .catch((error) => {
-        if (error.response.data && error.response.status === 404) {
-          setJobApplications(error.response.data.data);
-        }
-        console.log(error);
-      });
+    jumpToPaginationItem({
+      apiBaseUrl: "api/applications/get_user_applications",
+      itemNumber: applicationNumber,
+      dataSetter: setJobApplications,
+      paginationLinksSetter: setPaginationLinks,
+    });
   };
 
   const searchApplications = (data) => {
@@ -105,24 +44,13 @@ function JobApplicationList(props) {
       setToggleState((t) => !t);
       return;
     }
-    axios
-      .post(`${process.env.REACT_APP_API_URL}/api/applications/search/`, data, {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("atoken"),
-        },
-      })
-      .then((res) => {
-        console.log(res.data);
-        setJobApplications(res.data);
-        setSearchMsg(res.data.length + " results found");
-        setSearchMsgStyle("text-success");
-      })
-      .catch((err) => {
-        console.log(err);
-        setSearchMsg(err.response.data.message);
-        setSearchMsgStyle("text-danger");
-        setJobApplications(err.response.data.data);
-      });
+    searchList({
+      apiBaseUrl: "api/applications/search",
+      data: data,
+      dataSetter: setJobApplications,
+      responseMsgSetter: setSearchMsg,
+      responseMsgStyleSetter: setSearchMsgStyle,
+    });
   };
 
   const resetSearch = () => {
@@ -166,7 +94,16 @@ function JobApplicationList(props) {
                   : "page-item"
               }
             >
-              <a className="page-link" onClick={() => fetchPreviousPage()}>
+              <a
+                className="page-link"
+                onClick={() =>
+                  paginationNavigator({
+                    url: paginationLinks.previous,
+                    dataSetter: setJobApplications,
+                    paginationLinksSetter: setPaginationLinks,
+                  })
+                }
+              >
                 Previous
               </a>
             </li>
@@ -177,7 +114,16 @@ function JobApplicationList(props) {
                   : "page-item"
               }
             >
-              <a className="page-link" onClick={() => fetchNextPage()}>
+              <a
+                className="page-link"
+                onClick={() =>
+                  paginationNavigator({
+                    url: paginationLinks.next,
+                    dataSetter: setJobApplications,
+                    paginationLinksSetter: setPaginationLinks,
+                  })
+                }
+              >
                 Next
               </a>
             </li>

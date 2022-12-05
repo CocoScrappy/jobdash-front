@@ -3,20 +3,25 @@ import Layout from "layouts/MainLayout";
 import { Button, InputGroup, Container } from "react-bootstrap";
 import Heart from "react-heart";
 import MyCVPage from "containers/MyCVPage";
-
+import { Modal } from "react-bootstrap";
 import useStore from "store";
 import axios from "axios";
-import { Formik, Field, Form } from "formik";
+import { Form } from "react-bootstrap";
+import MyEditor from "components/MyEditor";
+import { useNavigate } from "react-router-dom";
 
 function JobApplicationForm({ posting }) {
+  var uCv = useStore((state) => state.cv_id);
   const state = useStore();
   const ISODate = new Date(state.date_created);
   const shortDate = ISODate.toDateString();
-
   const [isLiked, setIsLiked] = useState(false);
   const [success, setSuccess] = useState(false);
-
+  const [convertedNoteContent, setConvertedNoteContent] = useState("");
   const [cv, setCv] = useState({});
+  const [modalShow, setModalShow] = useState(false);
+  const [modalContent, setModalContent] = useState("");
+  const navigate = useNavigate();
 
   //handling form inputs
   const [formData, setFormData] = useState({});
@@ -25,35 +30,16 @@ function JobApplicationForm({ posting }) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const getUserCV = async () => {
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/api/cvs/get_user_cvs/`, {
-        headers: { Authorization: "Bearer " + localStorage.getItem("atoken") },
-      })
-      .then((response) => {
-        setCv(response.data);
-      })
-      .catch((error) => {
-        console.log(error.response.data.message);
-        // console.log(UserCVInfo)
-      });
-  };
-
-  useEffect(() => {
-    getUserCV();
-  }, []);
 
   const submitApplication = (data) => {
     var applicationData = {};
-
-    console.log("cv " + cv);
     try {
       applicationData = {
-        notes: data.notes,
+        notes: convertedNoteContent,
         favorited: isLiked,
         status: "applied",
         applicant: state.id,
-        cv: cv.id,
+        cv: uCv,
         job_posting: state.jpid,
       };
     } catch (err) {
@@ -69,15 +55,44 @@ function JobApplicationForm({ posting }) {
         applicationData
       )
       .then((res) => {
-        console.log(res);
-        setSuccess(true);
+        setModalContent("Application submitted successfully!");
+        setModalShow(true);
       })
-      .catch(() => {
-        alert("Something went wrong while calling database.");
+      .catch((error) => {
+        console.log(error.response.data.message);
+        setModalContent(error.response.data.message);
+        setModalShow(true);
       });
 
     setSuccess(true);
   };
+
+  function MyVerticallyCenteredModal(props) {
+    return (
+      <Modal
+        {...props}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Info
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <h4>Good Luck!</h4>
+          <p>
+            Job application record created successfully!
+          </p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={props.onHide}>Close</Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  }
+
 
   return (
     <Layout title="JobApplicationForm" content="JobApplicationForm">
@@ -102,16 +117,17 @@ function JobApplicationForm({ posting }) {
           <h5>Job Description: </h5>
           <p>{state.description}</p>
         </div>
-        <Formik initialValues={{ notes: "" }} onSubmit={submitApplication}>
           <Form>
-            <label htmlFor="notes">Notes: </label>
-            <Field
-              id="notes"
-              name="notes"
-              as="textarea"
-              rows={3}
-              placeholder="Notes go here"
-            />
+            {/* Notes */}
+            <div className="mb-4">
+            <h4>Notes</h4>
+              <MyEditor
+                content={""}
+                name="notes"
+                placeholder={"Notes..."}
+                setConvertedContent={setConvertedNoteContent}
+              />
+            </div>
             {/* <Form.Label as="h5">Notes: </Form.Label>
                 <Form.Control
 
@@ -121,12 +137,16 @@ function JobApplicationForm({ posting }) {
                     value={notes} /> */}
             {/* Add CV selector <MyCVsPage/> */}
 
-            <button variant="primary" type="submit">
+          {/* Save Button */}
+          <Button variant="primary" type="submit" onClick={submitApplication}>
               Apply
-            </button>
+          </Button>
           </Form>
-        </Formik>
       </Container>
+      <MyVerticallyCenteredModal
+        show={modalShow}
+        onHide={() => {setModalShow(false); navigate('/jobpostings')}}
+      />
     </Layout>
   );
 }

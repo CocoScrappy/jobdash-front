@@ -21,7 +21,7 @@ const AllApplicationsForPosting = (props) => {
         }
       )
       .then((response) => {
-        setListApplications(response.data);
+        setListApplications(response.data.results);
       })
       .catch((error) => {
         console.log(error);
@@ -35,11 +35,11 @@ const AllApplicationsForPosting = (props) => {
       <h1>Your applicants for {post.title}</h1>
       <p>My posting id {post.id}</p>
       {/* cv= a[0] user = a[1] */}
-      {listApplicants.map((a, index) => (
-        <div key={index}>
-          <p>Cv Name{a[0].name}</p>
+      {listApplicants.map((a) => (
+        <div key={a.id}>
+          <p>Cv Name{a.cv.name}</p>
           <p>
-            User Name{a[1].first_name} {a[1].last_name}
+            User Name{a.applicant.first_name} {a.applicant.last_name}
           </p>
           {/* <p>{a.user}</p> */}
         </div>
