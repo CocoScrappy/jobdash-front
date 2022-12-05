@@ -202,6 +202,7 @@ export const JobPosting = () => {
       color="var(--color-gray)"
     >
       <GenericPageLayout>
+        {showAlert && <FlashAlert setShowAlert={setShowAlert} msg={alertMsg} />}
         <div className="pb-5">
           <h2>What kind of job are you looking for?</h2>
           {/* <p className="stylized-letters">JD</p> */}
