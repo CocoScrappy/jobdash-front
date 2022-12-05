@@ -239,18 +239,19 @@ export const JobPosting = () => {
           </Formik>
         </div>
         {/* Modal to add job posting form */}
-        <div
-          style={{
-            cursor: "pointer",
-            marginRight: "12px",
-          }}
-          onClick={() => {
-            setShowAdd(true);
-          }}
-        >
-          <strong>Add job posting</strong>
-        </div>
-
+        {uRole == "employer" && (
+          <div
+            style={{
+              cursor: "pointer",
+              marginRight: "12px",
+            }}
+            onClick={() => {
+              setShowAdd(true);
+            }}
+          >
+            <strong>Add job posting</strong>
+          </div>
+        )}
         {loading === true && <ProgressBar animated now={percent} />}
 
         <Modal show={showAdd} onHide={handleCloseAdd}>
