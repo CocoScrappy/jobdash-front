@@ -64,7 +64,7 @@ function JobApplicationDetails(props) {
       application: applicationId,
       name: "",
       notes: "",
-      datetime: "",
+      datetime: null,
     });
     setShowDateModal(true);
   };

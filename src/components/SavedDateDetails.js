@@ -15,6 +15,7 @@ const SavedDateDetails = (props) => {
   const [dateInfo, setDateInfo] = useState(props.dateInfo);
   const [convertedContent, setConvertedContent] = useState("");
   const [updateResponseMsg, setUpdateResponseMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
 
   const minDate = format(new Date(), "yyyy-MM-dd'T'HH:mm");
 
@@ -24,6 +25,10 @@ const SavedDateDetails = (props) => {
 
   const saveUpdatedStatus = () => {
     setUpdateResponseMsg("");
+    if (dateInfo.datetime == null || dateInfo.name == "") {
+      setErrorMsg("date and title cannot be empty");
+      return;
+    }
 
     if (dateInfo.id === undefined) {
       postNewDate({
@@ -33,6 +38,7 @@ const SavedDateDetails = (props) => {
         parentObject: props.applicationInfo,
         msgSetter: setUpdateResponseMsg,
       });
+      return;
     } else {
       updateSavedDate({
         dateId: dateInfo.id,
@@ -41,6 +47,7 @@ const SavedDateDetails = (props) => {
         applicationInfo: props.applicationInfo,
         setApplicationInfo: props.setApplicationInfo,
       });
+      return;
     }
   };
 
@@ -63,6 +70,7 @@ const SavedDateDetails = (props) => {
       aria-labelledby="cv-preview"
     >
       <p className="text-success mx-3 mt-3">{updateResponseMsg}</p>
+      <p className="text-danger mx-3 mt-3">{errorMsg}</p>
       <Modal.Header closeButton>
         <Form.Control
           // type="text"

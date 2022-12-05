@@ -339,6 +339,7 @@ export const postNewDate = ({
   parentObject,
   msgSetter,
 }) => {
+  console.log(dateInfo);
   axios
     .post(`${process.env.REACT_APP_API_URL}/api/dates/`, dateInfo, {
       headers: {
