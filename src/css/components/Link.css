@@ -7,3 +7,11 @@
 .jobdash-link:hover {
   color: inherit;
 }
+
+.link-color-inherit .nav-link {
+  color: inherit;
+}
+
+.link-color-inherit .nav-link:hover {
+  color: inherit;
+}

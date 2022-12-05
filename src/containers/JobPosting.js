@@ -20,6 +20,10 @@ import useStore from "store";
 //unused?
 import { set } from "date-fns";
 
+import GenericPageLayout from "layouts/GenericPageLayout";
+// CSS
+import "../css/components/Stylized-letters.css";
+
 export const JobPosting = () => {
   //user
   var uRole = useStore((state) => state.role);
@@ -195,36 +199,38 @@ export const JobPosting = () => {
     <Layout
       title="Job Dash | Job Postings"
       content="job offers application postings"
+      color="var(--color-gray)"
     >
-      <Container>
-        {showAlert && <FlashAlert setShowAlert={setShowAlert} msg={alertMsg} />}
-        <h2>Job Postings</h2>
-        <h3>Search by Keyword</h3>
-        <Formik
-          initialValues={{ search: "", location: "" }}
-          onSubmit={searchJobs}
-        >
-          <Form>
-            <Field id="search" name="search" placeholder="Search Jobs..." />
-            &nbsp;
-            <Field
-              id="location"
-              name="location"
-              placeholder="Job Location..."
-            />
-            &nbsp;
-            <Field
-              as="select"
-              name="searchEngineSelect"
-              aria-label="Search Engine Select"
-              id="searchEngineSelect"
-            >
-              <option value="jobdash">JobDash</option>
-              <option value="monster">Monster</option>
-            </Field>
-            <button type="submit">Search</button>
-          </Form>
-        </Formik>
+      <GenericPageLayout>
+        <div className="pb-5">
+          <h2>What kind of job are you looking for?</h2>
+          {/* <p className="stylized-letters">JD</p> */}
+          <Formik
+            initialValues={{ search: "", location: "" }}
+            onSubmit={searchJobs}
+          >
+            <Form>
+              <Field id="search" name="search" placeholder="Search Jobs..." />
+              &nbsp;
+              <Field
+                id="location"
+                name="location"
+                placeholder="Job Location..."
+              />
+              &nbsp;
+              <Field
+                as="select"
+                name="searchEngineSelect"
+                aria-label="Search Engine Select"
+                id="searchEngineSelect"
+              >
+                <option value="jobdash">JobDash</option>
+                <option value="monster">Monster</option>
+              </Field>
+              <button type="submit">Search</button>
+            </Form>
+          </Formik>
+        </div>
         {/* Modal to add job posting form */}
         <div
           style={{
@@ -325,7 +331,7 @@ export const JobPosting = () => {
             );
           })}
         </ul>
-      </Container>
+      </GenericPageLayout>
     </Layout>
   );
 };
