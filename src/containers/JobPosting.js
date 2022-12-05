@@ -10,9 +10,11 @@ import Layout from "../layouts/MainLayout";
 import useStore from "store";
 import { Formik, Field, Form } from "formik";
 import { set } from "date-fns";
+import ProgressBar from 'react-bootstrap/ProgressBar';
 
 export const JobPosting = () => {
   var uRole = useStore((state) => state.role);
+  const uId = useStore((state) => state.id);
   const [jobpostings, setJobpostings] = useState([]);
   const [postCount, setPostCount] = useState(0);
   const [offset, setOffset] = useState(0);
@@ -29,6 +31,9 @@ export const JobPosting = () => {
 
   const [showAdd, setShowAdd] = useState(false);
 
+  const[loading,setLoading]=useState(false);
+  const[percent,setPercent]=useState(0);
+
   const handleCloseAdd = () => {
     setShowAdd(false);
   };
@@ -44,7 +49,7 @@ export const JobPosting = () => {
     let pageArray = [];
     for (let i = 1; i <= totalPages; i++) {
       pageArray.push({ page: i, offset: limit * (i - 1) });
-      console.log(`pageArray[${i - 1}].offset = ${pageArray[i - 1].offset}`);
+      // console.log(`pageArray[${i - 1}].offset = ${pageArray[i - 1].offset}`);
     }
     setPages(pageArray);
   };
@@ -62,6 +67,7 @@ export const JobPosting = () => {
         }
       ) //FIXME : trailing / ?
       .then((res) => {
+        console.log(JSON.stringify(res.data.results))
         setJobpostings(res.data.results);
         setPostCount(res.data.count);
         handlePages();
@@ -83,7 +89,53 @@ export const JobPosting = () => {
 
   const searchJobs = (data) => {
     const searchString = data.search;
-    const searchLocation = data.location
+    const searchLocation = data.location;
+    const searchEngine = data.searchEngineSelect;
+
+    if(searchEngine==="monster")
+    {
+      const message = {
+        searchTerm:searchString,
+        searchLocation:searchLocation
+      }
+      setJobpostings([]);
+      const socket = new WebSocket(`${process.env.REACT_APP_API_URL_WS}/ws/search/userId/${uId}/`);
+      socket.onopen = function(e){
+        console.log("connection established");
+        socket.send(JSON.stringify(message))
+      }
+
+      socket.onmessage=function(event){
+        var res=JSON.parse(event.data);
+        // console.log("event occured, data is ="+res.message)
+        if(res.message==="Beginning search"){
+          console.log("Recognized Begin Search");
+          setLoading(true);
+        }
+        if(res.percent!==undefined){
+          setPercent(res.percent);
+          console.log("Recognized Begin Percentage");
+        }
+
+        if(res.payload!==undefined){
+          setLoading(false);
+          console.log(res.payload)
+          setJobpostings(JSON.parse(res.payload)) //res
+          setPercent(0)
+        }
+      }
+
+      socket.onclose = function (event){
+        if(event.wasClean){
+          console.log("Clean Exit");
+        }
+        else{
+          console.log("Connection died")
+        }
+      }
+      return;
+    }
+
     if (searchString === "") {
       setToggleState((t) => !t);
       return;
@@ -99,10 +151,11 @@ export const JobPosting = () => {
         }
       )
       .then((res) => {
+        console.log("Result")
         console.log(res.data);
         const result = [];
-        res.data.results.forEach((match) => result.push(match.fields));
-        setJobpostings(result);
+        //res.data.results.forEach((match) => result.push(match.fields));
+        setJobpostings(res.data.results);
         setPostCount(res.data.count);
         handlePages();
         // res.data.foreach(match=>console.log(match.fields));
@@ -139,11 +192,21 @@ export const JobPosting = () => {
       <Container>
         <h2>Job Postings</h2>
         <h3>Search by Keyword</h3>
-        <Formik initialValues={{ search: "" }} onSubmit={searchJobs}>
+        <Formik initialValues={{ search: "",location:"" }} onSubmit={searchJobs}>
           <Form>
             <Field id="search" name="search" placeholder="Search Jobs..." />
             &nbsp;
             <Field id="location" name="location" placeholder="Job Location..." />
+            &nbsp;
+            <Field
+              as="select"
+              name="searchEngineSelect"
+              aria-label="Search Engine Select"
+              id="searchEngineSelect"
+            >
+              <option value="jobdash">JobDash</option>
+              <option value="monster">Monster</option>
+            </Field>
             <button type="submit">Search</button>
           </Form>
         </Formik>
@@ -159,6 +222,11 @@ export const JobPosting = () => {
         >
           <strong>Add job posting</strong>
         </div>
+
+        {loading===true &&
+          <ProgressBar animated now={percent} />
+        }
+
         <Modal show={showAdd} onHide={handleCloseAdd}>
           <Modal.Header closeButton>
             <Modal.Title>Add Jobposting</Modal.Title>

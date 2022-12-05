@@ -117,6 +117,10 @@ function JobApplicationForm({ posting }) {
           <h5>Job Description: </h5>
           <p>{state.description}</p>
         </div>
+        <div>
+          <h5>Job Description: </h5>
+          <p>{state.link}</p>
+        </div>
           <Form>
             {/* Notes */}
             <div className="mb-4">
