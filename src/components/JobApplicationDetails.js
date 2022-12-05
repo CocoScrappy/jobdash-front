@@ -58,6 +58,16 @@ function JobApplicationDetails(props) {
     setShowDateModal(true);
   };
 
+  const addNewDate = () => {
+    setDateModalInfo({
+      application: applicationId,
+      name: "",
+      notes: "",
+      datetime: "",
+    });
+    setShowDateModal(true);
+  };
+
   const resetDateModalInfo = () => {
     setDateModalInfo();
     setShowDateModal(false);
@@ -99,6 +109,7 @@ function JobApplicationDetails(props) {
           </Button>
         </div>
       </div>
+      <hr></hr>
       <p className="text-muted fst-italic">
         <strong>Applied on: </strong>
         {format(
@@ -131,27 +142,37 @@ function JobApplicationDetails(props) {
         </div>
         <p className="col-6 text-success">{statusMsg}</p>
       </div>
-      <div>
-        <p>Important Dates: </p>
-        <div>
-          {applicationInfo.saved_dates.map((date, index) => (
-            <div className="row">
-              <p className="col-8">{date.name}</p>
-              <p className="col-3">
-                {format(parseISO(date.datetime), "MMM dd yyyy h:mmaa")}
-              </p>
-              <Button
-                variant="primary"
-                size="sm"
-                className="col-1"
-                onClick={() => viewDateModal({ dateInfo: date })}
-              >
-                View
-              </Button>
-            </div>
-          ))}
-        </div>
+      <hr></hr>
+      <div className="row">
+        <p className="col-2">Important Dates: </p>
+        <Button
+          variant="link"
+          // size="sm"
+          className="col-2 pt-0 pb-3"
+          onClick={() => addNewDate()}
+        >
+          Add New
+        </Button>
       </div>
+      <div>
+        {applicationInfo.saved_dates.map((date, index) => (
+          <div className="row">
+            <p className="col-8">{date.name}</p>
+            <p className="col-3">
+              {format(parseISO(date.datetime), "MMM dd yyyy h:mmaa")}
+            </p>
+            <Button
+              variant="link"
+              // size="sm"
+              className="col-1"
+              onClick={() => viewDateModal({ dateInfo: date })}
+            >
+              View
+            </Button>
+          </div>
+        ))}
+      </div>
+      <hr></hr>
       <br></br>
       <h5>
         Notes{" "}
@@ -195,7 +216,7 @@ function JobApplicationDetails(props) {
         <SavedDateDetails
           show={showDateModal}
           setShow={setShowDateModal}
-          savedDateInfo={dateModalInfo}
+          dateInfo={dateModalInfo}
           onHide={resetDateModalInfo}
           setApplicationInfo={setApplicationInfo}
           applicationInfo={applicationInfo}

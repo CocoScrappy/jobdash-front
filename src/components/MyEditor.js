@@ -41,7 +41,7 @@ function MyEditor(props) {
   return (
     <div className="mb-3">
       <Editor
-        placeholder="CV content"
+        placeholder="Content"
         editorState={editorState}
         onEditorStateChange={handleEditorChange}
         toolbarClassName="toolbar-class"

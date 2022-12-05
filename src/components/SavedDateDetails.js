@@ -8,50 +8,105 @@ import axios from "axios";
 import { format, parseISO } from "date-fns";
 
 const SavedDateDetails = (props) => {
-  const [savedDateInfo, setSavedDateInfo] = useState(props.savedDateInfo);
+  const [dateInfo, setDateInfo] = useState(props.dateInfo);
   const [convertedContent, setConvertedContent] = useState("");
   const [updateResponseMsg, setUpdateResponseMsg] = useState("");
 
   const minDate = format(new Date(), "yyyy-MM-dd'T'HH:mm");
 
   useEffect(() => {
-    setSavedDateInfo({ ...savedDateInfo, notes: convertedContent });
+    setDateInfo({ ...dateInfo, notes: convertedContent });
   }, [convertedContent]);
 
   const saveUpdatedStatus = () => {
     setUpdateResponseMsg("");
-    // setSavedDateInfo({ ...savedDateInfo, notes: convertedContent });
-    console.log(savedDateInfo);
-    axios
-      .put(
-        `${process.env.REACT_APP_API_URL}/api/dates/${savedDateInfo.id}/`,
-        savedDateInfo,
-        {
+
+    if (dateInfo.id === undefined) {
+      axios
+        .post(`${process.env.REACT_APP_API_URL}/api/dates/`, dateInfo, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("atoken"),
           },
-        }
-      )
-      .then((response) => {
-        setUpdateResponseMsg(
-          "Successfully updated on: " +
-            format(new Date(), "MMM dd, yyyy, h:mm:ss aa")
-        );
-        let newApplicationDates = props.applicationInfo.saved_dates.map(
-          (date) => {
-            console.log(date.id === savedDateInfo.id);
-            if (date.id === savedDateInfo.id) {
-              return savedDateInfo;
-            }
-            return date;
+        })
+        .then((response) => {
+          setUpdateResponseMsg(
+            "Successfully created on: " +
+              format(new Date(), "MMM dd, yyyy, h:mm:ss aa")
+          );
+          setDateInfo(response.data);
+          console.log(props.applicationInfo);
+          let newApplicationDates = props.applicationInfo.saved_dates;
+          newApplicationDates.push(response.data);
+          // console.log(newApplicationDates);
+          props.setApplicationInfo({
+            ...props.applicationInfo,
+            saved_dates: newApplicationDates,
+          });
+          // console.log(props.applicationInfo);
+        })
+        .catch((error) => {
+          console.log(error);
+          if (error.response) {
+            console.log(error);
           }
-        );
-        console.log(newApplicationDates);
-        props.setApplicationInfo({
-          ...props.applicationInfo,
-          saved_dates: newApplicationDates,
         });
-        console.log(props.applicationInfo);
+    } else {
+      axios
+        .put(
+          `${process.env.REACT_APP_API_URL}/api/dates/${dateInfo.id}/`,
+          dateInfo,
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("atoken"),
+            },
+          }
+        )
+        .then((response) => {
+          setUpdateResponseMsg(
+            "Successfully updated on: " +
+              format(new Date(), "MMM dd, yyyy, h:mm:ss aa")
+          );
+          let newApplicationDates = props.applicationInfo.saved_dates.map(
+            (date) => {
+              console.log(date.id === dateInfo.id);
+              if (date.id === dateInfo.id) {
+                return dateInfo;
+              }
+              return date;
+            }
+          );
+          console.log(newApplicationDates);
+          props.setApplicationInfo({
+            ...props.applicationInfo,
+            saved_dates: newApplicationDates,
+          });
+          console.log(props.applicationInfo);
+        })
+        .catch((error) => {
+          console.log(error);
+          if (error.response) {
+            console.log(error);
+          }
+        });
+    }
+  };
+
+  const handleDelete = (dateId) => {
+    const confirmed = window.confirm("Are you sure you want to delete?");
+    if (confirmed) {
+      deleteDate(dateId);
+    }
+  };
+
+  const deleteDate = (dateId) => {
+    axios
+      .delete(`${process.env.REACT_APP_API_URL}/api/dates/${dateId}/`, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("atoken"),
+        },
+      })
+      .then((response) => {
+        window.location.reload(false);
       })
       .catch((error) => {
         console.log(error);
@@ -59,36 +114,6 @@ const SavedDateDetails = (props) => {
           console.log(error);
         }
       });
-  };
-
-  const handleDelete = () => {
-    const confirmed = window.confirm("Are you sure you want to delete?");
-    if (confirmed) {
-      deleteDate();
-    }
-  };
-
-  const deleteDate = () => {
-    window.alert("deleted");
-    props.onHide();
-    // axios
-    //   .delete(
-    //     `${process.env.REACT_APP_API_URL}/api/dates/${savedDateInfo.id}/`,
-    //     {
-    //       headers: {
-    //         Authorization: "Bearer " + localStorage.getItem("atoken"),
-    //       },
-    //     }
-    //   )
-    //   .then((response) => {
-    //     window.location.reload(false);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //     if (error.response) {
-    //       console.log(error);
-    //     }
-    //   });
   };
 
   return (
@@ -102,11 +127,11 @@ const SavedDateDetails = (props) => {
       <Modal.Header closeButton>
         <Form.Control
           // type="text"
-          value={savedDateInfo.name}
+          value={dateInfo.name}
           placeholder="Title"
           onChange={(event) => {
-            setSavedDateInfo({
-              ...savedDateInfo,
+            setDateInfo({
+              ...dateInfo,
               name: event.target.value,
             });
           }}
@@ -114,11 +139,15 @@ const SavedDateDetails = (props) => {
         <Form.Control
           type="datetime-local"
           className="ms-3"
-          value={format(parseISO(savedDateInfo.datetime), "yyyy-MM-dd'T'HH:mm")}
+          value={
+            dateInfo.datetime
+              ? format(parseISO(dateInfo.datetime), "yyyy-MM-dd'T'HH:mm")
+              : ""
+          }
           min={minDate}
           onChange={(event) => {
-            setSavedDateInfo({
-              ...savedDateInfo,
+            setDateInfo({
+              ...dateInfo,
               datetime: event.target.value,
             });
           }}
@@ -126,7 +155,7 @@ const SavedDateDetails = (props) => {
       </Modal.Header>
       <Modal.Body>
         <MyEditor
-          content={savedDateInfo.notes}
+          content={dateInfo.notes}
           setConvertedContent={setConvertedContent}
         />
         <Button
@@ -134,17 +163,21 @@ const SavedDateDetails = (props) => {
             saveUpdatedStatus();
           }}
         >
-          Save Changes
+          {dateInfo.id === undefined ? "Create" : "Save Changes"}
         </Button>
-        <Button
-          variant="danger"
-          className="mx-3"
-          onClick={() => {
-            handleDelete();
-          }}
-        >
-          Delete Date
-        </Button>
+        {dateInfo.id === undefined ? (
+          <></>
+        ) : (
+          <Button
+            variant="danger"
+            className="mx-3"
+            onClick={() => {
+              handleDelete(dateInfo.id);
+            }}
+          >
+            Delete Date
+          </Button>
+        )}
       </Modal.Body>
     </Modal>
   );
