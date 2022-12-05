@@ -3,6 +3,7 @@ import Layout from "layouts/MainLayout";
 import UserCV from "components/UserCV/UserCV";
 import axios from "axios";
 import useStore from "store";
+import GenericPageLayout from "layouts/GenericPageLayout";
 
 const MyCVPage = () => {
   const [UserCVInfo, setUserCVInfo] = useState(null);
@@ -47,15 +48,17 @@ const MyCVPage = () => {
         content="Build your CV"
         color="var(--color-gray)"
       >
-        <h2>My CV</h2>
-        <hr />
-        <p className={pageMsgStyle}>{pageMsg}</p>
-        <UserCV
-          cv={UserCVInfo}
-          setPageMsg={setPageMsg}
-          setPageMsgStyle={setPageMsgStyle}
-          setUserCVInfo={setUserCVInfo}
-        />
+        <GenericPageLayout>
+          <h2>My CV</h2>
+          <hr />
+          <p className={pageMsgStyle}>{pageMsg}</p>
+          <UserCV
+            cv={UserCVInfo}
+            setPageMsg={setPageMsg}
+            setPageMsgStyle={setPageMsgStyle}
+            setUserCVInfo={setUserCVInfo}
+          />
+        </GenericPageLayout>
       </Layout>
     );
   }

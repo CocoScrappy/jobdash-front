@@ -33,7 +33,8 @@
   background-color: var(--color-gray);
 }
 
-h1 {
+h1,
+h2 {
   font-family: "Archivo Black", sans-serif;
 }
 

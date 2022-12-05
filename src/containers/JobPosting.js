@@ -10,7 +10,10 @@ import Layout from "../layouts/MainLayout";
 import useStore from "store";
 import { Formik, Field, Form } from "formik";
 import { set } from "date-fns";
-import ProgressBar from 'react-bootstrap/ProgressBar';
+import ProgressBar from "react-bootstrap/ProgressBar";
+import GenericPageLayout from "layouts/GenericPageLayout";
+// CSS
+import "../css/components/Stylized-letters.css";
 
 export const JobPosting = () => {
   var uRole = useStore((state) => state.role);
@@ -31,8 +34,8 @@ export const JobPosting = () => {
 
   const [showAdd, setShowAdd] = useState(false);
 
-  const[loading,setLoading]=useState(false);
-  const[percent,setPercent]=useState(0);
+  const [loading, setLoading] = useState(false);
+  const [percent, setPercent] = useState(0);
 
   const handleCloseAdd = () => {
     setShowAdd(false);
@@ -67,7 +70,7 @@ export const JobPosting = () => {
         }
       ) //FIXME : trailing / ?
       .then((res) => {
-        console.log(JSON.stringify(res.data.results))
+        console.log(JSON.stringify(res.data.results));
         setJobpostings(res.data.results);
         setPostCount(res.data.count);
         handlePages();
@@ -92,47 +95,47 @@ export const JobPosting = () => {
     const searchLocation = data.location;
     const searchEngine = data.searchEngineSelect;
 
-    if(searchEngine==="monster")
-    {
+    if (searchEngine === "monster") {
       const message = {
-        searchTerm:searchString,
-        searchLocation:searchLocation
-      }
+        searchTerm: searchString,
+        searchLocation: searchLocation,
+      };
       setJobpostings([]);
-      const socket = new WebSocket(`${process.env.REACT_APP_API_URL_WS}/ws/search/userId/${uId}/`);
-      socket.onopen = function(e){
+      const socket = new WebSocket(
+        `${process.env.REACT_APP_API_URL_WS}/ws/search/userId/${uId}/`
+      );
+      socket.onopen = function (e) {
         console.log("connection established");
-        socket.send(JSON.stringify(message))
-      }
+        socket.send(JSON.stringify(message));
+      };
 
-      socket.onmessage=function(event){
-        var res=JSON.parse(event.data);
+      socket.onmessage = function (event) {
+        var res = JSON.parse(event.data);
         // console.log("event occured, data is ="+res.message)
-        if(res.message==="Beginning search"){
+        if (res.message === "Beginning search") {
           console.log("Recognized Begin Search");
           setLoading(true);
         }
-        if(res.percent!==undefined){
+        if (res.percent !== undefined) {
           setPercent(res.percent);
           console.log("Recognized Begin Percentage");
         }
 
-        if(res.payload!==undefined){
+        if (res.payload !== undefined) {
           setLoading(false);
-          console.log(res.payload)
-          setJobpostings(JSON.parse(res.payload)) //res
-          setPercent(0)
+          console.log(res.payload);
+          setJobpostings(JSON.parse(res.payload)); //res
+          setPercent(0);
         }
-      }
+      };
 
-      socket.onclose = function (event){
-        if(event.wasClean){
+      socket.onclose = function (event) {
+        if (event.wasClean) {
           console.log("Clean Exit");
+        } else {
+          console.log("Connection died");
         }
-        else{
-          console.log("Connection died")
-        }
-      }
+      };
       return;
     }
 
@@ -151,7 +154,7 @@ export const JobPosting = () => {
         }
       )
       .then((res) => {
-        console.log("Result")
+        console.log("Result");
         console.log(res.data);
         const result = [];
         //res.data.results.forEach((match) => result.push(match.fields));
@@ -188,28 +191,38 @@ export const JobPosting = () => {
     <Layout
       title="Job Dash | Job Postings"
       content="job offers application postings"
+      color="var(--color-gray)"
     >
-      <Container>
-        <h2>Job Postings</h2>
-        <h3>Search by Keyword</h3>
-        <Formik initialValues={{ search: "",location:"" }} onSubmit={searchJobs}>
-          <Form>
-            <Field id="search" name="search" placeholder="Search Jobs..." />
-            &nbsp;
-            <Field id="location" name="location" placeholder="Job Location..." />
-            &nbsp;
-            <Field
-              as="select"
-              name="searchEngineSelect"
-              aria-label="Search Engine Select"
-              id="searchEngineSelect"
-            >
-              <option value="jobdash">JobDash</option>
-              <option value="monster">Monster</option>
-            </Field>
-            <button type="submit">Search</button>
-          </Form>
-        </Formik>
+      <GenericPageLayout>
+        <div className="pb-5">
+          <h2>What kind of job are you looking for?</h2>
+          {/* <p className="stylized-letters">JD</p> */}
+          <Formik
+            initialValues={{ search: "", location: "" }}
+            onSubmit={searchJobs}
+          >
+            <Form>
+              <Field id="search" name="search" placeholder="Search Jobs..." />
+              &nbsp;
+              <Field
+                id="location"
+                name="location"
+                placeholder="Job Location..."
+              />
+              &nbsp;
+              <Field
+                as="select"
+                name="searchEngineSelect"
+                aria-label="Search Engine Select"
+                id="searchEngineSelect"
+              >
+                <option value="jobdash">JobDash</option>
+                <option value="monster">Monster</option>
+              </Field>
+              <button type="submit">Search</button>
+            </Form>
+          </Formik>
+        </div>
         {/* Modal to add job posting form */}
         <div
           style={{
@@ -223,9 +236,7 @@ export const JobPosting = () => {
           <strong>Add job posting</strong>
         </div>
 
-        {loading===true &&
-          <ProgressBar animated now={percent} />
-        }
+        {loading === true && <ProgressBar animated now={percent} />}
 
         <Modal show={showAdd} onHide={handleCloseAdd}>
           <Modal.Header closeButton>
@@ -312,7 +323,7 @@ export const JobPosting = () => {
             );
           })}
         </ul>
-      </Container>
+      </GenericPageLayout>
     </Layout>
   );
 };
