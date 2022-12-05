@@ -52,7 +52,10 @@ function JobApplicationForm({ posting }) {
     axios
       .post(
         `${process.env.REACT_APP_API_URL}/api/applications/`,
-        applicationData
+        applicationData,{
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("atoken"),
+          },}
       )
       .then((res) => {
         setModalContent("Application submitted successfully!");
@@ -118,8 +121,8 @@ function JobApplicationForm({ posting }) {
           <p>{state.description}</p>
         </div>
         <div>
-          <h5>Job Description: </h5>
-          <p>{state.link}</p>
+          <h5>Job Link: </h5>
+          <a href={state.link}>{state.link}</a>
         </div>
           <Form>
             {/* Notes */}
