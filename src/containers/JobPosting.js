@@ -97,12 +97,12 @@ export const JobPosting = () => {
         }
       });
   }, [toggleState, offset, limit]);
-
+  //search by keyword and location
   const searchJobs = (data) => {
     const searchString = data.search;
     const searchLocation = data.location;
     const searchEngine = data.searchEngineSelect;
-
+    //select for internal or external search
     if (searchEngine === "monster") {
       const message = {
         searchTerm: searchString,
@@ -146,12 +146,12 @@ export const JobPosting = () => {
       };
       return;
     }
-
+    //default internal search if no search input
     if (searchString === "") {
       setToggleState((t) => !t);
       return;
     }
-
+    //axios call to database for list of internal job posting
     axios
       .get(
         `${process.env.REACT_APP_API_URL}/api/postings/search/${searchString}/${searchLocation}`,
@@ -175,7 +175,7 @@ export const JobPosting = () => {
         console.log(err);
       });
   };
-
+  //pagination by page number
   const renderPagination = (p) => {
     return (
       <li
