@@ -3,6 +3,7 @@
  */
 import axios from "axios";
 import { format, parseISO } from "date-fns";
+import { Navigate } from "react-router-dom";
 
 /**
  * update favorited status
@@ -26,7 +27,7 @@ export const updateFavoritedStatus = ({
     )
     .then((response) => {
       console.log("favorited status updated");
-      console.log(response.data);
+      // console.log(response.data);
       setApplicationInfo({
         ...applicationInfo,
         favorited: updatedStatus,
@@ -58,7 +59,7 @@ export const fetchUserApplications = ({
       }
     )
     .then((response) => {
-      console.log(response);
+      // console.log(response);
       setJobApplications(response.data.results);
       setPaginationLinks({
         count: response.data.count,
@@ -89,7 +90,7 @@ export const getApplicationInfo = ({ applicationId, setApplicationInfo }) => {
       }
     )
     .then((response) => {
-      console.log(response);
+      // console.log(response);
       setApplicationInfo(response.data);
     })
     .catch((error) => {
@@ -115,7 +116,7 @@ export const getStatusOptions = ({ setStatusOptions }) => {
       }
     )
     .then((response) => {
-      console.log(response.data);
+      // console.log(response.data);
       setStatusOptions(response.data);
     })
     .catch((error) => {
@@ -150,7 +151,7 @@ export const updateApplicationStatus = ({
     )
     .then((response) => {
       setStatusMsg(`Application status updated to: ${updatedStatus}`);
-      console.log(response.data);
+      // console.log(response.data);
       setApplicationInfo({
         ...applicationInfo,
         status: updatedStatus,
@@ -188,8 +189,8 @@ export const updateApplicationNotes = ({
       }
     )
     .then((response) => {
-      console.log("Notes updated successfully");
-      console.log(response.data);
+      // console.log("Notes updated successfully");
+      // console.log(response.data);
       setApplicationInfo({
         ...applicationInfo,
         notes: response.data.notes,
@@ -224,7 +225,7 @@ export const paginationNavigator = ({
       },
     })
     .then((response) => {
-      console.log(response);
+      // console.log(response);
       dataSetter(response.data.results);
       paginationLinksSetter({
         count: response.data.count,
@@ -261,7 +262,7 @@ export const jumpToPaginationItem = ({
       }
     )
     .then((response) => {
-      console.log(response);
+      // console.log(response);
       dataSetter(response.data.results);
       paginationLinksSetter({
         count: response.data.count,
@@ -277,6 +278,10 @@ export const jumpToPaginationItem = ({
     });
 };
 
+/**
+ * Search a table in the database using a search string
+ * @param {} param0
+ */
 export const searchList = ({
   apiBaseUrl,
   data,
@@ -291,7 +296,7 @@ export const searchList = ({
       },
     })
     .then((res) => {
-      console.log(res.data);
+      // console.log(res.data);
       dataSetter(res.data);
       responseMsgSetter(res.data.length + " results found");
       responseMsgStyleSetter("text-success");
@@ -301,5 +306,151 @@ export const searchList = ({
       responseMsgSetter(err.response.data.message);
       responseMsgStyleSetter("text-danger");
       dataSetter(err.response.data.data);
+    });
+};
+
+export const getSavedDateInfo = ({ dateId, dataSetter }) => {
+  axios
+    .get(`${process.env.REACT_APP_API_URL}/api/dates/${dateId}/`, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("atoken"),
+      },
+    })
+    .then((response) => {
+      // console.log(response);
+      dataSetter(response.data);
+    })
+    .catch((error) => {
+      if (error.response.data) {
+        console.log(error.response.data.message);
+      }
+      console.log(error);
+    });
+};
+
+/**
+ * Create new date in applications details page
+ * @param {*} param0
+ */
+export const postNewDate = ({
+  dateInfo,
+  dataSetter,
+  parentSetter,
+  parentObject,
+  msgSetter,
+}) => {
+  axios
+    .post(`${process.env.REACT_APP_API_URL}/api/dates/`, dateInfo, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("atoken"),
+      },
+    })
+    .then((response) => {
+      msgSetter(
+        "Successfully created on: " +
+          format(new Date(), "MMM dd, yyyy, h:mm:ss aa")
+      );
+      dataSetter(response.data);
+      console.log(parentObject);
+      let newApplicationDates = parentObject.saved_dates;
+      newApplicationDates.push(response.data);
+      // console.log(newApplicationDates);
+      parentSetter({
+        ...parentObject,
+        saved_dates: newApplicationDates,
+      });
+      // console.log(props.applicationInfo);
+    })
+    .catch((error) => {
+      console.log(error);
+      if (error.response) {
+        console.log(error);
+      }
+    });
+};
+
+/**
+ * update saved date on application info page
+ * @param {*} param0
+ */
+export const updateSavedDate = ({
+  dateId,
+  dateInfo,
+  msgSetter,
+  applicationInfo,
+  setApplicationInfo,
+}) => {
+  axios
+    .put(`${process.env.REACT_APP_API_URL}/api/dates/${dateId}/`, dateInfo, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("atoken"),
+      },
+    })
+    .then((response) => {
+      msgSetter(
+        "Successfully updated on: " +
+          format(new Date(), "MMM dd, yyyy, h:mm:ss aa")
+      );
+      let newApplicationDates = applicationInfo.saved_dates.map((date) => {
+        console.log(date.id === dateInfo.id);
+        if (date.id === dateInfo.id) {
+          return dateInfo;
+        }
+        return date;
+      });
+      console.log(newApplicationDates);
+      setApplicationInfo({
+        ...applicationInfo,
+        saved_dates: newApplicationDates,
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      if (error.response) {
+        console.log(error);
+      }
+    });
+};
+
+/**
+ * delete saved date using id
+ * @param {*} dateId
+ */
+export const deleteSavedDate = (dateId) => {
+  axios
+    .delete(`${process.env.REACT_APP_API_URL}/api/dates/${dateId}/`, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("atoken"),
+      },
+    })
+    .then((response) => {
+      window.location.reload(false);
+    })
+    .catch((error) => {
+      console.log(error);
+      if (error.response) {
+        console.log(error);
+      }
+    });
+};
+
+export const deleteApplication = ({ applicationId, navigate }) => {
+  axios
+    .delete(
+      `${process.env.REACT_APP_API_URL}/api/applications/${applicationId}/`,
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("atoken"),
+        },
+      }
+    )
+    .then((response) => {
+      navigate("/jobapplications");
+    })
+    .catch((error) => {
+      console.log(error);
+      if (error.response) {
+        console.log(error);
+      }
     });
 };
