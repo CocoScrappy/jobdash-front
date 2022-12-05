@@ -3,6 +3,7 @@
  */
 import axios from "axios";
 import { format, parseISO } from "date-fns";
+import { Navigate } from "react-router-dom";
 
 /**
  * update favorited status
@@ -424,6 +425,27 @@ export const deleteSavedDate = (dateId) => {
     })
     .then((response) => {
       window.location.reload(false);
+    })
+    .catch((error) => {
+      console.log(error);
+      if (error.response) {
+        console.log(error);
+      }
+    });
+};
+
+export const deleteApplication = ({ applicationId, navigate }) => {
+  axios
+    .delete(
+      `${process.env.REACT_APP_API_URL}/api/applications/${applicationId}/`,
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("atoken"),
+        },
+      }
+    )
+    .then((response) => {
+      navigate("/jobapplications");
     })
     .catch((error) => {
       console.log(error);

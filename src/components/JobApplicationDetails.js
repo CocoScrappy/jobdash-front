@@ -11,6 +11,7 @@ import {
   getStatusOptions,
   updateApplicationStatus,
   updateApplicationNotes,
+  deleteApplication,
 } from "../helpers/Utils";
 import Heart from "react-heart";
 import Select from "react-select";
@@ -73,6 +74,13 @@ function JobApplicationDetails(props) {
     setShowDateModal(false);
   };
 
+  const handleDeleteApplication = (applicationId) => {
+    const confirmed = window.confirm("Are you sure you want to delete?");
+    if (confirmed) {
+      deleteApplication({ applicationId, navigate });
+    }
+  };
+
   // console.log(applicationInfo);
   if (applicationInfo === undefined) {
     return null;
@@ -91,6 +99,13 @@ function JobApplicationDetails(props) {
           <h6 className="mb-4">{applicationInfo.job_posting.remote_option}</h6>
         </div>
         <div className="col">
+          <Button
+            className="my-3"
+            variant="danger"
+            onClick={() => handleDeleteApplication(applicationId)}
+          >
+            Delete
+          </Button>
           <Heart
             style={{ cursor: "default" }}
             // ref={likeBtn}
