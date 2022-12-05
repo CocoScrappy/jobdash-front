@@ -326,3 +326,109 @@ export const getSavedDateInfo = ({ dateId, dataSetter }) => {
       console.log(error);
     });
 };
+
+/**
+ * Create new date in applications details page
+ * @param {*} param0
+ */
+export const postNewDate = ({
+  dateInfo,
+  dataSetter,
+  parentSetter,
+  parentObject,
+  msgSetter,
+}) => {
+  axios
+    .post(`${process.env.REACT_APP_API_URL}/api/dates/`, dateInfo, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("atoken"),
+      },
+    })
+    .then((response) => {
+      msgSetter(
+        "Successfully created on: " +
+          format(new Date(), "MMM dd, yyyy, h:mm:ss aa")
+      );
+      dataSetter(response.data);
+      console.log(parentObject);
+      let newApplicationDates = parentObject.saved_dates;
+      newApplicationDates.push(response.data);
+      // console.log(newApplicationDates);
+      parentSetter({
+        ...parentObject,
+        saved_dates: newApplicationDates,
+      });
+      // console.log(props.applicationInfo);
+    })
+    .catch((error) => {
+      console.log(error);
+      if (error.response) {
+        console.log(error);
+      }
+    });
+};
+
+/**
+ * update saved date on application info page
+ * @param {*} param0
+ */
+export const updateSavedDate = ({
+  dateId,
+  dateInfo,
+  msgSetter,
+  applicationInfo,
+  setApplicationInfo,
+}) => {
+  axios
+    .put(`${process.env.REACT_APP_API_URL}/api/dates/${dateId}/`, dateInfo, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("atoken"),
+      },
+    })
+    .then((response) => {
+      msgSetter(
+        "Successfully updated on: " +
+          format(new Date(), "MMM dd, yyyy, h:mm:ss aa")
+      );
+      let newApplicationDates = applicationInfo.saved_dates.map((date) => {
+        console.log(date.id === dateInfo.id);
+        if (date.id === dateInfo.id) {
+          return dateInfo;
+        }
+        return date;
+      });
+      console.log(newApplicationDates);
+      setApplicationInfo({
+        ...applicationInfo,
+        saved_dates: newApplicationDates,
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      if (error.response) {
+        console.log(error);
+      }
+    });
+};
+
+/**
+ * delete saved date using id
+ * @param {*} dateId
+ */
+export const deleteSavedDate = (dateId) => {
+  axios
+    .delete(`${process.env.REACT_APP_API_URL}/api/dates/${dateId}/`, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("atoken"),
+      },
+    })
+    .then((response) => {
+      window.location.reload(false);
+    })
+    .catch((error) => {
+      console.log(error);
+      if (error.response) {
+        console.log(error);
+      }
+    });
+};

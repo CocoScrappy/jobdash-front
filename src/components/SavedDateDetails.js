@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { getSavedDateInfo } from "../helpers/Utils";
+import {
+  postNewDate,
+  updateSavedDate,
+  deleteSavedDate,
+} from "../helpers/Utils";
 import { Modal } from "react-bootstrap";
 import parse from "html-react-parser";
 import MyEditor from "./MyEditor";
@@ -22,72 +26,21 @@ const SavedDateDetails = (props) => {
     setUpdateResponseMsg("");
 
     if (dateInfo.id === undefined) {
-      axios
-        .post(`${process.env.REACT_APP_API_URL}/api/dates/`, dateInfo, {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("atoken"),
-          },
-        })
-        .then((response) => {
-          setUpdateResponseMsg(
-            "Successfully created on: " +
-              format(new Date(), "MMM dd, yyyy, h:mm:ss aa")
-          );
-          setDateInfo(response.data);
-          console.log(props.applicationInfo);
-          let newApplicationDates = props.applicationInfo.saved_dates;
-          newApplicationDates.push(response.data);
-          // console.log(newApplicationDates);
-          props.setApplicationInfo({
-            ...props.applicationInfo,
-            saved_dates: newApplicationDates,
-          });
-          // console.log(props.applicationInfo);
-        })
-        .catch((error) => {
-          console.log(error);
-          if (error.response) {
-            console.log(error);
-          }
-        });
+      postNewDate({
+        dateInfo: dateInfo,
+        dataSetter: setDateInfo,
+        parentSetter: props.setApplicationInfo,
+        parentObject: props.applicationInfo,
+        msgSetter: setUpdateResponseMsg,
+      });
     } else {
-      axios
-        .put(
-          `${process.env.REACT_APP_API_URL}/api/dates/${dateInfo.id}/`,
-          dateInfo,
-          {
-            headers: {
-              Authorization: "Bearer " + localStorage.getItem("atoken"),
-            },
-          }
-        )
-        .then((response) => {
-          setUpdateResponseMsg(
-            "Successfully updated on: " +
-              format(new Date(), "MMM dd, yyyy, h:mm:ss aa")
-          );
-          let newApplicationDates = props.applicationInfo.saved_dates.map(
-            (date) => {
-              console.log(date.id === dateInfo.id);
-              if (date.id === dateInfo.id) {
-                return dateInfo;
-              }
-              return date;
-            }
-          );
-          console.log(newApplicationDates);
-          props.setApplicationInfo({
-            ...props.applicationInfo,
-            saved_dates: newApplicationDates,
-          });
-          console.log(props.applicationInfo);
-        })
-        .catch((error) => {
-          console.log(error);
-          if (error.response) {
-            console.log(error);
-          }
-        });
+      updateSavedDate({
+        dateId: dateInfo.id,
+        dateInfo: dateInfo,
+        msgSetter: setUpdateResponseMsg,
+        applicationInfo: props.applicationInfo,
+        setApplicationInfo: props.setApplicationInfo,
+      });
     }
   };
 
@@ -99,21 +52,7 @@ const SavedDateDetails = (props) => {
   };
 
   const deleteDate = (dateId) => {
-    axios
-      .delete(`${process.env.REACT_APP_API_URL}/api/dates/${dateId}/`, {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("atoken"),
-        },
-      })
-      .then((response) => {
-        window.location.reload(false);
-      })
-      .catch((error) => {
-        console.log(error);
-        if (error.response) {
-          console.log(error);
-        }
-      });
+    deleteSavedDate(dateId);
   };
 
   return (
