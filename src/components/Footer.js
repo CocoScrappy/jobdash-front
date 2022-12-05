@@ -5,8 +5,8 @@ import "../css/components/Footer.css";
 
 const Footer = () => {
   return (
-    <footer className="d-none d-lg-block mt-3">
-      <div class="footer">
+    <footer className="d-none d-lg-block">
+      <Container fluid className="footer px-md-5">
         <div className="footer-links">
           <a href="#">
             <i className="bi bi-instagram"></i>
@@ -28,7 +28,7 @@ const Footer = () => {
           <span>&#169;</span> 2022. Made with{" "}
           <i className="bi bi-heart-fill"></i> at JAC
         </div>
-      </div>
+      </Container>
     </footer>
   );
 };
