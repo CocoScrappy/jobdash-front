@@ -6,7 +6,11 @@ const DashboardPage = () => {
   var userFirstName = useStore((state) => state.first_name);
   var userLastName = useStore((state) => state.last_name);
   return (
-    <Layout title="JOBDASH - Dashboard" content="Dashboard Page">
+    <Layout
+      title="JOBDASH - Dashboard"
+      content="Dashboard Page"
+      color="var(--color-gray)"
+    >
       <DashboardLayout>
         <h1>
           {userFirstName} {userLastName}

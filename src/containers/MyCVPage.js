@@ -42,7 +42,11 @@ const MyCVPage = () => {
   // }
   if (UserCVInfo != null) {
     return (
-      <Layout title="AuthSite | MyCVPage" content="MyCV Page">
+      <Layout
+        title="JOBDASH - MyCVPage"
+        content="Build your CV"
+        color="var(--color-gray)"
+      >
         <h2>My CV</h2>
         <hr />
         <p className={pageMsgStyle}>{pageMsg}</p>

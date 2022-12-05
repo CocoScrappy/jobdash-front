@@ -8,7 +8,11 @@ import DashboardLayout from "layouts/DashboardLayout";
  */
 function JobApplicationListingPage() {
   return (
-    <Layout title="JOBDASH - Applications" content="JobApplications">
+    <Layout
+      title="JOBDASH - Applications"
+      content="JobApplications"
+      color="var(--color-gray)"
+    >
       <DashboardLayout>
         <JobApplicationList />
       </DashboardLayout>
