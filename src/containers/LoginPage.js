@@ -33,6 +33,7 @@ const LoginPage = () => {
       .catch((error) => {
         if (error.response.data.detail != null) {
           setErrorMsg(error.response.data.detail);
+          console.log(errorMsg)
         }
       })
       .then((response) => {
@@ -148,7 +149,7 @@ const LoginPage = () => {
                 id="floatingInput"
                 placeholder="name@example.com"
               />
-              <label for="floatingInput">Email</label>
+              <label htmlFor="floatingInput">Email</label>
               <ErrorMessage name="email">
                 {(msg) => <div className="errorMsg">{msg}</div>}
               </ErrorMessage>
@@ -162,7 +163,8 @@ const LoginPage = () => {
                 id="floatingPassword"
                 placeholder="Password"
               />
-              <label for="floatingPassword">Password</label>
+              <label htmlFor="floatingPassword">Password</label>
+              <span className="errorMsg">{errorMsg}</span>
               <ErrorMessage name="password">
                 {(msg) => <div className="errorMsg">{msg}</div>}
               </ErrorMessage>
@@ -170,7 +172,7 @@ const LoginPage = () => {
 
             <div
               className="mb-3 d-flex justify-content-between w-100"
-              controlId="formBasicCheckbox"
+              // controlId="formBasicCheckbox"
             >
               {/* <Form.Check type="checkbox" label="Remember me" /> */}
               <div className="form-check">
@@ -180,7 +182,7 @@ const LoginPage = () => {
                   value=""
                   id="flexCheckDefault"
                 />
-                <label className="form-check-label" for="flexCheckDefault">
+                <label className="form-check-label" htmlFor="flexCheckDefault">
                   Remember me
                 </label>
               </div>
@@ -204,7 +206,7 @@ const LoginPage = () => {
               </Link>
             </p>
 
-            <span className="errorMsg"></span>
+            {/* <span className="errorMsg"></span> */}
 
             {/* Old form - FUNCTIONAL BUT NO STYLE*/}
             {/* <div className="row">
