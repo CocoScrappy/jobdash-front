@@ -178,6 +178,12 @@ function JobApplicationList(props) {
             </Form>
           </Formik>
         </div>
+      <div className="col" >
+      <Button variant="secondary" onClick={() => {
+        navigate("/externaljobapplicationform") }} >
+              + Application
+            </Button>
+      </div>
       </div>
       <table className="table table-striped">
         <thead>
