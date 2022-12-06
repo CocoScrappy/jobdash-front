@@ -23,6 +23,7 @@ import { set } from "date-fns";
 import GenericPageLayout from "layouts/GenericPageLayout";
 // CSS
 import "../css/components/Stylized-letters.css";
+import "../css/components/SearchForm.css";
 
 export const JobPosting = () => {
   //user
@@ -210,30 +211,37 @@ export const JobPosting = () => {
           />
         )}
         <div className="pb-5">
-          <h2>What kind of job are you looking for?</h2>
-          {/* <p className="stylized-letters">JD</p> */}
+          <h2 className="pb-lg-3">What job are you looking for?</h2>
+          {/* FIXME Extract this form into its own component for cleaner code */}
           <Formik
             initialValues={{ search: "", location: "" }}
             onSubmit={searchJobs}
           >
-            <Form>
-              <Field id="search" name="search" placeholder="Search Jobs..." />
-              &nbsp;
-              <Field
-                id="location"
-                name="location"
-                placeholder="Job Location..."
-              />
-              &nbsp;
-              <Field
-                as="select"
-                name="searchEngineSelect"
-                aria-label="Search Engine Select"
-                id="searchEngineSelect"
-              >
-                <option value="jobdash">JobDash</option>
-                <option value="monster">Monster</option>
-              </Field>
+            <Form className="border search-form-jobdash shadow-lg">
+              <div>
+                <div className="search-icon">
+                  <i class="bi bi-search"></i>
+                </div>
+                <Field
+                  id="search"
+                  name="search"
+                  placeholder="Job title or keyword"
+                />
+              </div>
+              <div>
+                <Field id="location" name="location" placeholder="Location" />
+              </div>
+              <div>
+                <Field
+                  as="select"
+                  name="searchEngineSelect"
+                  aria-label="Search Engine Select"
+                  id="searchEngineSelect"
+                >
+                  <option value="jobdash">JobDash</option>
+                  <option value="monster">Monster</option>
+                </Field>
+              </div>
               <button type="submit">Search</button>
             </Form>
           </Formik>
