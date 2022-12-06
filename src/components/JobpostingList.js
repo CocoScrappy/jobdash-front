@@ -50,15 +50,6 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
   //   employer,
   // } = record;
 
-  const addJPId = useStore((state) => state.addJpId);
-  const addJPTitle = useStore((state) => state.addTitle);
-  const addJPLogoUrl = useStore((state) => state.addLogo_url);
-  const addJPLocation = useStore((state) => state.addLocation);
-  const addJPDescription = useStore((state) => state.addDescription);
-  const addJPDateCreated = useStore((state) => state.addDateCreated);
-  const addJPRemoteOption = useStore((state) => state.addRemoteOption);
-  const addJPEmployerId = useStore((state) => state.addEmployerId);
-  const addJPCompanyName = useStore((state) => state.addCompanyName);
 
   const handleChange = (e) => {
     setRecord({ ...record, [e.target.name]: e.target.value });
@@ -104,27 +95,6 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
       });
   };
 
-  const handleApply = async (id, company) => {
-    return axios
-      .get(`${process.env.REACT_APP_API_URL}/api/postings/${id}/`)
-      .then((res) => {
-        console.log(res);
-        addJPId(res.data.id);
-        addJPTitle(res.data.title);
-        //addJPLogoUrl(res.data.logo_url);
-        addJPLocation(res.data.location);
-        addJPDescription(res.data.description);
-        addJPDateCreated(res.data.date_created);
-        addJPRemoteOption(res.data.remote_option);
-        addJPEmployerId(res.data.employer_id);
-        addJPCompanyName(company);
-        navigate("/jobapplicationform");
-        return;
-      })
-      .catch(() => {
-        alert("Something wrong with aplying to Job posting");
-      });
-  };
 
   //on click event to open job description in a modal
   const previewJobDescription = (post) => {
@@ -192,8 +162,8 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
               style={{
                 cursor: "pointer",
               }}
-              onClick={async () => {
-                await handleApply(t.id, t.company);
+              onClick={ () => {
+                navigate("/jobapplicationform", { state: { ...t } });
               }}
             />
           </div>

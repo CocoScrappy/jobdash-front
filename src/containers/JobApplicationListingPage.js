@@ -1,6 +1,6 @@
 import Layout from "layouts/MainLayout";
 import JobApplicationList from "components/JobApplicationList/JobApplicationList";
-import { Container } from "react-bootstrap";
+import DashboardLayout from "layouts/DashboardLayout";
 
 /**
  * A function that updatest he favorited status of an application
@@ -8,10 +8,14 @@ import { Container } from "react-bootstrap";
  */
 function JobApplicationListingPage() {
   return (
-    <Layout title="JobApplications" content="JobApplications">
-      <Container>
+    <Layout
+      title="JOBDASH - Applications"
+      content="JobApplications"
+      color="var(--color-gray)"
+    >
+      <DashboardLayout>
         <JobApplicationList />
-      </Container>
+      </DashboardLayout>
     </Layout>
   );
 }

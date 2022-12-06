@@ -9,12 +9,14 @@ import axios from "axios";
 import { format } from "date-fns";
 import useStore from "store";
 import parse from "html-react-parser";
+import FlashAlert from "./FlashAlert";
 
 export default function JobpostingForm({ jobpostings, setJobpostings }) {
   var uId = useStore((state) => state.id);
   var uRole = useStore((state) => state.role);
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [variant, setVariant] = useState("");
+  const [alertMsg, setAlertMsg] = useState("");
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
   const [convertedContent, setConvertedContent] = useState("");
@@ -39,7 +41,6 @@ export default function JobpostingForm({ jobpostings, setJobpostings }) {
 
     console.log(formData);
     if (!formData) {
-      alert("Please provide a valid value for jobposting");
       return;
     }
     formData.description = convertedContent;
@@ -55,16 +56,17 @@ export default function JobpostingForm({ jobpostings, setJobpostings }) {
         const { data } = res;
         setErrors({});
         setJobpostings([...jobpostings, data]);
-        setSuccess(true);
-        setError(false);
+        setAlertMsg("Job successfully posted!");
+        setVariant("success");
+        setShowAlert(true);
       })
       .catch(function (e) {
         if (e.response !== null) {
           setErrors({ ...errors, ...e.response.data });
-          setError(true);
-          setSuccess(false);
+          setAlertMsg("Could not save to database.");
+          setVariant("danger");
+          setShowAlert(true);
         } else {
-          alert("Something went wrong while calling database.");
         }
       });
     //make sure this works since changing parentesis near catch?
@@ -169,8 +171,13 @@ export default function JobpostingForm({ jobpostings, setJobpostings }) {
       <InputGroup className="mb-4">
         <Button type="sumbit"> Add job posting</Button>
       </InputGroup>
-      {error && <p>Oh noes! Something's wrong!</p>}
-      {success && <p>Hurray! yay! Success!</p>}
+      {showAlert && (
+        <FlashAlert
+          setShowAlert={setShowAlert}
+          msg={alertMsg}
+          variant={variant}
+        />
+      )}
     </Form>
   );
 }

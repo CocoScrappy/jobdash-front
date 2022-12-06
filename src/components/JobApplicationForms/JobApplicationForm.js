@@ -1,83 +1,132 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState} from "react";
 import Layout from "layouts/MainLayout";
-import { Button, InputGroup, Container } from "react-bootstrap";
+import { Button, Container } from "react-bootstrap";
 import Heart from "react-heart";
-import MyCVPage from "containers/MyCVPage";
-
+import { Modal } from "react-bootstrap";
 import useStore from "store";
 import axios from "axios";
-import { Formik, Field, Form } from "formik";
+import { Form } from "react-bootstrap";
+import MyEditor from "components/MyEditor";
+import { useNavigate, useLocation  } from "react-router-dom";
+import parse from "html-react-parser";
 
-function JobApplicationForm({ posting }) {
-  const state = useStore();
-  const ISODate = new Date(state.date_created);
+
+function JobApplicationForm() {
+  
+  const handleSubmit = event => {
+    event.preventDefault();
+  };
+
+  const store = useStore();
+  const uId = store.id;
+  const uCv = store.cv_id;
+  const navigate = useNavigate();
+  const jobPostingInfo = useLocation();
+  
+  const [post, setPost] = useState(jobPostingInfo.state);
+  const ISODate = new Date(post.date_created);
   const shortDate = ISODate.toDateString();
-
   const [isLiked, setIsLiked] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [convertedNoteContent, setConvertedNoteContent] = useState("");
 
-  const [cv, setCv] = useState({});
+  const [modalShow, setModalShow] = useState(false);
+  const [modalState, setModalState] = useState("close");
+      
+  const handleShowModalSuccess = () => {
+   setModalState("modal-success")
+  }
+  
+  const handleShowModalFail = () => {
+   setModalState("modal-fail");
+  }
+  
+  const handleCloseSuccess = () => {
+   setModalState("close");
+   navigate('/jobpostings');
+  }
 
-  //handling form inputs
-  const [formData, setFormData] = useState({});
-  const { notes } = formData;
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  const handleCloseFail = () => {
+    setModalState("close")
+   }
 
-  const getUserCV = async () => {
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/api/cvs/get_user_cvs/`, {
-        headers: { Authorization: "Bearer " + localStorage.getItem("atoken") },
-      })
-      .then((response) => {
-        setCv(response.data);
-      })
-      .catch((error) => {
-        console.log(error.response.data.message);
-        // console.log(UserCVInfo)
-      });
-  };
 
-  useEffect(() => {
-    getUserCV();
-  }, []);
 
-  const submitApplication = (data) => {
+  const submitApplication = () => {
     var applicationData = {};
-
-    console.log("cv " + cv);
     try {
       applicationData = {
-        notes: data.notes,
+        notes: convertedNoteContent,
         favorited: isLiked,
         status: "applied",
-        applicant: state.id,
-        cv: cv.id,
-        job_posting: state.jpid,
+        applicant: uId,
+        cv: uCv,
+        job_posting: post.id,
+        saved_dates: [],
       };
     } catch (err) {
       console.log(
         "Whoops, something went wrong while assigning the values for the request body"
       );
     }
-    console.log("application: " + JSON.stringify(applicationData));
-    console.log("submitting application");
     axios
       .post(
         `${process.env.REACT_APP_API_URL}/api/applications/`,
-        applicationData
+        applicationData,{
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("atoken"),
+          },
+        }
       )
       .then((res) => {
-        console.log(res);
+        if (res.status === 201) {
+        handleShowModalSuccess();
         setSuccess(true);
+        }
       })
-      .catch(() => {
-        alert("Something went wrong while calling database.");
+      .catch((error) => {
+        setSuccess(false);
+        handleShowModalFail(error);
       });
-
-    setSuccess(true);
   };
+
+  function MyVerticallyCenteredModal() {
+
+    return (
+      <>
+      <Modal show={modalState === "modal-success"}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered>
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Status
+          </Modal.Title>
+        </Modal.Header>
+          <Modal.Body>Job application record created successfully!</Modal.Body>
+          <Modal.Footer>
+            <Button variant="primary" onClick={handleCloseSuccess}>Close</Button>
+          </Modal.Footer>
+      </Modal>
+     
+      <Modal show={modalState === "modal-fail"}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered>
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Status
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Oops, something went wrong with your request. Try again later. </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={handleCloseFail}>Close</Button>
+        </Modal.Footer>
+      </Modal>
+      </>
+    );
+  }
+
 
   return (
     <Layout title="JobApplicationForm" content="JobApplicationForm">
@@ -86,47 +135,48 @@ function JobApplicationForm({ posting }) {
       </div>
       <Container>
         <div>
-          <h5>Company: {state.company_name}</h5>
-          <h5>Job Title: {state.title}</h5>
+          <h5>Company: {post.company}</h5>
+          <h5>Job Title: {post.title}</h5>
         </div>
         <div style={{ width: "1.5rem" }}>
           <h5>Favorite: </h5>
           <Heart isActive={isLiked} onClick={() => setIsLiked(!isLiked)} />
         </div>
         <div>
-          <h5>Location: {state.location}</h5>
-          <h5>Remote Option: {state.remote_option}</h5>
+          <h5>Location: {post.location}</h5>
+          <h5>Remote Option: {post.remote_option}</h5>
           <h5>Date Created: {shortDate}</h5>
         </div>
         <div>
           <h5>Job Description: </h5>
-          <p>{state.description}</p>
+          <p>{parse(post.description)}</p>
         </div>
-        <Formik initialValues={{ notes: "" }} onSubmit={submitApplication}>
-          <Form>
-            <label htmlFor="notes">Notes: </label>
-            <Field
-              id="notes"
-              name="notes"
-              as="textarea"
-              rows={3}
-              placeholder="Notes go here"
-            />
-            {/* <Form.Label as="h5">Notes: </Form.Label>
-                <Form.Control
+        <div>
+          <h5>Job Link: <a href={post.link}>{post.link ?? "None"}</a> </h5>
+        </div>
 
-                    placeholder="Add your notes here..."
-                    onChange={handleChange}
-                    name="notes"
-                    value={notes} /> */}
-            {/* Add CV selector <MyCVsPage/> */}
+          <Form onSubmit={handleSubmit}>
+            {/* Notes */}
+            <div className="mb-4">
+            <h4>Notes</h4>
+              <MyEditor
+                content={""}
+                name="notes"
+                placeholder={"Notes..."}
+                setConvertedContent={setConvertedNoteContent}
+              />
+            </div>
 
-            <button variant="primary" type="submit">
+          {/* Save Button */}
+          <Button variant="primary" type="submit" onClick={submitApplication}>
               Apply
-            </button>
+          </Button>
           </Form>
-        </Formik>
       </Container>
+      <MyVerticallyCenteredModal
+        show={modalShow}
+        onHide={() => {setModalShow(false); navigate('/jobpostings')}}
+      />
     </Layout>
   );
 }

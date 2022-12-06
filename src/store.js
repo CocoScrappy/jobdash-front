@@ -14,6 +14,7 @@ const useStore = create(
       last_name: "",
       role: "",
       cv_id: "",
+      cv_id: "",
 
       // User Info
       addId: (uid) => {
@@ -41,71 +42,20 @@ const useStore = create(
           role: uRole,
         }));
       },
-      addCVId: (cvId) => {
+      addCVId: (uCVId) => {
         set(() => ({
-          cv_id: cvId,
+          cv_id: uCVId,
         }));
       },
 
 
-      jpid: -1,
-      title: "",
-      logo_url: "",
-      location: "",
-      description: "",
-      date_created: "",
-      remote_option: "",
-      employer_id: -1,
-      company_name: "",
+      link:"",
 
-      // Job Post (jp) Info
-      addJpId: (jpid) => {
-        set(() => ({
-          jpid: jpid,
-        }));
+      addLink:(link)=>{
+        set(()=>({
+          link:link
+        }))
       },
-      addTitle: (jpTitle) => {
-        set(() => ({
-          title: jpTitle,
-        }));
-      },
-      addLogoUrl: (jpLogoUrl) => {
-        set(() => ({
-          logo_url: jpLogoUrl,
-        }));
-      },
-      addLocation: (jpLocation) => {
-        set(() => ({
-          location: jpLocation,
-        }));
-      },
-      addDescription: (jpDescription) => {
-        set(() => ({
-          description: jpDescription,
-        }));
-      },
-      addDateCreated: (jpDateCreated) => {
-        set(() => ({
-          date_created: jpDateCreated,
-        }));
-      },
-      addRemoteOption: (jpRemoteOption) => {
-        set(() => ({
-          remote_option: jpRemoteOption,
-        }));
-      },
-      addEmployerId: (jpEmployerId) => {
-        set(() => ({
-          employer_id: jpEmployerId,
-        }));
-      },
-      addCompanyName: (jpCompanyName) => {
-        set(() => ({
-          company_name: jpCompanyName,
-        }));
-      },
-    
-
 
     }),
     {
