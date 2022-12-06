@@ -30,7 +30,6 @@ function JobApplicationForm({ posting }) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-
   const submitApplication = (data) => {
     var applicationData = {};
     try {
@@ -52,10 +51,12 @@ function JobApplicationForm({ posting }) {
     axios
       .post(
         `${process.env.REACT_APP_API_URL}/api/applications/`,
-        applicationData,{
+        applicationData,
+        {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("atoken"),
-          },}
+          },
+        }
       )
       .then((res) => {
         setModalContent("Application submitted successfully!");
@@ -79,15 +80,11 @@ function JobApplicationForm({ posting }) {
         centered
       >
         <Modal.Header closeButton>
-          <Modal.Title id="contained-modal-title-vcenter">
-            Info
-          </Modal.Title>
+          <Modal.Title id="contained-modal-title-vcenter">Info</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <h4>Good Luck!</h4>
-          <p>
-            Job application record created successfully!
-          </p>
+          <p>Job application record created successfully!</p>
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={props.onHide}>Close</Button>
@@ -95,7 +92,6 @@ function JobApplicationForm({ posting }) {
       </Modal>
     );
   }
-
 
   return (
     <Layout title="JobApplicationForm" content="JobApplicationForm">
@@ -124,35 +120,38 @@ function JobApplicationForm({ posting }) {
           <h5>Job Link: </h5>
           <a href={state.link}>{state.link}</a>
         </div>
-          <Form>
-            {/* Notes */}
-            <div className="mb-4">
+        <Form>
+          {/* Notes */}
+          <div className="mb-4">
             <h4>Notes</h4>
-              <MyEditor
-                content={""}
-                name="notes"
-                placeholder={"Notes..."}
-                setConvertedContent={setConvertedNoteContent}
-              />
-            </div>
-            {/* <Form.Label as="h5">Notes: </Form.Label>
+            <MyEditor
+              content={""}
+              name="notes"
+              placeholder={"Notes..."}
+              setConvertedContent={setConvertedNoteContent}
+            />
+          </div>
+          {/* <Form.Label as="h5">Notes: </Form.Label>
                 <Form.Control
 
                     placeholder="Add your notes here..."
                     onChange={handleChange}
                     name="notes"
                     value={notes} /> */}
-            {/* Add CV selector <MyCVsPage/> */}
+          {/* Add CV selector <MyCVsPage/> */}
 
           {/* Save Button */}
           <Button variant="primary" type="submit" onClick={submitApplication}>
-              Apply
+            Apply
           </Button>
-          </Form>
+        </Form>
       </Container>
       <MyVerticallyCenteredModal
         show={modalShow}
-        onHide={() => {setModalShow(false); navigate('/jobpostings')}}
+        onHide={() => {
+          setModalShow(false);
+          navigate("/jobpostings");
+        }}
       />
     </Layout>
   );

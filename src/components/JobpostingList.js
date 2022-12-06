@@ -16,6 +16,10 @@ import useStore from "store";
 import MyEditor from "components/MyEditor";
 import PreviewModal from "./PreviewModal";
 
+//css
+// css
+import "../css/layouts/CardGrid.css";
+
 //icons
 import {
   MdCheckBox,
@@ -25,6 +29,7 @@ import {
   MdSend,
 } from "react-icons/md";
 import { BsPersonLinesFill } from "react-icons/bs";
+import { Card, Col, Container, Row } from "react-bootstrap";
 
 export default function JobpostingList({ jobpostings = [], setJobpostings }) {
   var uId = useStore((state) => state.id);
@@ -136,15 +141,37 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
   };
 
   const renderListGroupItem = (t) => {
+    // console.log("t is", t);
     return (
-      <ListGroup.Item
+      // <ListGroup.Item
+      <div
         key={t.id}
-        className="d-flex justify-content-between align-items-center"
+        className="shadow-sm card--job"
+        style={{
+          background: "white",
+          padding: "14px",
+          borderRadius: "8px",
+        }}
       >
-        <div className="d-flex justify-content-center">
-          <span>
-            {t.title} || {t.remote_option} || {t.company} ||
-          </span>
+        <div className="d-flex flex-column">
+          {/* <img src={t.logo_url} /> */}
+          <p>Posted {new Date(t.date_created).toLocaleDateString()}</p>
+          <h3>{t.title}</h3>
+          <p>{t.company}</p>
+          {/* FIXME WIP - Temporary style just for testing */}
+          <p
+            style={{
+              backgroundColor: "#94ff846e",
+              width: "fit-content",
+              padding: "4px 12px",
+              borderRadius: "7px",
+              color: "#17ae00",
+              fontWeight: "bold",
+            }}
+          >
+            {t.remote_option}
+          </p>
+          <p>{t.location}</p>
 
           <p
             variant="primary"
@@ -188,7 +215,7 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
             />
           </>
         )}
-        {uRole == "user" && (
+        {uRole === "user" && (
           <div>
             <MdSend
               style={{
@@ -200,7 +227,8 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
             />
           </div>
         )}
-      </ListGroup.Item>
+      </div>
+      // </ListGroup.Item>
     );
   };
 
@@ -212,7 +240,8 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
 
   return (
     <div>
-      <ListGroup>{jobpostings.map(renderListGroupItem)}</ListGroup>
+      {/* <ListGroup>{jobpostings.map(renderListGroupItem)}</ListGroup> */}
+      <div className="card-grid">{jobpostings.map(renderListGroupItem)}</div>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Edit Jobposting</Modal.Title>
