@@ -107,10 +107,9 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
     setShowModal(true);
   };
 
-  const renderListGroupItem = (t) => {
+  const renderJobPostingCards = (t) => {
     // console.log("t is", t);
     return (
-      // <ListGroup.Item
       <div
         key={t.id}
         className="p-4 card-job d-flex flex-column justify-content-between"
@@ -190,16 +189,6 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
           </>
         )}
         {uRole === "user" && (
-          // <div>
-          //   <MdSend
-          //     style={{
-          //       cursor: "pointer",
-          //     }}
-          //     onClick={() => {
-          //       navigate("/jobapplicationform", { state: { ...t } });
-          //     }}
-          //   />
-          // </div>
           <Button
             variant="dark"
             className="btn-jobdash"
@@ -209,7 +198,6 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
           </Button>
         )}
       </div>
-      // </ListGroup.Item>
     );
   };
 
@@ -221,7 +209,7 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
 
   return (
     <div>
-      <div className="card-grid">{jobpostings.map(renderListGroupItem)}</div>
+      <div className="card-grid">{jobpostings.map(renderJobPostingCards)}</div>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Edit Jobposting</Modal.Title>
