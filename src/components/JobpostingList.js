@@ -114,9 +114,11 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
         key={t.id}
         className="p-4 card-job d-flex flex-column justify-content-between"
         style={{
+          cursor: "pointer",
           background: "white",
           borderRadius: "8px",
         }}
+        onClick={() => previewJobDescription(t)}
       >
         <div className="d-flex flex-column">
           {/* <img src={t.logo_url} /> */}
@@ -145,17 +147,6 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
           <Tag tag={t.remote_option} />
 
           <p>{t.location}</p>
-
-          <p
-            variant="primary"
-            onClick={() => previewJobDescription(t)}
-            style={{
-              cursor: "pointer",
-              marginRight: "12px",
-            }}
-          >
-            <strong> Job Description</strong>
-          </p>
         </div>
         {/* display crud only for owner of posts */}
         {uId === t.employer && (
@@ -191,10 +182,11 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
         {uRole === "user" && (
           <Button
             variant="dark"
-            className="btn-jobdash"
+            className="btn-jobdash btn-change-text"
             onClick={() => navigate("/jobapplicationform", { state: { ...t } })}
           >
-            Apply
+            <i className="button-text-extra bi bi-send-fill"></i>
+            <span className="button-text">Apply now </span>
           </Button>
         )}
       </div>
