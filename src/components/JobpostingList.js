@@ -15,6 +15,7 @@ import useStore from "store";
 // custom components
 import MyEditor from "components/MyEditor";
 import PreviewModal from "./PreviewModal";
+import Tag from "./Tag";
 
 //css
 // css
@@ -114,7 +115,7 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
       // <ListGroup.Item
       <div
         key={t.id}
-        className="p-4 card-job"
+        className="p-4 card-job d-flex flex-column justify-content-between"
         style={{
           background: "white",
           borderRadius: "8px",
@@ -138,26 +139,14 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
             >
               <i className="bi bi-buildings" style={{ color: "inherit" }}></i>
             </div>
-            <p className="m-0 small">
+            <p className="m-0 small card-date">
               {new Date(t.date_created).toLocaleDateString()}
             </p>
           </div>
           <h3>{t.title}</h3>
           <p>{t.company}</p>
-          {/* FIXME WIP - Temporary style just for testing */}
-          <p
-            className="small"
-            style={{
-              backgroundColor: "#94ff846e",
-              width: "fit-content",
-              padding: "4px 12px",
-              borderRadius: "16px",
-              color: "#17ae00",
-              fontWeight: "bold",
-            }}
-          >
-            {t.remote_option}
-          </p>
+          <Tag tag={t.remote_option} />
+
           <p>{t.location}</p>
 
           <p
@@ -235,7 +224,6 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
 
   return (
     <div>
-      {/* <ListGroup>{jobpostings.map(renderListGroupItem)}</ListGroup> */}
       <div className="card-grid">{jobpostings.map(renderListGroupItem)}</div>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
