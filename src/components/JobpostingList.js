@@ -15,10 +15,13 @@ import useStore from "store";
 // custom components
 import MyEditor from "components/MyEditor";
 import PreviewModal from "./PreviewModal";
+import Tag from "./Tag";
 
 //css
 // css
 import "../css/layouts/CardGrid.css";
+import "../css/components/Card.css";
+import "../css/components/Button.css";
 
 //icons
 import {
@@ -26,10 +29,8 @@ import {
   MdCheckBoxOutlineBlank,
   MdEdit,
   MdDelete,
-  MdSend,
 } from "react-icons/md";
 import { BsPersonLinesFill } from "react-icons/bs";
-import { Card, Col, Container, Row } from "react-bootstrap";
 
 export default function JobpostingList({ jobpostings = [], setJobpostings }) {
   var uId = useStore((state) => state.id);
@@ -54,7 +55,6 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
   //   remote_option,
   //   employer,
   // } = record;
-
 
   const handleChange = (e) => {
     setRecord({ ...record, [e.target.name]: e.target.value });
@@ -100,7 +100,6 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
       });
   };
 
-
   //on click event to open job description in a modal
   const previewJobDescription = (post) => {
     setModalContent(post.description);
@@ -108,37 +107,43 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
     setShowModal(true);
   };
 
-  const renderListGroupItem = (t) => {
+  const renderJobPostingCards = (t) => {
     // console.log("t is", t);
     return (
-      // <ListGroup.Item
       <div
         key={t.id}
-        className="shadow-sm card--job"
+        className="p-4 card-job d-flex flex-column justify-content-between"
         style={{
           background: "white",
-          padding: "14px",
           borderRadius: "8px",
         }}
       >
         <div className="d-flex flex-column">
           {/* <img src={t.logo_url} /> */}
-          <p>Posted {new Date(t.date_created).toLocaleDateString()}</p>
+          <div className="d-flex justify-content-between align-items-center mb-3">
+            <div
+              style={{
+                fontSize: "2rem",
+                backgroundColor: "var(--color-dark-gray)",
+                color: "white",
+                width: "50px",
+                height: "50px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: "50%",
+              }}
+            >
+              <i className="bi bi-buildings" style={{ color: "inherit" }}></i>
+            </div>
+            <p className="m-0 small card-date">
+              {new Date(t.date_created).toLocaleDateString()}
+            </p>
+          </div>
           <h3>{t.title}</h3>
           <p>{t.company}</p>
-          {/* FIXME WIP - Temporary style just for testing */}
-          <p
-            style={{
-              backgroundColor: "#94ff846e",
-              width: "fit-content",
-              padding: "4px 12px",
-              borderRadius: "7px",
-              color: "#17ae00",
-              fontWeight: "bold",
-            }}
-          >
-            {t.remote_option}
-          </p>
+          <Tag tag={t.remote_option} />
+
           <p>{t.location}</p>
 
           <p
@@ -184,19 +189,15 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
           </>
         )}
         {uRole === "user" && (
-          <div>
-            <MdSend
-              style={{
-                cursor: "pointer",
-              }}
-              onClick={ () => {
-                navigate("/jobapplicationform", { state: { ...t } });
-              }}
-            />
-          </div>
+          <Button
+            variant="dark"
+            className="btn-jobdash"
+            onClick={() => navigate("/jobapplicationform", { state: { ...t } })}
+          >
+            Apply
+          </Button>
         )}
       </div>
-      // </ListGroup.Item>
     );
   };
 
@@ -208,8 +209,7 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
 
   return (
     <div>
-      {/* <ListGroup>{jobpostings.map(renderListGroupItem)}</ListGroup> */}
-      <div className="card-grid">{jobpostings.map(renderListGroupItem)}</div>
+      <div className="card-grid">{jobpostings.map(renderJobPostingCards)}</div>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Edit Jobposting</Modal.Title>
