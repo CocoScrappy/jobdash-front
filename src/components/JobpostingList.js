@@ -150,34 +150,54 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
         </div>
         {/* display crud only for owner of posts */}
         {uId === t.employer && (
-          <>
-            <div>
-              <MdEdit
-                onClick={() => {
-                  setRecord(t);
-                  setShow(true);
-                }}
-              />
+          <div
+            style={{
+              display: "flex",
+              placeItems: "center",
+              gap: 15,
+            }}
+          >
+            <div
+              style={{
+                cursor: "pointer",
+              }}
+              onClick={() => {
+                setRecord(t);
+                setShow(true);
+              }}
+            >
+              <h5>
+                <MdEdit />
+                Edit
+              </h5>
             </div>
-            <div>
-              <MdDelete
-                style={{
-                  cursor: "pointer",
-                }}
-                onClick={() => {
-                  handleDelete(t.id);
-                }}
-              />
+            <div
+              style={{
+                cursor: "pointer",
+              }}
+              onClick={() => {
+                handleDelete(t.id);
+              }}
+            >
+              <h5>
+                <MdDelete />
+                Delete
+              </h5>
             </div>
-            <BsPersonLinesFill
+            <div
               style={{
                 cursor: "pointer",
               }}
               onClick={() => {
                 navigate("/applicationForPosting", { state: { ...t } });
               }}
-            />
-          </>
+            >
+              <h5>
+                <BsPersonLinesFill />
+                Applicants
+              </h5>
+            </div>
+          </div>
         )}
         {uRole === "user" && (
           <Button

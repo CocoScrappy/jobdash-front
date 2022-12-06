@@ -85,7 +85,7 @@ export const JobPosting = () => {
         }
       )
       .then((res) => {
-        console.log(JSON.stringify(res.data.results));
+        // console.log(JSON.stringify(res.data.results));
         setJobpostings(res.data.results);
         setPostCount(res.data.count);
         handlePages();
@@ -93,16 +93,18 @@ export const JobPosting = () => {
       .catch((error) => {
         if (error.response.status != 404) {
           setShowAlert(true);
-          setAlertMsg("Could not retrieve job posting from database.");
+          setAlertMsg(
+            `Could not retrieve job posting from database. ` + error.message
+          );
         }
       });
   }, [toggleState, offset, limit]);
-
+  //search by keyword and location
   const searchJobs = (data) => {
     const searchString = data.search;
     const searchLocation = data.location;
     const searchEngine = data.searchEngineSelect;
-
+    //select for internal or external search
     if (searchEngine === "monster") {
       const message = {
         searchTerm: searchString,
@@ -146,12 +148,12 @@ export const JobPosting = () => {
       };
       return;
     }
-
+    //default internal search if no search input
     if (searchString === "") {
       setToggleState((t) => !t);
       return;
     }
-
+    //axios call to database for list of internal job posting
     axios
       .get(
         `${process.env.REACT_APP_API_URL}/api/postings/search/${searchString}/${searchLocation}`,
@@ -175,23 +177,26 @@ export const JobPosting = () => {
         console.log(err);
       });
   };
-
+  //pagination by page number
   const renderPagination = (p) => {
     return (
-      <li
-        key={p.page}
-        style={{
-          cursor: "pointer",
-          listStyle: "none",
-          marginRight: 1,
-          marginLeft: 1,
-        }}
-        onClick={() => {
-          setOffset(p.offset);
-        }}
-      >
-        {p.page}
-      </li>
+      <>
+        <span> | </span>
+        <li
+          key={p.page}
+          style={{
+            cursor: "pointer",
+            listStyle: "none",
+            marginRight: 1,
+            marginLeft: 1,
+          }}
+          onClick={() => {
+            setOffset(p.offset);
+          }}
+        >
+          {p.page}
+        </li>
+      </>
     );
   };
 
@@ -325,26 +330,29 @@ export const JobPosting = () => {
             display: "inline-flex",
           }}
         >
-          Limit:
+          Limit per page:
           {limitRanges.map((l) => {
             return (
-              <li
-                key={l.value}
-                style={{
-                  cursor: "pointer",
-                  listStyle: "none",
-                  marginRight: 1,
-                  marginLeft: 1,
-                }}
-                onClick={() => {
-                  setLimit(l.value);
-                  if (postCount < l.value) {
-                    setOffset(0);
-                  }
-                }}
-              >
-                {l.value}
-              </li>
+              <>
+                <span> | </span>
+                <li
+                  key={l.value}
+                  style={{
+                    cursor: "pointer",
+                    listStyle: "none",
+                    marginRight: 1,
+                    marginLeft: 1,
+                  }}
+                  onClick={() => {
+                    setLimit(l.value);
+                    if (postCount < l.value) {
+                      setOffset(0);
+                    }
+                  }}
+                >
+                  {l.value}
+                </li>
+              </>
             );
           })}
         </ul>
