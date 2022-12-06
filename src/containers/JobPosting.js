@@ -1,25 +1,38 @@
+//React imports
 import { useState, useEffect } from "react";
 import Container from "react-bootstrap/Container";
-import JobpostingList from "../components/JobpostingList";
-import JobpostingForm from "../components/JobpostingForm";
+import ProgressBar from "react-bootstrap/ProgressBar";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import { MdEdit } from "react-icons/md";
-import axios from "axios";
+// import Alert from "react-bootstrap/Alert";
+
+//custom imports
 import Layout from "../layouts/MainLayout";
-import useStore from "store";
+import JobpostingList from "../components/JobpostingList";
+import JobpostingForm from "../components/JobpostingForm";
+import FlashAlert from "components/FlashAlert";
+
+//other dependancies
 import { Formik, Field, Form } from "formik";
+import axios from "axios";
+import useStore from "store";
+
+//unused?
 import { set } from "date-fns";
-import ProgressBar from "react-bootstrap/ProgressBar";
+
 import GenericPageLayout from "layouts/GenericPageLayout";
 // CSS
 import "../css/components/Stylized-letters.css";
 import "../css/components/SearchForm.css";
 
 export const JobPosting = () => {
+  //user
   var uRole = useStore((state) => state.role);
   const uId = useStore((state) => state.id);
+  //job posting list
   const [jobpostings, setJobpostings] = useState([]);
+  //pagination
+  const [pages, setPages] = useState([]);
   const [postCount, setPostCount] = useState(0);
   const [offset, setOffset] = useState(0);
   const [limit, setLimit] = useState(5);
@@ -30,13 +43,17 @@ export const JobPosting = () => {
     { value: 50 },
     { value: 100 },
   ]);
-  const [pages, setPages] = useState([]);
+  //search
   const [toggleState, setToggleState] = useState(false);
-
-  const [showAdd, setShowAdd] = useState(false);
-
   const [loading, setLoading] = useState(false);
   const [percent, setPercent] = useState(0);
+
+  //add posting modal
+  const [showAdd, setShowAdd] = useState(false);
+
+  //alerts
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMsg, setAlertMsg] = useState(false);
 
   const handleCloseAdd = () => {
     setShowAdd(false);
@@ -57,10 +74,8 @@ export const JobPosting = () => {
     }
     setPages(pageArray);
   };
-
+  //fetch job posting list and render page
   useEffect(() => {
-    // if (uRole === "employer") {
-    //FIXME: add filtered route here
     axios
       .get(
         `${process.env.REACT_APP_API_URL}/api/postings/get_user_postings/?limit=${limit}&offset=${offset}`,
@@ -69,26 +84,19 @@ export const JobPosting = () => {
             Authorization: "Bearer " + localStorage.getItem("atoken"),
           },
         }
-      ) //FIXME : trailing / ?
+      )
       .then((res) => {
         console.log(JSON.stringify(res.data.results));
         setJobpostings(res.data.results);
         setPostCount(res.data.count);
         handlePages();
       })
-      .catch(() => {
-        alert("Something went wrong fetching the list of job postings.");
+      .catch((error) => {
+        if (error.response.status != 404) {
+          setShowAlert(true);
+          setAlertMsg("Could not retrieve job posting from database.");
+        }
       });
-    // } else {
-    //   axios
-    //     .get(`${process.env.REACT_APP_API_URL}/api/postings/default`) //FIXME : trailing / ?
-    //     .then((res) => {
-    //       setJobpostings(res.data);
-    //     })
-    //     .catch(() => {
-    //       alert("Something went wrong fetching the list of job postings.");
-    //     });
-    // }
   }, [toggleState, offset, limit]);
 
   const searchJobs = (data) => {
@@ -195,6 +203,13 @@ export const JobPosting = () => {
       color="var(--color-gray)"
     >
       <GenericPageLayout>
+        {showAlert && (
+          <FlashAlert
+            setShowAlert={setShowAlert}
+            msg={alertMsg}
+            variant={"danger"}
+          />
+        )}
         <div className="pb-5">
           <h2 className="pb-lg-3">What job are you looking for?</h2>
           {/* FIXME Extract this form into its own component for cleaner code */}
@@ -232,18 +247,19 @@ export const JobPosting = () => {
           </Formik>
         </div>
         {/* Modal to add job posting form */}
-        <div
-          style={{
-            cursor: "pointer",
-            marginRight: "12px",
-          }}
-          onClick={() => {
-            setShowAdd(true);
-          }}
-        >
-          <strong>Add job posting</strong>
-        </div>
-
+        {uRole == "employer" && (
+          <div
+            style={{
+              cursor: "pointer",
+              marginRight: "12px",
+            }}
+            onClick={() => {
+              setShowAdd(true);
+            }}
+          >
+            <strong>Add job posting</strong>
+          </div>
+        )}
         {loading === true && <ProgressBar animated now={percent} />}
 
         <Modal show={showAdd} onHide={handleCloseAdd}>
@@ -285,7 +301,7 @@ export const JobPosting = () => {
               Previous
             </li>
           )}
-          <p> Page: </p>
+          {pages.length !== 0 && <p> Page: </p>}
           {pages.map(renderPagination)}
 
           {offset < postCount - limit && (
