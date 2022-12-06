@@ -78,9 +78,27 @@ const LoginPage = () => {
           .catch((error) => {
             console.log(error.response.data.message);
           });
-          })
+      })
+      .then(() => {
+        axios
+      .get(`${process.env.REACT_APP_API_URL}/api/cvs/get_user_cvs/`, {
+        headers: { Authorization: "Bearer " + localStorage.getItem("atoken") },
+      })
+      .then((response) => {
+        if (response.data.id != null) {
+        addCVId(response.data.id);
+        } else {
+          addCVId("");
+        }
+      })
+      .catch((error) => {
+        console.log(error.response.data.message);
+      });
+  })
       });
   };
+
+
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().required("Field must not be blank."),
