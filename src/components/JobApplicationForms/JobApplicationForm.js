@@ -27,6 +27,7 @@ function JobApplicationForm() {
   const [isLiked, setIsLiked] = useState(false);
   const [success, setSuccess] = useState(false);
   const [convertedNoteContent, setConvertedNoteContent] = useState("");
+  const [failModalMsg, setFailModalMsg] = useState("");
 
   const [modalShow, setModalShow] = useState(false);
   const [modalState, setModalState] = useState("close");
@@ -55,7 +56,7 @@ function JobApplicationForm() {
         notes: convertedNoteContent,
         favorited: isLiked,
         status: "applied",
-        applicant: uId,
+        // applicant: uId,
         cv: uCv,
         job_posting: post.id,
         saved_dates: [],
@@ -82,8 +83,10 @@ function JobApplicationForm() {
         }
       })
       .catch((error) => {
+        console.log(error);
         setSuccess(false);
-        handleShowModalFail(error);
+        setFailModalMsg(error.response.data.message);
+        handleShowModalFail();
       });
   };
 
@@ -116,9 +119,7 @@ function JobApplicationForm() {
           <Modal.Header closeButton>
             <Modal.Title id="contained-modal-title-vcenter">Status</Modal.Title>
           </Modal.Header>
-          <Modal.Body>
-            Oops, something went wrong with your request. Try again later.{" "}
-          </Modal.Body>
+          <Modal.Body>{failModalMsg}</Modal.Body>
           <Modal.Footer>
             <Button variant="primary" onClick={handleCloseFail}>
               Close
