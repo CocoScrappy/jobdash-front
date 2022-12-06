@@ -13,6 +13,7 @@ const useStore = create(
       first_name: "",
       last_name: "",
       role: "",
+      cv_id: "",
 
       // User Info
       addId: (uid) => {
@@ -38,6 +39,11 @@ const useStore = create(
       addRole: (uRole) => {
         set(() => ({
           role: uRole,
+        }));
+      },
+      addCVId: (uCVId) => {
+        set(() => ({
+          cv_id: uCVId,
         }));
       },
 
