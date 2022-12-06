@@ -29,10 +29,8 @@ import {
   MdCheckBoxOutlineBlank,
   MdEdit,
   MdDelete,
-  MdSend,
 } from "react-icons/md";
 import { BsPersonLinesFill } from "react-icons/bs";
-import { Card, Col, Container, Row } from "react-bootstrap";
 
 export default function JobpostingList({ jobpostings = [], setJobpostings }) {
   var uId = useStore((state) => state.id);
@@ -205,8 +203,7 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
           <Button
             variant="dark"
             className="btn-jobdash"
-            // size="lg"
-            // type="submit"
+            onClick={() => navigate("/jobapplicationform", { state: { ...t } })}
           >
             Apply
           </Button>
