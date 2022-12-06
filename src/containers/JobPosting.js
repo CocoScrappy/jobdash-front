@@ -85,7 +85,7 @@ export const JobPosting = () => {
         }
       )
       .then((res) => {
-        console.log(JSON.stringify(res.data.results));
+        // console.log(JSON.stringify(res.data.results));
         setJobpostings(res.data.results);
         setPostCount(res.data.count);
         handlePages();
