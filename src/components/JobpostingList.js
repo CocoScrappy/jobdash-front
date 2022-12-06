@@ -108,7 +108,7 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
   };
 
   const renderJobPostingCards = (t) => {
-    // console.log("t is", t);
+    console.log("t is", t);
     return (
       <div
         key={t.id}

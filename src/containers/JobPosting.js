@@ -35,10 +35,10 @@ export const JobPosting = () => {
   const [pages, setPages] = useState([]);
   const [postCount, setPostCount] = useState(0);
   const [offset, setOffset] = useState(0);
-  const [limit, setLimit] = useState(8);
+  const [limit, setLimit] = useState(15);
   const [limitRanges, setLimitRanges] = useState([
-    { value: 8 },
-    { value: 20 },
+    { value: 15 },
+    { value: 30 },
     { value: 50 },
     { value: 100 },
   ]);
