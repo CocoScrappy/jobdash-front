@@ -1,0 +1,53 @@
+.search-form-jobdash {
+  height: 75px;
+  background: white;
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  padding: 7px;
+}
+
+.search-form-jobdash .search-icon {
+  font-size: 1.5rem;
+  opacity: 0.5;
+  padding-right: 24px;
+}
+.search-form-jobdash > div {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-left: 24px;
+}
+.search-form-jobdash > div:not(:last-of-type) {
+  border-right: 1px solid lightgray;
+}
+
+.search-form-jobdash input,
+.search-form-jobdash select {
+  border: none;
+  background-color: white !important;
+  height: max-content;
+  padding: 8px;
+}
+.search-form-jobdash input:focus-visible,
+.search-form-jobdash select:focus-visible {
+  outline: none;
+}
+
+.search-form-jobdash button {
+  margin-left: auto;
+  padding: 0 34px;
+  border-radius: 30px;
+  background-color: var(--color-main);
+  color: white;
+  border: var(--color-main);
+  height: 100%;
+  transition-property: background-color, border-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-out;
+}
+
+.search-form-jobdash button:hover {
+  background-color: var(--color-main-lighter);
+  border-color: var(--color-main-lighter);
+}
