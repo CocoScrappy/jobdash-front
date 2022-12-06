@@ -19,6 +19,8 @@ import PreviewModal from "./PreviewModal";
 //css
 // css
 import "../css/layouts/CardGrid.css";
+import "../css/components/Card.css";
+import "../css/components/Button.css";
 
 //icons
 import {
@@ -54,7 +56,6 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
   //   remote_option,
   //   employer,
   // } = record;
-
 
   const handleChange = (e) => {
     setRecord({ ...record, [e.target.name]: e.target.value });
@@ -100,7 +101,6 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
       });
   };
 
-
   //on click event to open job description in a modal
   const previewJobDescription = (post) => {
     setModalContent(post.description);
@@ -114,20 +114,39 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
       // <ListGroup.Item
       <div
         key={t.id}
-        className="shadow-sm card--job"
+        className="p-4 card-job"
         style={{
           background: "white",
-          padding: "14px",
           borderRadius: "8px",
         }}
       >
         <div className="d-flex flex-column">
           {/* <img src={t.logo_url} /> */}
-          <p>Posted {new Date(t.date_created).toLocaleDateString()}</p>
+          <div className="d-flex justify-content-between align-items-center mb-3">
+            <div
+              style={{
+                fontSize: "2rem",
+                backgroundColor: "var(--color-dark-gray)",
+                color: "white",
+                width: "60px",
+                height: "60px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: "50%",
+              }}
+            >
+              <i className="bi bi-buildings" style={{ color: "inherit" }}></i>
+            </div>
+            <p className="m-0 small">
+              {new Date(t.date_created).toLocaleDateString()}
+            </p>
+          </div>
           <h3>{t.title}</h3>
           <p>{t.company}</p>
           {/* FIXME WIP - Temporary style just for testing */}
           <p
+            className="small"
             style={{
               backgroundColor: "#94ff846e",
               width: "fit-content",
@@ -184,16 +203,24 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
           </>
         )}
         {uRole === "user" && (
-          <div>
-            <MdSend
-              style={{
-                cursor: "pointer",
-              }}
-              onClick={ () => {
-                navigate("/jobapplicationform", { state: { ...t } });
-              }}
-            />
-          </div>
+          // <div>
+          //   <MdSend
+          //     style={{
+          //       cursor: "pointer",
+          //     }}
+          //     onClick={() => {
+          //       navigate("/jobapplicationform", { state: { ...t } });
+          //     }}
+          //   />
+          // </div>
+          <Button
+            variant="dark"
+            className="btn-jobdash"
+            // size="lg"
+            // type="submit"
+          >
+            Apply
+          </Button>
         )}
       </div>
       // </ListGroup.Item>
