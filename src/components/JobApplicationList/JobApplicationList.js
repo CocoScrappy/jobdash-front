@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { Button } from "react-bootstrap";
 import JobApplicationItem from "./JobApplicationItem";
 import {
   fetchUserApplications,
@@ -9,7 +10,7 @@ import {
 import { Formik, Field, Form } from "formik";
 import axios from "axios";
 import { set } from "date-fns";
-
+import { useNavigate } from "react-router-dom";
 // css
 import "../../css/components/SearchForm.css";
 
@@ -38,6 +39,8 @@ function JobApplicationList(props) {
       paginationLinksSetter: setPaginationLinks,
     });
   };
+
+  const navigate = useNavigate();
 
   const searchApplications = (data) => {
     setSearchMsg("");
