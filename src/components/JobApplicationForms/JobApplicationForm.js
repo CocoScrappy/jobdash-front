@@ -1,59 +1,56 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState} from "react";
 import Layout from "layouts/MainLayout";
-import { Button, InputGroup, Container } from "react-bootstrap";
+import { Button, Container } from "react-bootstrap";
 import Heart from "react-heart";
-import MyCVPage from "containers/MyCVPage";
 import { Modal } from "react-bootstrap";
 import useStore from "store";
 import axios from "axios";
 import { Form } from "react-bootstrap";
 import MyEditor from "components/MyEditor";
 import { useNavigate, useLocation  } from "react-router-dom";
+import parse from "html-react-parser";
 
 
-function JobApplicationForm(props) {
-  const uId = useStore((state) => state.uId);
-  const uCv = useStore((state) => state.cv_id);
-  const { jobPostingInfo } = useLocation();
-  const [post, setPost] = useState(jobPostingInfo);
-  // const state = useStore();
+function JobApplicationForm() {
+  
+  const handleSubmit = event => {
+    event.preventDefault();
+  };
+
+  const store = useStore();
+  const uId = store.id;
+  const uCv = store.cv_id;
+  const navigate = useNavigate();
+  const jobPostingInfo = useLocation();
+  
+  const [post, setPost] = useState(jobPostingInfo.state);
   const ISODate = new Date(post.date_created);
   const shortDate = ISODate.toDateString();
   const [isLiked, setIsLiked] = useState(false);
   const [success, setSuccess] = useState(false);
   const [convertedNoteContent, setConvertedNoteContent] = useState("");
+
   const [modalShow, setModalShow] = useState(false);
-  const [modalContent, setModalContent] = useState("");
-  const navigate = useNavigate();
+  const [modalState, setModalState] = useState("close");
+      
+  const handleShowModalSuccess = () => {
+   setModalState("modal-success")
+  }
+  
+  const handleShowModalFail = () => {
+   setModalState("modal-fail");
+  }
+  
+  const handleCloseSuccess = () => {
+   setModalState("close");
+   navigate('/jobpostings');
+  }
 
-  //handling form inputs
-  const [formData, setFormData] = useState({});
-  const { notes } = formData;
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  const handleCloseFail = () => {
+    setModalState("close")
+   }
 
-  // const getJobPostingInfo = (post) => {
-  //   return axios
-  //     .get(`${process.env.REACT_APP_API_URL}/api/postings/${post.id}/`)
-  //     .then((res) => {
-  //       console.log(res);
-  //       // addJPId(res.data.id);
-  //       // addJPTitle(res.data.title);
-  //       // //addJPLogoUrl(res.data.logo_url);
-  //       // addJPLocation(res.data.location);
-  //       // addJPDescription(res.data.description);
-  //       // addJPDateCreated(res.data.date_created);
-  //       // addJPRemoteOption(res.data.remote_option);
-  //       // addJPEmployerId(res.data.employer_id);
-  //       // addJPCompanyName(company);
-  //       navigate("/jobapplicationform", { state: { ...t } });
-  //       return;
-  //     })
-  //     .catch(() => {
-  //       alert("Something wrong with aplying to Job posting");
-  //     });
-  // };
+
 
   const submitApplication = () => {
     var applicationData = {};
@@ -65,55 +62,68 @@ function JobApplicationForm(props) {
         applicant: uId,
         cv: uCv,
         job_posting: post.id,
+        saved_dates: [],
       };
     } catch (err) {
       console.log(
         "Whoops, something went wrong while assigning the values for the request body"
       );
     }
-    console.log("application: " + JSON.stringify(applicationData));
-    console.log("submitting application");
     axios
       .post(
         `${process.env.REACT_APP_API_URL}/api/applications/`,
-        applicationData
+        applicationData, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("atoken")}`,
+          },
+        }
       )
       .then((res) => {
-        setModalContent("Application submitted successfully!");
-        setModalShow(true);
+        if (res.status === 201) {
+        handleShowModalSuccess();
+        setSuccess(true);
+        }
       })
       .catch((error) => {
-        console.log(error.response.data.message);
-        setModalContent(error.response.data.message);
-        setModalShow(true);
+        setSuccess(false);
+        handleShowModalFail(error);
       });
-
-    setSuccess(true);
   };
 
-  function MyVerticallyCenteredModal(props) {
+  function MyVerticallyCenteredModal() {
+
     return (
-      <Modal
-        {...props}
+      <>
+      <Modal show={modalState === "modal-success"}
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
-        centered
-      >
+        centered>
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-            Info
+            Status
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          <h4>Good Luck!</h4>
-          <p>
-            Job application record created successfully!
-          </p>
-        </Modal.Body>
+          <Modal.Body>Job application record created successfully!</Modal.Body>
+          <Modal.Footer>
+            <Button variant="primary" onClick={handleCloseSuccess}>Close</Button>
+          </Modal.Footer>
+      </Modal>
+     
+      <Modal show={modalState === "modal-fail"}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered>
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Status
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Oops, something went wrong with your request. Try again later. </Modal.Body>
         <Modal.Footer>
-          <Button onClick={props.onHide}>Close</Button>
+          <Button variant="primary" onClick={handleCloseFail}>Close</Button>
         </Modal.Footer>
       </Modal>
+      </>
     );
   }
 
@@ -125,7 +135,7 @@ function JobApplicationForm(props) {
       </div>
       <Container>
         <div>
-          <h5>Company: {post.company_name}</h5>
+          <h5>Company: {post.company}</h5>
           <h5>Job Title: {post.title}</h5>
         </div>
         <div style={{ width: "1.5rem" }}>
@@ -139,9 +149,9 @@ function JobApplicationForm(props) {
         </div>
         <div>
           <h5>Job Description: </h5>
-          <p>{post.description}</p>
+          <p>{parse(post.description)}</p>
         </div>
-          <Form>
+          <Form onSubmit={handleSubmit}>
             {/* Notes */}
             <div className="mb-4">
             <h4>Notes</h4>
@@ -152,14 +162,6 @@ function JobApplicationForm(props) {
                 setConvertedContent={setConvertedNoteContent}
               />
             </div>
-            {/* <Form.Label as="h5">Notes: </Form.Label>
-                <Form.Control
-
-                    placeholder="Add your notes here..."
-                    onChange={handleChange}
-                    name="notes"
-                    value={notes} /> */}
-            {/* Add CV selector <MyCVsPage/> */}
 
           {/* Save Button */}
           <Button variant="primary" type="submit" onClick={submitApplication}>

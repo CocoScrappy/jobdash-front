@@ -192,7 +192,7 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
               style={{
                 cursor: "pointer",
               }}
-              onClick={async () => {
+              onClick={ () => {
                 navigate("/jobapplicationform", { state: { ...t } });
                 // await handleApply(t.id);
               }}
