@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 import Layout from "../../layouts/MainLayout";
 import { Button, InputGroup, Form, Container } from "react-bootstrap";
-import Modal from 'react-bootstrap/Modal';
-import { FormControl } from 'react-bootstrap'
-import Heart from "react-heart"
+import Modal from "react-bootstrap/Modal";
+import { FormControl } from "react-bootstrap";
+import Heart from "react-heart";
 import parse from "html-react-parser";
 
 import axios from "axios";
@@ -12,11 +12,10 @@ import axios from "axios";
 import useStore from "store";
 // custom components
 import MyEditor from "components/MyEditor";
-import {JobpostingForm} from 'components/JobpostingForm';
+import { JobpostingForm } from "components/JobpostingForm";
 
 function ExternalJobApplicationForm() {
-
-  const handleSubmit = event => {
+  const handleSubmit = (event) => {
     event.preventDefault();
   };
 
@@ -34,24 +33,23 @@ function ExternalJobApplicationForm() {
 
   const [modalShow, setModalShow] = useState(false);
   const [modalState, setModalState] = useState("close");
-      
+
   const handleShowModalSuccess = () => {
-   setModalState("modal-success")
-  }
-  
+    setModalState("modal-success");
+  };
+
   const handleShowModalFail = () => {
-   setModalState("modal-fail");
-  }
-  
+    setModalState("modal-fail");
+  };
+
   const handleCloseSuccess = () => {
-   setModalState("close");
-   navigate('/jobpostings');
-  }
+    setModalState("close");
+    navigate("/jobpostings");
+  };
 
   const handleCloseFail = () => {
-    setModalState("close")
-   }
-
+    setModalState("close");
+  };
 
   const {
     // jobposting fields
@@ -64,39 +62,39 @@ function ExternalJobApplicationForm() {
     remote_option,
   } = formData;
 
-  
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-  
+
   const handleCreateRecord = async () => {
     // adding job posting first
 
     formData.description = convertedDescContent;
     formData.employer = 14; //14 will be default internal Employer
 
-
     console.log("this func is running");
     console.log(formData);
-    axios.post(`${process.env.REACT_APP_API_URL}/api/postings/`, formData, {
-      headers: { Authorization: "Bearer " + localStorage.getItem("atoken") },
-    })
+    axios
+      .post(`${process.env.REACT_APP_API_URL}/api/postings/`, formData, {
+        headers: { Authorization: "Bearer " + localStorage.getItem("atoken") },
+      })
       .then((res) => {
         console.log("job posting : " + res.data);
 
         //adding application
-          const formAppData = {
-            notes: convertedNoteContent,
-            favorited: isLiked,
-            status: "applied",
-            applicant: uId,
-            cv: uCv,
-            job_posting: res.data.id
-          }
-          axios
+        const formAppData = {
+          notes: convertedNoteContent,
+          favorited: isLiked,
+          status: "applied",
+          // applicant: uId,
+          cv: uCv,
+          job_posting: res.data.id,
+        };
+        axios
           .post(
             `${process.env.REACT_APP_API_URL}/api/applications/`,
-            formAppData,{
+            formAppData,
+            {
               headers: {
                 Authorization: "Bearer " + localStorage.getItem("atoken"),
               },
@@ -104,71 +102,73 @@ function ExternalJobApplicationForm() {
           )
           .then((res) => {
             if (res.status === 201) {
-            handleShowModalSuccess();
-            setSuccess(true);
+              handleShowModalSuccess();
+              setSuccess(true);
             }
           })
           .catch((error) => {
             setSuccess(false);
             handleShowModalFail(error);
           });
-        })
+      })
       // .then((res) => {
       //   console.log(res.data);
       // })
       .catch((error) => {
         alert("Something wrong with creating job posting record");
       });
-    }
+  };
 
-
-    function MyVerticallyCenteredModal(props) {
-
-      return (
-        <>
-        <Modal show={modalState === "modal-success"}
+  function MyVerticallyCenteredModal(props) {
+    return (
+      <>
+        <Modal
+          show={modalState === "modal-success"}
           size="lg"
           aria-labelledby="contained-modal-title-vcenter"
-          centered>
+          centered
+        >
           <Modal.Header closeButton>
-            <Modal.Title id="contained-modal-title-vcenter">
-              Status
-            </Modal.Title>
+            <Modal.Title id="contained-modal-title-vcenter">Status</Modal.Title>
           </Modal.Header>
-            <Modal.Body>Job application record created successfully!</Modal.Body>
-            <Modal.Footer>
-              <Button variant="secondary" onClick={handleCloseSuccess}>Close</Button>
-            </Modal.Footer>
-        </Modal>
-       
-        <Modal show={modalState === "modal-fail"}
-          size="lg"
-          aria-labelledby="contained-modal-title-vcenter"
-          centered>
-          <Modal.Header closeButton>
-            <Modal.Title id="contained-modal-title-vcenter">
-              Status
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body>Oops, something went wrong with your request. Try again later. </Modal.Body>
+          <Modal.Body>Job application record created successfully!</Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseFail}>Close</Button>
+            <Button variant="secondary" onClick={handleCloseSuccess}>
+              Close
+            </Button>
           </Modal.Footer>
         </Modal>
-        </>
-      );
-    }
 
+        <Modal
+          show={modalState === "modal-fail"}
+          size="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          centered
+        >
+          <Modal.Header closeButton>
+            <Modal.Title id="contained-modal-title-vcenter">Status</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            Oops, something went wrong with your request. Try again later.{" "}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleCloseFail}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </>
+    );
+  }
 
   return (
-
-    <Layout title="ExternalJobApplicationForm" content="ExternalJobApplicationForm">
-        <div>External Job Application Form</div>
-        <Container>
-        <Form
-            onSubmit={handleSubmit}
-            >
-
+    <Layout
+      title="ExternalJobApplicationForm"
+      content="ExternalJobApplicationForm"
+    >
+      <div>External Job Application Form</div>
+      <Container>
+        <Form onSubmit={handleSubmit}>
           {/* Title */}
           <InputGroup className="mb-4">
             <InputGroup.Text>Title</InputGroup.Text>
@@ -206,9 +206,9 @@ function ExternalJobApplicationForm() {
               name="location"
               defaultValue={location || ""}
             />
-          <Form.Control.Feedback type="invalid">
-            {errors.location}
-          </Form.Control.Feedback>
+            <Form.Control.Feedback type="invalid">
+              {errors.location}
+            </Form.Control.Feedback>
           </InputGroup>
 
           {/* Company Name */}
@@ -245,25 +245,24 @@ function ExternalJobApplicationForm() {
               {errors.remote_option}
             </Form.Control.Feedback>
           </InputGroup>
-          
+
           {/* Description */}
           <div className="mb-4">
-          <h4>Job Description</h4>
-            <MyEditor 
+            <h4>Job Description</h4>
+            <MyEditor
               content={""}
               name="description"
               setConvertedContent={setConvertedDescContent}
               defaultValue={description || ""}
-
             />
           </div>
-          <Form.Control.Feedback type="invalid" >
+          <Form.Control.Feedback type="invalid">
             {errors.description}
           </Form.Control.Feedback>
 
           {/* Notes */}
           <div className="mb-4">
-          <h4>Notes</h4>
+            <h4>Notes</h4>
             <MyEditor
               content={""}
               name="notes"
@@ -271,25 +270,30 @@ function ExternalJobApplicationForm() {
               setConvertedContent={setConvertedNoteContent}
             />
           </div>
-          
+
           {/* Like Button */}
           <div style={{ width: "1.5rem" }}>
-              <Heart isActive={isLiked} onClick={() => setIsLiked(!isLiked)}/>
+            <Heart isActive={isLiked} onClick={() => setIsLiked(!isLiked)} />
           </div>
 
           {/* Save Button */}
-          <Button variant="secondary" type="submit" onClick={() => {handleCreateRecord()}}>
-              Save External Application
+          <Button
+            variant="secondary"
+            type="submit"
+            onClick={() => {
+              handleCreateRecord();
+            }}
+          >
+            Save External Application
           </Button>
         </Form>
-        </Container>
-        <MyVerticallyCenteredModal
+      </Container>
+      <MyVerticallyCenteredModal
         show={modalShow}
         onHide={() => setModalShow(false)}
       />
     </Layout>
-
-  )
+  );
 }
 
 export default ExternalJobApplicationForm;
