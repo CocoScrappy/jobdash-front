@@ -13,36 +13,38 @@ import Button from "react-bootstrap/Button";
 // CSS
 import "../css/components/Link.css";
 import "../css/components/Button.css";
+import { NewLine } from "helpers/Utils";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
-  const [usernameTaken, setUsernameTaken] = useState("");
+  const [passwordError, setpasswordError] = useState("");
   const [emailTaken, setEmailTaken] = useState("");
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     data.summary = "";
     console.log(data);
-    axios
+    await axios
       .post(`${process.env.REACT_APP_API_URL}/api/register`, data)
+      .then((res) => {
+        console.log(res)
+        navigate("/login");
+      })
       .catch((error) => {
         //reset previous errors
         setEmailTaken("");
-        setUsernameTaken("");
-
-        switch (error.response.data) {
-          case "Email Already Taken":
-            setEmailTaken("Email Already Taken");
-            break;
-          case "Username Already Taken":
-            setUsernameTaken("Username Already Taken");
-            break;
-          default:
-            break;
+        setpasswordError("");
+        console.log(error)
+        if(error.response.data.password!=null){
+          error.response.data.password.forEach(err=>setpasswordError(state=>state+'\n'+err))
         }
+
+        var emailError=error.response.data.email[0]
+        if(emailError!=null){
+          setEmailTaken(emailError.charAt(0).toUpperCase()+emailError.slice(1));
+        }
+
+        return;
       })
-      .then((res) => {
-        navigate("/login");
-      });
   };
   const initialValues = {
     first_name: "",
@@ -83,7 +85,7 @@ const RegisterPage = () => {
                 id="floatingPassword"
                 placeholder="Jane"
               />
-              <label for="floatingPassword">First name</label>
+              <label htmlFor="floatingPassword">First name</label>
               <ErrorMessage name="first_name">
                 {(msg) => <div className="errorMsg">{msg}</div>}
               </ErrorMessage>
@@ -96,14 +98,10 @@ const RegisterPage = () => {
                 id="floatingPassword"
                 placeholder="Doe"
               />
-              <label for="floatingPassword">Last name</label>
+              <label htmlFor="floatingPassword">Last name</label>
               <ErrorMessage name="last_name">
                 {(msg) => <div className="errorMsg">{msg}</div>}
               </ErrorMessage>
-            </div>
-
-            <div className="mb-3">
-              <span className="errorMsg">{usernameTaken}</span>
             </div>
 
             <div className="form-floating mb-3">
@@ -112,8 +110,9 @@ const RegisterPage = () => {
                 className="form-control"
                 id="floatingPassword"
                 placeholder="jd@email.com"
+                onKeyDown={()=>{setEmailTaken("")}}
               />
-              <label for="floatingPassword">Email</label>
+              <label htmlFor="floatingPassword">Email</label>
               <ErrorMessage name="email">
                 {(msg) => <div className="errorMsg">{msg}</div>}
               </ErrorMessage>
@@ -124,7 +123,7 @@ const RegisterPage = () => {
             </div>
 
             <div className="mb-3">
-              <label for="roleSelect" class="form-label">
+              <label htmlFor="roleSelect" className="form-label">
                 I am a...
               </label>
               <Field
@@ -146,8 +145,9 @@ const RegisterPage = () => {
                 className="form-control"
                 id="floatingPassword"
                 placeholder="Password"
+                onKeyDown={()=>{setpasswordError("")}}
               />
-              <label for="floatingPassword">Password (6 - 32 characters)</label>
+              <label htmlFor="floatingPassword">Password (6 - 32 characters)</label>
               <ErrorMessage name="password">
                 {(msg) => <div className="errorMsg">{msg}</div>}
               </ErrorMessage>
@@ -161,11 +161,14 @@ const RegisterPage = () => {
                 id="floatingPassword"
                 placeholder="Password"
               />
-              <label for="floatingPassword">Confirm password</label>
+              <label htmlFor="floatingPassword">Confirm password</label>
               <ErrorMessage name="password"></ErrorMessage>
               <ErrorMessage name="confirmPass">
                 {(msg) => <div className="errorMsg">{msg}</div>}
               </ErrorMessage>
+            <div className="mb-3">
+              <NewLine text={passwordError}/>
+            </div>
             </div>
 
             <div id="register-btn" className="d-grid gap-2 mb-3">
@@ -174,6 +177,7 @@ const RegisterPage = () => {
                 className="btn-jobdash"
                 size="lg"
                 type="submit"
+                onClick={()=>{setpasswordError("")}}
               >
                 Get started
               </Button>
