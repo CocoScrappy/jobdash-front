@@ -16,6 +16,10 @@ import useStore from "store";
 import MyEditor from "components/MyEditor";
 import PreviewModal from "./PreviewModal";
 
+//css
+// css
+import "../css/layouts/CardGrid.css";
+
 //icons
 import {
   MdCheckBox,
@@ -25,6 +29,7 @@ import {
   MdSend,
 } from "react-icons/md";
 import { BsPersonLinesFill } from "react-icons/bs";
+import { Card, Col, Container, Row } from "react-bootstrap";
 
 export default function JobpostingList({ jobpostings = [], setJobpostings }) {
   var uId = useStore((state) => state.id);
@@ -50,16 +55,6 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
   //   employer,
   // } = record;
 
-  const addJPId = useStore((state) => state.addJpId);
-  const addJPTitle = useStore((state) => state.addTitle);
-  const addJPLogoUrl = useStore((state) => state.addLogo_url);
-  const addJPLocation = useStore((state) => state.addLocation);
-  const addJPDescription = useStore((state) => state.addDescription);
-  const addJPDateCreated = useStore((state) => state.addDateCreated);
-  const addJPRemoteOption = useStore((state) => state.addRemoteOption);
-  const addJPEmployerId = useStore((state) => state.addEmployerId);
-  const addJPCompanyName = useStore((state) => state.addCompanyName);
-  const addJPLink = useStore((state) => state.addLink);
 
   const handleChange = (e) => {
     setRecord({ ...record, [e.target.name]: e.target.value });
@@ -105,28 +100,6 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
       });
   };
 
-  const handleApply = async (id, company) => {
-    return axios
-      .get(`${process.env.REACT_APP_API_URL}/api/postings/${id}/`)
-      .then((res) => {
-        console.log(res);
-        addJPId(res.data.id);
-        addJPTitle(res.data.title);
-        //addJPLogoUrl(res.data.logo_url);
-        addJPLocation(res.data.location);
-        addJPDescription(res.data.description);
-        addJPDateCreated(res.data.date_created);
-        addJPRemoteOption(res.data.remote_option);
-        addJPEmployerId(res.data.employer_id);
-        addJPCompanyName(company);
-        addJPLink(res.data.link);
-        navigate("/jobapplicationform");
-        return;
-      })
-      .catch(() => {
-        alert("Something wrong with aplying to Job posting");
-      });
-  };
 
   //on click event to open job description in a modal
   const previewJobDescription = (post) => {
@@ -136,15 +109,37 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
   };
 
   const renderListGroupItem = (t) => {
+    // console.log("t is", t);
     return (
-      <ListGroup.Item
+      // <ListGroup.Item
+      <div
         key={t.id}
-        className="d-flex justify-content-between align-items-center"
+        className="shadow-sm card--job"
+        style={{
+          background: "white",
+          padding: "14px",
+          borderRadius: "8px",
+        }}
       >
-        <div className="d-flex justify-content-center">
-          <span>
-            {t.title} || {t.remote_option} || {t.company} ||
-          </span>
+        <div className="d-flex flex-column">
+          {/* <img src={t.logo_url} /> */}
+          <p>Posted {new Date(t.date_created).toLocaleDateString()}</p>
+          <h3>{t.title}</h3>
+          <p>{t.company}</p>
+          {/* FIXME WIP - Temporary style just for testing */}
+          <p
+            style={{
+              backgroundColor: "#94ff846e",
+              width: "fit-content",
+              padding: "4px 12px",
+              borderRadius: "7px",
+              color: "#17ae00",
+              fontWeight: "bold",
+            }}
+          >
+            {t.remote_option}
+          </p>
+          <p>{t.location}</p>
 
           <p
             variant="primary"
@@ -188,19 +183,20 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
             />
           </>
         )}
-        {uRole == "user" && (
+        {uRole === "user" && (
           <div>
             <MdSend
               style={{
                 cursor: "pointer",
               }}
-              onClick={async () => {
-                await handleApply(t.id, t.company);
+              onClick={ () => {
+                navigate("/jobapplicationform", { state: { ...t } });
               }}
             />
           </div>
         )}
-      </ListGroup.Item>
+      </div>
+      // </ListGroup.Item>
     );
   };
 
@@ -212,7 +208,8 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
 
   return (
     <div>
-      <ListGroup>{jobpostings.map(renderListGroupItem)}</ListGroup>
+      {/* <ListGroup>{jobpostings.map(renderListGroupItem)}</ListGroup> */}
+      <div className="card-grid">{jobpostings.map(renderListGroupItem)}</div>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Edit Jobposting</Modal.Title>

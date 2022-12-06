@@ -77,7 +77,16 @@ const Navigation = () => {
   );
 
   return (
-    <Navbar expand="lg">
+    <Navbar
+      style={{
+        alignSelf: "start",
+        position: "sticky",
+        top: "0",
+        background: "white",
+        zIndex: "100",
+      }}
+      expand="lg"
+    >
       <Container fluid className="px-md-5">
         <Navbar.Brand>
           <Link className="navbar-brand" to="/">

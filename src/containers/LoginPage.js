@@ -23,6 +23,7 @@ const LoginPage = () => {
   const addULastName = useStore((state) => state.addLastName);
   const addUEmail = useStore((state) => state.addEmail);
   const addURole = useStore((state) => state.addRole);
+  const addCVId = useStore((state) => state.addCVId);
 
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -33,6 +34,7 @@ const LoginPage = () => {
       .catch((error) => {
         if (error.response.data.detail != null) {
           setErrorMsg(error.response.data.detail);
+          console.log(errorMsg)
         }
       })
       .then((response) => {
@@ -60,7 +62,23 @@ const LoginPage = () => {
             addUEmail(res.data.email);
             addURole(res.data.role);
             navigate("/dashboard");
+          })
+          .then(() => {
+            axios
+          .get(`${process.env.REACT_APP_API_URL}/api/cvs/get_user_cvs/`, {
+            headers: { Authorization: "Bearer " + localStorage.getItem("atoken") },
+          })
+          .then((response) => {
+            if (response.data.id != null) {
+            addCVId(response.data.id);
+            } else {
+              addCVId("");
+            }
+          })
+          .catch((error) => {
+            console.log(error.response.data.message);
           });
+          })
       });
   };
 
@@ -148,7 +166,7 @@ const LoginPage = () => {
                 id="floatingInput"
                 placeholder="name@example.com"
               />
-              <label for="floatingInput">Email</label>
+              <label htmlFor="floatingInput">Email</label>
               <ErrorMessage name="email">
                 {(msg) => <div className="errorMsg">{msg}</div>}
               </ErrorMessage>
@@ -162,7 +180,8 @@ const LoginPage = () => {
                 id="floatingPassword"
                 placeholder="Password"
               />
-              <label for="floatingPassword">Password</label>
+              <label htmlFor="floatingPassword">Password</label>
+              <span className="errorMsg">{errorMsg}</span>
               <ErrorMessage name="password">
                 {(msg) => <div className="errorMsg">{msg}</div>}
               </ErrorMessage>
@@ -170,7 +189,7 @@ const LoginPage = () => {
 
             <div
               className="mb-3 d-flex justify-content-between w-100"
-              controlId="formBasicCheckbox"
+              // controlId="formBasicCheckbox"
             >
               {/* <Form.Check type="checkbox" label="Remember me" /> */}
               <div className="form-check">
@@ -180,7 +199,7 @@ const LoginPage = () => {
                   value=""
                   id="flexCheckDefault"
                 />
-                <label className="form-check-label" for="flexCheckDefault">
+                <label className="form-check-label" htmlFor="flexCheckDefault">
                   Remember me
                 </label>
               </div>
@@ -204,7 +223,7 @@ const LoginPage = () => {
               </Link>
             </p>
 
-            <span className="errorMsg"></span>
+            {/* <span className="errorMsg"></span> */}
 
             {/* Old form - FUNCTIONAL BUT NO STYLE*/}
             {/* <div className="row">
