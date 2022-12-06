@@ -10,6 +10,9 @@ import { Formik, Field, Form } from "formik";
 import axios from "axios";
 import { set } from "date-fns";
 
+// css
+import "../../css/components/SearchForm.css";
+
 function JobApplicationList(props) {
   const [jobApplications, setJobApplications] = useState([]);
   const [toggleState, setToggleState] = useState(false);
@@ -58,32 +61,45 @@ function JobApplicationList(props) {
     setToggleState((t) => !t);
   };
 
+  const handleReset = (e) => {
+    const value = e.target.value;
+    if (value === "") resetSearch();
+  };
+
   return (
     <>
-      <h2>Job Applications ({paginationLinks.count})</h2>
-      <hr />
-      <h3>Search by Keyword</h3>
-      <Formik
-        initialValues={{ searchString: "" }}
-        onSubmit={searchApplications}
-      >
-        <Form>
-          <label htmlFor="searchString">Search</label>
-          <Field
-            id="searchString"
-            name="searchString"
-            placeholder="Search Applications..."
-            className="mx-3"
-          />
-          <button type="submit" className="mx-3">
-            Search
-          </button>
-          <button className="me-2" type="reset" onClick={() => resetSearch()}>
-            Reset
-          </button>
-          <span className={searchMsgStyle}>{searchMsg}</span>
-        </Form>
-      </Formik>
+      <div className="pb-5">
+        {/* <h2>Job Applications ({paginationLinks.count})</h2> */}
+        <Formik
+          initialValues={{ searchString: "" }}
+          onSubmit={searchApplications}
+        >
+          <Form
+            onChange={handleReset}
+            className="border search-form-jobdash shadow-lg"
+          >
+            {/* <label htmlFor="searchString">Search</label> */}
+            <div>
+              <div className="search-icon">
+                <i class="bi bi-search"></i>
+              </div>
+              <Field
+                id="searchString"
+                name="searchString"
+                placeholder="Job title or keyword"
+                className="w-100"
+              />
+            </div>
+            <button type="submit">Search</button>
+
+            {/* Now calls reset when input is empty instead <button className="me-2" type="reset" onClick={resetSearch}>
+              Reset
+            </button> */}
+          </Form>
+        </Formik>
+        <span className={searchMsgStyle}>{searchMsg}</span>
+      </div>
+
       <div className="row my-3">
         <nav aria-label="Page navigation" className="col-4">
           <ul className="pagination">

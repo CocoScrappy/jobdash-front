@@ -11,19 +11,19 @@ import Layout from "../layouts/MainLayout";
 import JobpostingList from "../components/JobpostingList";
 import JobpostingForm from "../components/JobpostingForm";
 import FlashAlert from "components/FlashAlert";
+import GenericPageLayout from "layouts/GenericPageLayout";
 
 //other dependancies
 import { Formik, Field, Form } from "formik";
 import axios from "axios";
 import useStore from "store";
 
-//unused?
-import { set } from "date-fns";
-
-import GenericPageLayout from "layouts/GenericPageLayout";
 // CSS
 import "../css/components/Stylized-letters.css";
 import "../css/components/SearchForm.css";
+
+//unused?
+import { set } from "date-fns";
 
 export const JobPosting = () => {
   //user
@@ -246,6 +246,7 @@ export const JobPosting = () => {
             </Form>
           </Formik>
         </div>
+
         {/* Modal to add job posting form */}
         {uRole == "employer" && (
           <div
@@ -278,6 +279,7 @@ export const JobPosting = () => {
             </Button>
           </Modal.Footer>
         </Modal>
+
         {/* Listing jobs */}
         <JobpostingList
           jobpostings={jobpostings}

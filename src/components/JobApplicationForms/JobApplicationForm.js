@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import Layout from "layouts/MainLayout";
 import { Button, Container } from "react-bootstrap";
 import Heart from "react-heart";
@@ -7,13 +7,11 @@ import useStore from "store";
 import axios from "axios";
 import { Form } from "react-bootstrap";
 import MyEditor from "components/MyEditor";
-import { useNavigate, useLocation  } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import parse from "html-react-parser";
 
-
 function JobApplicationForm() {
-  
-  const handleSubmit = event => {
+  const handleSubmit = (event) => {
     event.preventDefault();
   };
 
@@ -22,7 +20,7 @@ function JobApplicationForm() {
   const uCv = store.cv_id;
   const navigate = useNavigate();
   const jobPostingInfo = useLocation();
-  
+
   const [post, setPost] = useState(jobPostingInfo.state);
   const ISODate = new Date(post.date_created);
   const shortDate = ISODate.toDateString();
@@ -32,25 +30,23 @@ function JobApplicationForm() {
 
   const [modalShow, setModalShow] = useState(false);
   const [modalState, setModalState] = useState("close");
-      
+
   const handleShowModalSuccess = () => {
-   setModalState("modal-success")
-  }
-  
+    setModalState("modal-success");
+  };
+
   const handleShowModalFail = () => {
-   setModalState("modal-fail");
-  }
-  
+    setModalState("modal-fail");
+  };
+
   const handleCloseSuccess = () => {
-   setModalState("close");
-   navigate('/jobpostings');
-  }
+    setModalState("close");
+    navigate("/jobpostings");
+  };
 
   const handleCloseFail = () => {
-    setModalState("close")
-   }
-
-
+    setModalState("close");
+  };
 
   const submitApplication = () => {
     var applicationData = {};
@@ -72,7 +68,8 @@ function JobApplicationForm() {
     axios
       .post(
         `${process.env.REACT_APP_API_URL}/api/applications/`,
-        applicationData,{
+        applicationData,
+        {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("atoken"),
           },
@@ -80,8 +77,8 @@ function JobApplicationForm() {
       )
       .then((res) => {
         if (res.status === 201) {
-        handleShowModalSuccess();
-        setSuccess(true);
+          handleShowModalSuccess();
+          setSuccess(true);
         }
       })
       .catch((error) => {
@@ -91,42 +88,46 @@ function JobApplicationForm() {
   };
 
   function MyVerticallyCenteredModal() {
-
     return (
       <>
-      <Modal show={modalState === "modal-success"}
-        size="lg"
-        aria-labelledby="contained-modal-title-vcenter"
-        centered>
-        <Modal.Header closeButton>
-          <Modal.Title id="contained-modal-title-vcenter">
-            Status
-          </Modal.Title>
-        </Modal.Header>
+        <Modal
+          show={modalState === "modal-success"}
+          size="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          centered
+        >
+          <Modal.Header closeButton>
+            <Modal.Title id="contained-modal-title-vcenter">Status</Modal.Title>
+          </Modal.Header>
           <Modal.Body>Job application record created successfully!</Modal.Body>
           <Modal.Footer>
-            <Button variant="primary" onClick={handleCloseSuccess}>Close</Button>
+            <Button variant="primary" onClick={handleCloseSuccess}>
+              Close
+            </Button>
           </Modal.Footer>
-      </Modal>
-     
-      <Modal show={modalState === "modal-fail"}
-        size="lg"
-        aria-labelledby="contained-modal-title-vcenter"
-        centered>
-        <Modal.Header closeButton>
-          <Modal.Title id="contained-modal-title-vcenter">
-            Status
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Oops, something went wrong with your request. Try again later. </Modal.Body>
-        <Modal.Footer>
-          <Button variant="primary" onClick={handleCloseFail}>Close</Button>
-        </Modal.Footer>
-      </Modal>
+        </Modal>
+
+        <Modal
+          show={modalState === "modal-fail"}
+          size="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          centered
+        >
+          <Modal.Header closeButton>
+            <Modal.Title id="contained-modal-title-vcenter">Status</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            Oops, something went wrong with your request. Try again later.{" "}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="primary" onClick={handleCloseFail}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </>
     );
   }
-
 
   return (
     <Layout title="JobApplicationForm" content="JobApplicationForm">
@@ -152,30 +153,35 @@ function JobApplicationForm() {
           <p>{parse(post.description)}</p>
         </div>
         <div>
-          <h5>Job Link: <a href={post.link}>{post.link ?? "None"}</a> </h5>
+          <h5>
+            Job Link: <a href={post.link}>{post.link ?? "None"}</a>{" "}
+          </h5>
         </div>
 
-          <Form onSubmit={handleSubmit}>
-            {/* Notes */}
-            <div className="mb-4">
+        <Form onSubmit={handleSubmit}>
+          {/* Notes */}
+          <div className="mb-4">
             <h4>Notes</h4>
-              <MyEditor
-                content={""}
-                name="notes"
-                placeholder={"Notes..."}
-                setConvertedContent={setConvertedNoteContent}
-              />
-            </div>
+            <MyEditor
+              content={""}
+              name="notes"
+              placeholder={"Notes..."}
+              setConvertedContent={setConvertedNoteContent}
+            />
+          </div>
 
           {/* Save Button */}
           <Button variant="primary" type="submit" onClick={submitApplication}>
-              Apply
+            Apply
           </Button>
-          </Form>
+        </Form>
       </Container>
       <MyVerticallyCenteredModal
         show={modalShow}
-        onHide={() => {setModalShow(false); navigate('/jobpostings')}}
+        onHide={() => {
+          setModalShow(false);
+          navigate("/jobpostings");
+        }}
       />
     </Layout>
   );
