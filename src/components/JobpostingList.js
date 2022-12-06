@@ -55,7 +55,6 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
   //   employer,
   // } = record;
 
-
   const handleChange = (e) => {
     setRecord({ ...record, [e.target.name]: e.target.value });
   };
@@ -99,7 +98,6 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
         alert("Something wrong with updating Job posting");
       });
   };
-
 
   //on click event to open job description in a modal
   const previewJobDescription = (post) => {
@@ -154,45 +152,72 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
         </div>
         {/* display crud only for owner of posts */}
         {uId === t.employer && (
-          <>
-            <div>
-              <MdEdit
-                onClick={() => {
-                  setRecord(t);
-                  setShow(true);
-                }}
-              />
+          <div
+            style={{
+              display: "flex",
+              placeItems: "center",
+              gap: 15,
+            }}
+          >
+            <div
+              style={{
+                cursor: "pointer",
+              }}
+              onClick={() => {
+                setRecord(t);
+                setShow(true);
+              }}
+            >
+              <h5>
+                <MdEdit />
+                Edit
+              </h5>
             </div>
-            <div>
-              <MdDelete
-                style={{
-                  cursor: "pointer",
-                }}
-                onClick={() => {
-                  handleDelete(t.id);
-                }}
-              />
+            <div
+              style={{
+                cursor: "pointer",
+              }}
+              onClick={() => {
+                handleDelete(t.id);
+              }}
+            >
+              <h5>
+                <MdDelete />
+                Delete
+              </h5>
             </div>
-            <BsPersonLinesFill
+            <div
               style={{
                 cursor: "pointer",
               }}
               onClick={() => {
                 navigate("/applicationForPosting", { state: { ...t } });
               }}
-            />
-          </>
+            >
+              <h5>
+                <BsPersonLinesFill />
+                Applicants
+              </h5>
+            </div>
+          </div>
         )}
         {uRole === "user" && (
-          <div>
-            <MdSend
-              style={{
-                cursor: "pointer",
-              }}
-              onClick={ () => {
-                navigate("/jobapplicationform", { state: { ...t } });
-              }}
-            />
+          <div
+            style={{
+              display: "flex",
+              placeItems: "center",
+              gap: 15,
+              justifyContent: "right",
+              cursor: "pointer",
+            }}
+            onClick={() => {
+              navigate("/jobapplicationform", { state: { ...t } });
+            }}
+          >
+            <h5>
+              Apply
+              <MdSend />
+            </h5>
           </div>
         )}
       </div>

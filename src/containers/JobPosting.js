@@ -94,7 +94,9 @@ export const JobPosting = () => {
       .catch((error) => {
         if (error.response.status != 404) {
           setShowAlert(true);
-          setAlertMsg("Could not retrieve job posting from database.");
+          setAlertMsg(
+            `Could not retrieve job posting from database. ` + error.message
+          );
         }
       });
   }, [toggleState, offset, limit]);
@@ -179,20 +181,23 @@ export const JobPosting = () => {
   //pagination by page number
   const renderPagination = (p) => {
     return (
-      <li
-        key={p.page}
-        style={{
-          cursor: "pointer",
-          listStyle: "none",
-          marginRight: 1,
-          marginLeft: 1,
-        }}
-        onClick={() => {
-          setOffset(p.offset);
-        }}
-      >
-        {p.page}
-      </li>
+      <>
+        <span> | </span>
+        <li
+          key={p.page}
+          style={{
+            cursor: "pointer",
+            listStyle: "none",
+            marginRight: 1,
+            marginLeft: 1,
+          }}
+          onClick={() => {
+            setOffset(p.offset);
+          }}
+        >
+          {p.page}
+        </li>
+      </>
     );
   };
 
@@ -326,26 +331,29 @@ export const JobPosting = () => {
             display: "inline-flex",
           }}
         >
-          Limit:
+          Limit per page:
           {limitRanges.map((l) => {
             return (
-              <li
-                key={l.value}
-                style={{
-                  cursor: "pointer",
-                  listStyle: "none",
-                  marginRight: 1,
-                  marginLeft: 1,
-                }}
-                onClick={() => {
-                  setLimit(l.value);
-                  if (postCount < l.value) {
-                    setOffset(0);
-                  }
-                }}
-              >
-                {l.value}
-              </li>
+              <>
+                <span> | </span>
+                <li
+                  key={l.value}
+                  style={{
+                    cursor: "pointer",
+                    listStyle: "none",
+                    marginRight: 1,
+                    marginLeft: 1,
+                  }}
+                  onClick={() => {
+                    setLimit(l.value);
+                    if (postCount < l.value) {
+                      setOffset(0);
+                    }
+                  }}
+                >
+                  {l.value}
+                </li>
+              </>
             );
           })}
         </ul>
