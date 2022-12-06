@@ -8,7 +8,7 @@
 }
 
 .search-form-jobdash .search-icon {
-  font-size: 2rem;
+  font-size: 1.5rem;
   opacity: 0.5;
   padding-right: 24px;
 }
@@ -43,7 +43,7 @@
   border: var(--color-main);
   height: 100%;
   transition-property: background-color, border-color;
-  transition-duration: 0.5s;
+  transition-duration: 0.3s;
   transition-timing-function: ease-out;
 }
 

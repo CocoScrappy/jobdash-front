@@ -197,12 +197,12 @@ export const JobPosting = () => {
       <GenericPageLayout>
         <div className="pb-5">
           <h2 className="pb-lg-3">What job are you looking for?</h2>
-          {/* <p className="stylized-letters">JD</p> */}
+          {/* FIXME Extract this form into its own component for cleaner code */}
           <Formik
             initialValues={{ search: "", location: "" }}
             onSubmit={searchJobs}
           >
-            <Form className="border search-form-jobdash">
+            <Form className="border search-form-jobdash shadow-lg">
               <div>
                 <div className="search-icon">
                   <i class="bi bi-search"></i>
