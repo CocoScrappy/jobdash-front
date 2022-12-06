@@ -5,6 +5,7 @@ import { Button, InputGroup, Form, Container } from "react-bootstrap";
 import Modal from 'react-bootstrap/Modal';
 import { FormControl } from 'react-bootstrap'
 import Heart from "react-heart"
+import parse from "html-react-parser";
 
 import axios from "axios";
 //zustand
@@ -15,6 +16,10 @@ import {JobpostingForm} from 'components/JobpostingForm';
 
 function ExternalJobApplicationForm() {
 
+  const handleSubmit = event => {
+    event.preventDefault();
+  };
+
   var uId = useStore((state) => state.id);
   var uCv = useStore((state) => state.cv_id);
   const [convertedDescContent, setConvertedDescContent] = useState("");
@@ -23,9 +28,31 @@ function ExternalJobApplicationForm() {
   const [isLiked, setIsLiked] = useState(false);
   const [error, setError] = useState(false);
   const [errors, setErrors] = useState({});
-  //const navigate = useNavigate();
+  const [success, setSuccess] = useState(false);
+
+  const navigate = useNavigate();
+
   const [modalShow, setModalShow] = useState(false);
-  const [modalContent, setModalContent] = useState("");
+  const [modalState, setModalState] = useState("close");
+      
+  const handleShowModalSuccess = () => {
+   setModalState("modal-success")
+  }
+  
+  const handleShowModalFail = () => {
+   setModalState("modal-fail");
+  }
+  
+  const handleCloseSuccess = () => {
+   setModalState("close");
+   navigate('/jobpostings');
+  }
+
+  const handleCloseFail = () => {
+    setModalState("close")
+   }
+
+
   const {
     // jobposting fields
     employer,
@@ -66,19 +93,24 @@ function ExternalJobApplicationForm() {
             cv: uCv,
             job_posting: res.data.id
           }
-          axios.post(`${process.env.REACT_APP_API_URL}/api/applications/`, formAppData,{
-            headers: { Authorization: "Bearer " + localStorage.getItem("atoken") },
-          })
+          axios
+          .post(
+            `${process.env.REACT_APP_API_URL}/api/applications/`,
+            formAppData,{
+              headers: {
+                Authorization: "Bearer " + localStorage.getItem("atoken"),
+              },
+            }
+          )
           .then((res) => {
-            console.log("application:"+res.data);
-            setModalContent("Application submitted successfully!");
-            setModalShow(true);
-            //navigate('/applications');
+            if (res.status === 201) {
+            handleShowModalSuccess();
+            setSuccess(true);
+            }
           })
           .catch((error) => {
-            console.log(error);
-            setModalContent(error);
-            setModalShow(true);
+            setSuccess(false);
+            handleShowModalFail(error);
           });
         })
       // .then((res) => {
@@ -91,28 +123,39 @@ function ExternalJobApplicationForm() {
 
 
     function MyVerticallyCenteredModal(props) {
+
       return (
-        <Modal
-          {...props}
+        <>
+        <Modal show={modalState === "modal-success"}
           size="lg"
           aria-labelledby="contained-modal-title-vcenter"
-          centered
-        >
+          centered>
           <Modal.Header closeButton>
             <Modal.Title id="contained-modal-title-vcenter">
-              Info
+              Status
             </Modal.Title>
           </Modal.Header>
-          <Modal.Body>
-            <h4>Good Luck!</h4>
-            <p>
-              Job application record created successfully!
-            </p>
-          </Modal.Body>
+            <Modal.Body>Job application record created successfully!</Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleCloseSuccess}>Close</Button>
+            </Modal.Footer>
+        </Modal>
+       
+        <Modal show={modalState === "modal-fail"}
+          size="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          centered>
+          <Modal.Header closeButton>
+            <Modal.Title id="contained-modal-title-vcenter">
+              Status
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>Oops, something went wrong with your request. Try again later. </Modal.Body>
           <Modal.Footer>
-            <Button onClick={props.onHide}>Close</Button>
+            <Button variant="secondary" onClick={handleCloseFail}>Close</Button>
           </Modal.Footer>
         </Modal>
+        </>
       );
     }
 
@@ -123,7 +166,7 @@ function ExternalJobApplicationForm() {
         <div>External Job Application Form</div>
         <Container>
         <Form
-            // onSubmit={handleCreateRecord}
+            onSubmit={handleSubmit}
             >
 
           {/* Title */}
@@ -235,7 +278,7 @@ function ExternalJobApplicationForm() {
           </div>
 
           {/* Save Button */}
-          <Button variant="primary" type="submit" onClick={() => {handleCreateRecord()}}>
+          <Button variant="secondary" type="submit" onClick={() => {handleCreateRecord()}}>
               Save External Application
           </Button>
         </Form>

@@ -105,7 +105,7 @@ function JobApplicationForm() {
         </Modal.Header>
           <Modal.Body>Job application record created successfully!</Modal.Body>
           <Modal.Footer>
-            <Button variant="primary" onClick={handleCloseSuccess}>Close</Button>
+            <Button variant="secondary" onClick={handleCloseSuccess}>Close</Button>
           </Modal.Footer>
       </Modal>
      
@@ -120,7 +120,7 @@ function JobApplicationForm() {
         </Modal.Header>
         <Modal.Body>Oops, something went wrong with your request. Try again later. </Modal.Body>
         <Modal.Footer>
-          <Button variant="primary" onClick={handleCloseFail}>Close</Button>
+          <Button variant="secondary" onClick={handleCloseFail}>Close</Button>
         </Modal.Footer>
       </Modal>
       </>
