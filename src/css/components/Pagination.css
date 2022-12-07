@@ -1,8 +1,40 @@
 .pagination {
   margin: 0;
 }
-.pagination > li {
+.pagination > li,
+.page-item:first-child .page-link,
+.page-item:last-child .page-link {
   margin: 2px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination > li.page-link > a {
+  border-radius: 50%;
+}
+.pagination > li.active-jobdash {
+  background: var(--color-dark-gray);
+}
+
+.pagination > li.active-jobdash a {
+  color: white;
+}
+
+.pagination > li.active-jobdash:hover a,
+.pagination > li.active-jobdash:focus a,
+.pagination > li.active-jobdash a:focus,
+.pagination > li.active-jobdash:focus {
+  color: white;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .pagination > li.disabled span {
@@ -16,6 +48,7 @@
   transition-property: color;
   transition-duration: 0.3s;
   transition-timing-function: ease-out;
+  border-radius: 50%;
 }
 
 .pagination > li > a:focus-visible {
@@ -24,11 +57,10 @@
 
 .pagination > li > a:focus,
 .pagination > li > a:hover {
-  background-color: inherit;
-  color: var(--color-text);
+  background-color: #afbecf36;
+  color: #afbecf;
 }
 
-.page-item:first-child .page-link,
-.page-item:last-child .page-link {
-  border-radius: 0;
+.page-item:not(:first-child) .page-link {
+  margin: 0;
 }
