@@ -48,6 +48,7 @@ const DashboardPage = () => {
             if (a.favorited === true) {
               setFavorited(favorited + 1);
             }
+
             setUpcoming(upcoming + 1);
           });
         } catch (error) {
