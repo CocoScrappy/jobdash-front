@@ -25,18 +25,10 @@ const HomePage = () => {
             className="d-flex flex-column flex-lg-row justify-content-between"
             style={{ gap: "8px" }}
           >
-            <Button
-              variant="dark"
-              className="shadow-lg btn-jobdash w-100"
-              size="lg"
-            >
+            <Button variant="dark" className="btn-jobdash w-100" size="lg">
               Login
             </Button>
-            <Button
-              variant="dark"
-              className="shadow-lg btn-jobdash w-100"
-              size="lg"
-            >
+            <Button variant="dark" className="btn-jobdash w-100" size="lg">
               Register
             </Button>
           </div>
