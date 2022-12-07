@@ -59,6 +59,7 @@ export default function SkeletonCards() {
           </div>
           <h3 className="skt_long"></h3>
           <p className="skt_short"></p>
+          <p className="skt_short"></p>
           <p className="skt_long"></p>
         </div>
         {/* display crud only for owner of posts */}
