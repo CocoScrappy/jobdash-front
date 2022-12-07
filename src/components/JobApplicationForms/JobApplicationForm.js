@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Layout from "layouts/MainLayout";
 import { Button, Container } from "react-bootstrap";
 import Heart from "react-heart";
@@ -10,6 +10,9 @@ import MyEditor from "components/MyEditor";
 import { useNavigate, useLocation } from "react-router-dom";
 import parse from "html-react-parser";
 import GenericPageLayout from "layouts/GenericPageLayout";
+import Spinner from "react-bootstrap/Spinner";
+import DonutChart from "react-donut-chart";
+import Badge from "react-bootstrap/Badge";
 
 function JobApplicationForm() {
   const handleSubmit = (event) => {
@@ -32,6 +35,49 @@ function JobApplicationForm() {
 
   const [modalShow, setModalShow] = useState(false);
   const [modalState, setModalState] = useState("close");
+
+  const [jobAnalysisResults, setJobAnalysisResults] = useState();
+  const [analysisLoading, setAnalysisLoading] = useState(false);
+  const [analysisDisabled, setAnalysisDisabled] = useState(false);
+
+  // useEffect(() => {
+  //   setJobAnalysisResults({
+  //     matching_score: 13.79,
+  //     matching_skills_results: {
+  //       matching_skills: [
+  //         "spring",
+  //         "scalable",
+  //         "frameworks",
+  //         "science",
+  //         "stack",
+  //         "work",
+  //         "java",
+  //         "experience",
+  //       ],
+  //       missing_skills: [
+  //         "type",
+  //         "code",
+  //         "design",
+  //         "testing",
+  //         "computer",
+  //         "understanding",
+  //         "types",
+  //         "building",
+  //         "web",
+  //         "agile",
+  //         "ny",
+  //         "development",
+  //         "cd",
+  //         "knowledge",
+  //         "fitness",
+  //         "principles",
+  //         "position",
+  //         "degree",
+  //         "style",
+  //       ],
+  //     },
+  //   });
+  // }, []);
 
   const handleShowModalSuccess = () => {
     setModalState("modal-success");
@@ -59,7 +105,7 @@ function JobApplicationForm() {
         status: "applied",
         // applicant: uId,
         cv: uCv,
-        job_posting: post.id
+        job_posting: post.id,
       };
     } catch (err) {
       console.log(
@@ -87,6 +133,26 @@ function JobApplicationForm() {
         setSuccess(false);
         setFailModalMsg(error.response.data.message);
         handleShowModalFail();
+      });
+  };
+
+  const runCVAnalyzer = () => {
+    setAnalysisLoading(true);
+    setAnalysisDisabled(true);
+    const data = { jobId: post.id };
+    axios
+      .post(`${process.env.REACT_APP_API_URL}/api/postings/analyzer/`, data, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("atoken"),
+        },
+      })
+      .then((res) => {
+        setJobAnalysisResults(res.data);
+        setAnalysisLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setAnalysisLoading(false);
       });
   };
 
@@ -137,18 +203,98 @@ function JobApplicationForm() {
       color="var(--color-gray)"
     >
       <GenericPageLayout>
-        <div>
-          <h5>Company: {post.company}</h5>
-          <h5>Job Title: {post.title}</h5>
-        </div>
-        <div style={{ width: "1.5rem" }}>
-          <h5>Favorite: </h5>
-          <Heart isActive={isLiked} onClick={() => setIsLiked(!isLiked)} />
-        </div>
-        <div>
-          <h5>Location: {post.location}</h5>
-          <h5>Remote Option: {post.remote_option}</h5>
-          <h5>Date Created: {shortDate}</h5>
+        <div className="row">
+          <div className="col">
+            <div>
+              <h5>Company: {post.company}</h5>
+              <h5>Job Title: {post.title}</h5>
+            </div>
+            <div style={{ width: "1.5rem" }}>
+              <h5>Favorite: </h5>
+              <Heart isActive={isLiked} onClick={() => setIsLiked(!isLiked)} />
+            </div>
+            <div>
+              <h5>Location: {post.location}</h5>
+              <h5>Remote Option: {post.remote_option}</h5>
+              <h5>Date Created: {shortDate}</h5>
+            </div>
+          </div>
+          {/* post analyzer */}
+          <div className="col text-center">
+            <h3>JobPost Analyzer (beta)</h3>
+            <div>
+              {jobAnalysisResults === undefined ? (
+                <>
+                  <Button
+                    disabled={analysisDisabled}
+                    onClick={() => runCVAnalyzer()}
+                  >
+                    {analysisLoading ? (
+                      <>
+                        <Spinner
+                          as="span"
+                          animation="border"
+                          size="sm"
+                          role="status"
+                          aria-hidden="true"
+                          className="me-3"
+                          variant="light"
+                        />
+                        Loading...
+                      </>
+                    ) : (
+                      "Start"
+                    )}
+                  </Button>
+                </>
+              ) : (
+                <div>
+                  <DonutChart
+                    data={[
+                      {
+                        label: "Match",
+                        value: jobAnalysisResults.matching_score,
+                      },
+                      {
+                        label: "",
+                        value: 100 - jobAnalysisResults.matching_score,
+                        isEmpty: true,
+                      },
+                    ]}
+                    height={100}
+                    width={100}
+                    colors={["MediumBlue", "lightgrey"]}
+                    legend={false}
+                    emptyColor="lightgrey"
+                    strokeColor="white"
+                    clickToggle={false}
+                    interactive={true}
+                    formatValues={(values, total) => `${values.toFixed(0)}%`}
+                  />
+                  <p>
+                    <strong>Matching: </strong>
+                    {jobAnalysisResults.matching_skills_results.matching_skills.map(
+                      (item) => (
+                        <Badge bg="success" className="me-1">
+                          {item}
+                        </Badge>
+                      )
+                    )}
+                  </p>
+                  <p>
+                    <strong>Missing: </strong>
+                    {jobAnalysisResults.matching_skills_results.missing_skills
+                      .slice(0, 10)
+                      .map((item) => (
+                        <Badge bg="warning" className="me-1">
+                          {item}
+                        </Badge>
+                      ))}
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
         <div>
           <h5>Job Description: </h5>
