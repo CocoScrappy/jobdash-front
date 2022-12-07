@@ -263,22 +263,7 @@ export const JobPosting = () => {
             </Form>
           </Formik>
         </div>
-        {/* Recruiter - Modal to add job posting form */}
-        {uRole === "employer" && (
-          <div>
-            <strong
-              style={{
-                cursor: "pointer",
-                marginRight: "12px",
-              }}
-              onClick={() => {
-                setShowAdd(true);
-              }}
-            >
-              Add job posting
-            </strong>
-          </div>
-        )}
+
         {loading === true && <ProgressBar animated now={percent} />}
         <Modal show={showAdd} onHide={handleCloseAdd}>
           <Modal.Header closeButton>
@@ -296,28 +281,42 @@ export const JobPosting = () => {
             </Button>
           </Modal.Footer>
         </Modal>
-        {/* Limit per page section*/}
-        <div className="d-flex align-items-center justify-content-end my-2">
-          <p className="me-2 my-0">Jobs per page: </p>
-          <BootstrapForm.Select style={{ width: "auto" }}>
-            {limitRanges.map((l) => {
-              return (
-                <option
-                  key={l.limitValue}
-                  value={l.limitValue}
-                  onClick={() => {
-                    setLimit(l.limitValue);
-                    console.log(l.limitValue);
-                    if (postCount < l.limitValue) {
-                      setOffset(0);
-                    }
-                  }}
-                >
-                  {l.limitValue}
-                </option>
-              );
-            })}
-          </BootstrapForm.Select>
+        <div className="d-flex align-items-center justify-content-between my-2">
+          {/* Recruiter - Modal to add job posting form */}
+          {uRole === "employer" && (
+            <Button
+              variant="dark"
+              className="btn-jobdash"
+              onClick={() => {
+                setShowAdd(true);
+              }}
+            >
+              Add New Job
+            </Button>
+          )}
+          {/* Limit per page section*/}
+          <div className="d-flex align-items-center">
+            <p className="me-2 my-0">Jobs per page: </p>
+            <BootstrapForm.Select style={{ width: "auto" }}>
+              {limitRanges.map((l) => {
+                return (
+                  <option
+                    key={l.limitValue}
+                    value={l.limitValue}
+                    onClick={() => {
+                      setLimit(l.limitValue);
+                      console.log(l.limitValue);
+                      if (postCount < l.limitValue) {
+                        setOffset(0);
+                      }
+                    }}
+                  >
+                    {l.limitValue}
+                  </option>
+                );
+              })}
+            </BootstrapForm.Select>
+          </div>
         </div>
         {/* Listing jobs */}
         {/* Loading effect */}
