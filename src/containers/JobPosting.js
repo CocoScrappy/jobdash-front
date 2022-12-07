@@ -4,6 +4,9 @@ import Container from "react-bootstrap/Container";
 import ProgressBar from "react-bootstrap/ProgressBar";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
+import Pagination from "react-bootstrap/Pagination";
+import BootstrapForm from "react-bootstrap/Form";
+
 // import Alert from "react-bootstrap/Alert";
 
 //custom imports
@@ -21,6 +24,7 @@ import useStore from "store";
 // CSS
 import "../css/components/Stylized-letters.css";
 import "../css/components/SearchForm.css";
+import "../css/components/Pagination.css";
 
 //unused?
 import { set } from "date-fns";
@@ -35,11 +39,12 @@ export const JobPosting = () => {
   const [pages, setPages] = useState([]);
   const [postCount, setPostCount] = useState(0);
   const [offset, setOffset] = useState(0);
-  const [limit, setLimit] = useState(8);
+  const [limit, setLimit] = useState(10);
   const [limitRanges, setLimitRanges] = useState([
-    { value: 8 },
+    { value: 10 },
     { value: 20 },
     { value: 50 },
+    { value: 80 },
     { value: 100 },
   ]);
   //search
@@ -164,8 +169,8 @@ export const JobPosting = () => {
         }
       )
       .then((res) => {
-        console.log("Result");
-        console.log(res.data);
+        // console.log("Result");
+        // console.log(res.data);
         const result = [];
         //res.data.results.forEach((match) => result.push(match.fields));
         setJobpostings(res.data.results);
@@ -180,23 +185,14 @@ export const JobPosting = () => {
   //pagination by page number
   const renderPagination = (p) => {
     return (
-      <>
-        <span> | </span>
-        <li
-          key={p.page}
-          style={{
-            cursor: "pointer",
-            listStyle: "none",
-            marginRight: 1,
-            marginLeft: 1,
-          }}
-          onClick={() => {
-            setOffset(p.offset);
-          }}
-        >
-          {p.page}
-        </li>
-      </>
+      <Pagination.Item
+        key={p.page}
+        onClick={() => {
+          setOffset(p.offset);
+        }}
+      >
+        {p.page}
+      </Pagination.Item>
     );
   };
 
@@ -207,6 +203,7 @@ export const JobPosting = () => {
       color="var(--color-gray)"
     >
       <GenericPageLayout>
+        {/* Alert */}
         {showAlert && (
           <FlashAlert
             setShowAlert={setShowAlert}
@@ -214,9 +211,8 @@ export const JobPosting = () => {
             variant={"danger"}
           />
         )}
-        <div className="pb-5">
+        <div className="pb-5 d-flex flex-column justify-content-start">
           <h2 className="pb-lg-3">What job are you looking for?</h2>
-          {/* FIXME Extract this form into its own component for cleaner code */}
           <Formik
             initialValues={{ search: "", location: "" }}
             onSubmit={searchJobs}
@@ -250,9 +246,8 @@ export const JobPosting = () => {
             </Form>
           </Formik>
         </div>
-
-        {/* Modal to add job posting form */}
-        {uRole == "employer" && (
+        {/* Recruiter - Modal to add job posting form */}
+        {uRole === "employer" && (
           <div
             style={{
               cursor: "pointer",
@@ -266,7 +261,6 @@ export const JobPosting = () => {
           </div>
         )}
         {loading === true && <ProgressBar animated now={percent} />}
-
         <Modal show={showAdd} onHide={handleCloseAdd}>
           <Modal.Header closeButton>
             <Modal.Title>Add Jobposting</Modal.Title>
@@ -283,66 +277,14 @@ export const JobPosting = () => {
             </Button>
           </Modal.Footer>
         </Modal>
-
-        {/* Listing jobs */}
-        <JobpostingList
-          jobpostings={jobpostings}
-          setJobpostings={setJobpostings}
-        />
-        <ul
-          style={{
-            display: "inline-flex",
-          }}
-        >
-          {offset > 0 && (
-            <li
-              style={{
-                cursor: "pointer",
-                listStyle: "none",
-              }}
-              onClick={() => {
-                setOffset(offset - limit);
-              }}
-            >
-              Previous
-            </li>
-          )}
-          {pages.length !== 0 && <p> Page: </p>}
-          {pages.map(renderPagination)}
-
-          {offset < postCount - limit && (
-            <li
-              style={{
-                cursor: "pointer",
-                listStyle: "none",
-              }}
-              onClick={() => {
-                setOffset(offset + limit);
-              }}
-            >
-              Next
-            </li>
-          )}
-        </ul>
-        <br />
-        <ul
-          style={{
-            display: "inline-flex",
-          }}
-        >
-          Limit per page:
-          {limitRanges.map((l) => {
-            return (
-              <>
-                <span> | </span>
-                <li
+        {/* Limit per page section*/}
+        <div className="d-flex align-items-center justify-content-end my-2">
+          <p className="me-2 my-0">Jobs per page: </p>
+          <BootstrapForm.Select style={{ width: "auto" }}>
+            {limitRanges.map((l) => {
+              return (
+                <option
                   key={l.value}
-                  style={{
-                    cursor: "pointer",
-                    listStyle: "none",
-                    marginRight: 1,
-                    marginLeft: 1,
-                  }}
                   onClick={() => {
                     setLimit(l.value);
                     if (postCount < l.value) {
@@ -351,11 +293,62 @@ export const JobPosting = () => {
                   }}
                 >
                   {l.value}
-                </li>
-              </>
-            );
-          })}
-        </ul>
+                </option>
+              );
+            })}
+          </BootstrapForm.Select>
+        </div>
+        {/* Listing jobs */}
+        <JobpostingList
+          jobpostings={jobpostings}
+          setJobpostings={setJobpostings}
+        />
+        {/* Pagination Section*/}
+        <div
+          style={{ height: "150px" }}
+          className="d-flex justify-content-center align-items-end"
+        >
+          <Pagination className="justify-content-center pt-4">
+            {offset > 0 ? (
+              <Pagination.Prev
+                onClick={() => {
+                  setOffset(offset - limit);
+                }}
+              >
+                <i class="bi bi-arrow-left"></i>
+              </Pagination.Prev>
+            ) : (
+              <Pagination.Prev
+                disabled
+                onClick={() => {
+                  setOffset(offset - limit);
+                }}
+              >
+                <i class="bi bi-arrow-left"></i>
+              </Pagination.Prev>
+            )}
+            {pages.map(renderPagination)}
+
+            {offset < postCount - limit ? (
+              <Pagination.Next
+                onClick={() => {
+                  setOffset(offset + limit);
+                }}
+              >
+                <i class="bi bi-arrow-right"></i>
+              </Pagination.Next>
+            ) : (
+              <Pagination.Next
+                disabled
+                onClick={() => {
+                  setOffset(offset + limit);
+                }}
+              >
+                <i class="bi bi-arrow-right"></i>
+              </Pagination.Next>
+            )}
+          </Pagination>
+        </div>
       </GenericPageLayout>
     </Layout>
   );

@@ -87,8 +87,6 @@ function JobApplicationDetails(props) {
   }
   return (
     <div>
-      <h3>Job Application Details</h3>
-      <hr />
       <div className="row">
         <div className="col col-10">
           <h2>{applicationInfo.job_posting.title}</h2>

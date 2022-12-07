@@ -9,6 +9,7 @@ import { Form } from "react-bootstrap";
 import MyEditor from "components/MyEditor";
 import { useNavigate, useLocation } from "react-router-dom";
 import parse from "html-react-parser";
+import GenericPageLayout from "layouts/GenericPageLayout";
 
 function JobApplicationForm() {
   const handleSubmit = (event) => {
@@ -131,11 +132,12 @@ function JobApplicationForm() {
   }
 
   return (
-    <Layout title="JobApplicationForm" content="JobApplicationForm">
-      <div>
-        <h4>Job Application Form</h4>
-      </div>
-      <Container>
+    <Layout
+      title="Job Dash | Apply to a Job"
+      content="JobApplicationForm"
+      color="var(--color-gray)"
+    >
+      <GenericPageLayout>
         <div>
           <h5>Company: {post.company}</h5>
           <h5>Job Title: {post.title}</h5>
@@ -172,11 +174,17 @@ function JobApplicationForm() {
           </div>
 
           {/* Save Button */}
-          <Button variant="primary" type="submit" onClick={submitApplication}>
-            Apply
+          <Button
+            variant="dark"
+            className="btn-jobdash btn-change-text"
+            type="submit"
+            onClick={submitApplication}
+          >
+            <i className="button-text-extra bi bi-send-fill"></i>
+            <span className="button-text">Apply now </span>
           </Button>
         </Form>
-      </Container>
+      </GenericPageLayout>
       <MyVerticallyCenteredModal
         show={modalShow}
         onHide={() => {

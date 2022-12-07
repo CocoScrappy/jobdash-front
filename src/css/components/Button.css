@@ -10,3 +10,20 @@
   background-color: var(--color-main-lighter);
   border-color: var(--color-main-lighter);
 }
+
+.btn-change-text > * {
+  color: white;
+  padding: 0 3px;
+}
+
+/* Attempted button animations but failed lol */
+/* .btn-change-text:hover .button-text-extra {
+  display: block;
+}
+.btn-change-text:hover .button-text {
+  display: none;
+} */
+
+/* .btn-change-text:hover:before {
+  content: "Hello!";
+} */
