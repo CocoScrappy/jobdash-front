@@ -37,7 +37,7 @@ export const JobPosting = () => {
   const [jobpostings, setJobpostings] = useState([]);
   //pagination
   const [pages, setPages] = useState([]);
-  const [activePage, setActivePage] = useState(null);
+  const [activePage, setActivePage] = useState(1);
   const [postCount, setPostCount] = useState(0);
   const [offset, setOffset] = useState(0);
   const [limit, setLimit] = useState(10);
@@ -78,6 +78,7 @@ export const JobPosting = () => {
       // console.log(`pageArray[${i - 1}].offset = ${pageArray[i - 1].offset}`);
     }
     setPages(pageArray);
+    setActivePage(offset / limit + 1);
   };
   //fetch job posting list and render page
   useEffect(() => {
@@ -185,7 +186,17 @@ export const JobPosting = () => {
   };
   //pagination by page number
   const renderPagination = (p) => {
-    return (
+    return p.page == activePage ? (
+      <Pagination.Item
+        key={p.page}
+        className="active"
+        onClick={() => {
+          setOffset(p.offset);
+        }}
+      >
+        {p.page}
+      </Pagination.Item>
+    ) : (
       <Pagination.Item
         key={p.page}
         onClick={() => {
