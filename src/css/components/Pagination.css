@@ -1,0 +1,26 @@
+.pagination > li {
+  margin: 2px;
+}
+.pagination > li > a {
+  color: var(--color-dark-gray);
+  background: none;
+  border: none;
+  transition-property: color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-out;
+}
+
+.pagination > li > a:focus-visible {
+  outline: none;
+}
+
+.pagination > li > a:focus,
+.pagination > li > a:hover {
+  background-color: inherit;
+  color: var(--color-main);
+}
+
+.page-item:first-child .page-link,
+.page-item:last-child .page-link {
+  border-radius: 0;
+}

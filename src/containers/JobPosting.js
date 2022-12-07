@@ -24,6 +24,7 @@ import useStore from "store";
 // CSS
 import "../css/components/Stylized-letters.css";
 import "../css/components/SearchForm.css";
+import "../css/components/Pagination.css";
 
 //unused?
 import { set } from "date-fns";
@@ -284,6 +285,33 @@ export const JobPosting = () => {
             </Button>
           </Modal.Footer>
         </Modal>
+        {/* Limit per page section*/}
+        Limit per page:
+        <BootstrapForm.Select style={{ width: "auto" }}>
+          {limitRanges.map((l) => {
+            return (
+              <>
+                <option
+                  key={l.value}
+                  // style={{
+                  //   cursor: "pointer",
+                  //   listStyle: "none",
+                  //   marginRight: 1,
+                  //   marginLeft: 1,
+                  // }}
+                  onClick={() => {
+                    setLimit(l.value);
+                    if (postCount < l.value) {
+                      setOffset(0);
+                    }
+                  }}
+                >
+                  {l.value}
+                </option>
+              </>
+            );
+          })}
+        </BootstrapForm.Select>
         {/* Listing jobs */}
         <JobpostingList
           jobpostings={jobpostings}
@@ -322,33 +350,6 @@ export const JobPosting = () => {
             />
           )}
         </Pagination>
-        {/* Limit per page section*/}
-        Limit per page:
-        <BootstrapForm.Select style={{ width: "auto" }}>
-          {limitRanges.map((l) => {
-            return (
-              <>
-                <option
-                  key={l.value}
-                  // style={{
-                  //   cursor: "pointer",
-                  //   listStyle: "none",
-                  //   marginRight: 1,
-                  //   marginLeft: 1,
-                  // }}
-                  onClick={() => {
-                    setLimit(l.value);
-                    if (postCount < l.value) {
-                      setOffset(0);
-                    }
-                  }}
-                >
-                  {l.value}
-                </option>
-              </>
-            );
-          })}
-        </BootstrapForm.Select>
       </GenericPageLayout>
     </Layout>
   );
