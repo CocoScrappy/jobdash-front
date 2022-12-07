@@ -39,11 +39,12 @@ export const JobPosting = () => {
   const [pages, setPages] = useState([]);
   const [postCount, setPostCount] = useState(0);
   const [offset, setOffset] = useState(0);
-  const [limit, setLimit] = useState(15);
+  const [limit, setLimit] = useState(10);
   const [limitRanges, setLimitRanges] = useState([
-    { value: 15 },
-    { value: 30 },
+    { value: 10 },
+    { value: 20 },
     { value: 50 },
+    { value: 80 },
     { value: 100 },
   ]);
   //search
@@ -51,7 +52,6 @@ export const JobPosting = () => {
   const [loading, setLoading] = useState(false);
   const [percent, setPercent] = useState(0);
 
-  console.log({ offset, limit });
   //add posting modal
   const [showAdd, setShowAdd] = useState(false);
 
@@ -184,16 +184,9 @@ export const JobPosting = () => {
   };
   //pagination by page number
   const renderPagination = (p) => {
-    console.log("p is", p);
     return (
       <Pagination.Item
         key={p.page}
-        // style={{
-        //   cursor: "pointer",
-        //   listStyle: "none",
-        //   marginRight: 1,
-        //   marginLeft: 1,
-        // }}
         onClick={() => {
           setOffset(p.offset);
         }}
@@ -218,9 +211,8 @@ export const JobPosting = () => {
             variant={"danger"}
           />
         )}
-        <div className="pb-5">
+        <div className="pb-5 d-flex flex-column justify-content-start">
           <h2 className="pb-lg-3">What job are you looking for?</h2>
-          {/* FIXME Extract this form into its own component for cleaner code */}
           <Formik
             initialValues={{ search: "", location: "" }}
             onSubmit={searchJobs}
@@ -286,19 +278,13 @@ export const JobPosting = () => {
           </Modal.Footer>
         </Modal>
         {/* Limit per page section*/}
-        Limit per page:
-        <BootstrapForm.Select style={{ width: "auto" }}>
-          {limitRanges.map((l) => {
-            return (
-              <>
+        <div className="d-flex align-items-center justify-content-end my-2">
+          <p className="me-2 my-0">Jobs per page: </p>
+          <BootstrapForm.Select style={{ width: "auto" }}>
+            {limitRanges.map((l) => {
+              return (
                 <option
                   key={l.value}
-                  // style={{
-                  //   cursor: "pointer",
-                  //   listStyle: "none",
-                  //   marginRight: 1,
-                  //   marginLeft: 1,
-                  // }}
                   onClick={() => {
                     setLimit(l.value);
                     if (postCount < l.value) {
@@ -308,48 +294,61 @@ export const JobPosting = () => {
                 >
                   {l.value}
                 </option>
-              </>
-            );
-          })}
-        </BootstrapForm.Select>
+              );
+            })}
+          </BootstrapForm.Select>
+        </div>
         {/* Listing jobs */}
         <JobpostingList
           jobpostings={jobpostings}
           setJobpostings={setJobpostings}
         />
         {/* Pagination Section*/}
-        <Pagination className="justify-content-center pt-4">
-          {offset > 0 ? (
-            <Pagination.Prev
-              onClick={() => {
-                setOffset(offset - limit);
-              }}
-            />
-          ) : (
-            <Pagination.Prev
-              disabled
-              onClick={() => {
-                setOffset(offset - limit);
-              }}
-            />
-          )}
-          {pages.map(renderPagination)}
+        <div
+          style={{ height: "150px" }}
+          className="d-flex justify-content-center align-items-end"
+        >
+          <Pagination className="justify-content-center pt-4">
+            {offset > 0 ? (
+              <Pagination.Prev
+                onClick={() => {
+                  setOffset(offset - limit);
+                }}
+              >
+                <i class="bi bi-arrow-left"></i>
+              </Pagination.Prev>
+            ) : (
+              <Pagination.Prev
+                disabled
+                onClick={() => {
+                  setOffset(offset - limit);
+                }}
+              >
+                <i class="bi bi-arrow-left"></i>
+              </Pagination.Prev>
+            )}
+            {pages.map(renderPagination)}
 
-          {offset < postCount - limit ? (
-            <Pagination.Next
-              onClick={() => {
-                setOffset(offset + limit);
-              }}
-            />
-          ) : (
-            <Pagination.Next
-              disabled
-              onClick={() => {
-                setOffset(offset + limit);
-              }}
-            />
-          )}
-        </Pagination>
+            {offset < postCount - limit ? (
+              <Pagination.Next
+                onClick={() => {
+                  setOffset(offset + limit);
+                }}
+              >
+                <i class="bi bi-arrow-right"></i>
+              </Pagination.Next>
+            ) : (
+              <Pagination.Next
+                disabled
+                onClick={() => {
+                  setOffset(offset + limit);
+                }}
+              >
+                <i class="bi bi-arrow-right"></i>
+              </Pagination.Next>
+            )}
+          </Pagination>
+        </div>
       </GenericPageLayout>
     </Layout>
   );

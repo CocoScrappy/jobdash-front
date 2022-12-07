@@ -1,5 +1,13 @@
+.pagination {
+  margin: 0;
+}
 .pagination > li {
   margin: 2px;
+}
+
+.pagination > li.disabled span {
+  border: none;
+  background: none;
 }
 .pagination > li > a {
   color: var(--color-dark-gray);
@@ -17,7 +25,7 @@
 .pagination > li > a:focus,
 .pagination > li > a:hover {
   background-color: inherit;
-  color: var(--color-main);
+  color: var(--color-text);
 }
 
 .page-item:first-child .page-link,
