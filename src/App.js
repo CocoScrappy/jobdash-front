@@ -5,7 +5,6 @@ import DashboardPage from "containers/DashboardPage";
 import LoginPage from "containers/LoginPage";
 import RegisterPage from "containers/RegisterPage";
 import JobPosting from "containers/JobPosting";
-import JobApplicationViewEdit from "containers/JobApplicationViewEdit";
 import JobApplications from "containers/JobApplicationListingPage";
 import JobApplicationForm from "components/JobApplicationForms/JobApplicationForm";
 import ExternalJobApplicationForm from "components/JobApplicationForms/ExternalJobApplicationForm";
@@ -13,7 +12,8 @@ import MyCVPage from "containers/MyCVPage";
 import AllApplicationsForPosting from "containers/AllApplicationsForPosting";
 import UserProtectedRoute from "UserProtectedRoute";
 import JobApplicationInfoPage from "containers/JobApplicationInfoPage";
-import SavedDateInfoPage from "containers/SavedDateInfoPage";
+import Error from "containers/Errors/ErrorPage";
+// import SavedDateInfoPage from "containers/SavedDateInfoPage";
 // CSS
 import "./css/App.css";
 
@@ -23,6 +23,10 @@ const App = () => (
       <Route path="/" element={<HomePage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
+      <Route
+          path="/error/:errorCode"
+          element={<Error />}
+        />
 
       <Route path="/" element={<UserProtectedRoute />}>
         <Route path="dashboard" element={<DashboardPage />} />

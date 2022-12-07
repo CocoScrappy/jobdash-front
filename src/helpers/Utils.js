@@ -3,7 +3,7 @@
  */
 import axios from "axios";
 import { format, parseISO } from "date-fns";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 /**
  * update favorited status
@@ -71,6 +71,13 @@ export const fetchUserApplications = ({
       if (error.response.data && error.response.status === 404) {
         setJobApplications(error.response.data.data);
       }
+      // if (error.response.data.detail) {
+      //   if (
+      //     error.response.data.detail ===
+      //     "Given token not valid for any token type"
+      //   ) {
+      //   }
+      // }
       console.log(error);
     });
 };
@@ -456,8 +463,8 @@ export const deleteApplication = ({ applicationId, navigate }) => {
     });
 };
 
-export const NewLine =function(props){
+export const NewLine = function (props) {
   const text = props.text;
-  const newText = text.split('\n').map(str=><p>{str}</p>)
-  return newText
-}
+  const newText = text.split("\n").map((str) => <p>{str}</p>);
+  return newText;
+};
