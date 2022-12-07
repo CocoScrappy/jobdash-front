@@ -16,6 +16,7 @@ import JobpostingList from "../components/JobpostingList";
 import JobpostingForm from "../components/JobpostingForm";
 import FlashAlert from "components/FlashAlert";
 import GenericPageLayout from "layouts/GenericPageLayout";
+import SkeletonCards from "components/SkeletonCards";
 
 //other dependancies
 import { Formik, Field, Form } from "formik";
@@ -322,18 +323,11 @@ export const JobPosting = () => {
         {/* Loading effect */}
 
         {jobListLoading === true ? (
-          // <Button variant="primary" disabled>
-          //   <Spinner
-          //     as="span"
-          //     animation="grow"
-          //     size="sm"
-          //     role="status"
-          //     aria-hidden="true"
-          //   />
-          //   Loading...
-          // </Button>
-          <div className="d-flex justify-content-center align-items-center">
-            <div className="loader"></div>
+          //   <div className="d-flex justify-content-center align-items-center">
+          //   <div className="loader"></div>
+          // </div>
+          <div className="card-grid">
+            <SkeletonCards />
           </div>
         ) : (
           <JobpostingList
