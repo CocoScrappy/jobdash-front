@@ -26,6 +26,7 @@ import useStore from "store";
 import "../css/components/Stylized-letters.css";
 import "../css/components/SearchForm.css";
 import "../css/components/Pagination.css";
+import "../css/components/Loader.css";
 
 //unused?
 import { set } from "date-fns";
@@ -319,17 +320,22 @@ export const JobPosting = () => {
           </BootstrapForm.Select>
         </div>
         {/* Listing jobs */}
+        {/* Loading effect */}
+
         {jobListLoading === true ? (
-          <Button variant="primary" disabled>
-            <Spinner
-              as="span"
-              animation="grow"
-              size="sm"
-              role="status"
-              aria-hidden="true"
-            />
-            Loading...
-          </Button>
+          // <Button variant="primary" disabled>
+          //   <Spinner
+          //     as="span"
+          //     animation="grow"
+          //     size="sm"
+          //     role="status"
+          //     aria-hidden="true"
+          //   />
+          //   Loading...
+          // </Button>
+          <div className="d-flex justify-content-center align-items-center">
+            <div className="loader"></div>
+          </div>
         ) : (
           <JobpostingList
             jobpostings={jobpostings}
