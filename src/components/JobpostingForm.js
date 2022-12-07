@@ -51,7 +51,11 @@ export default function JobpostingForm({ jobpostings, setJobpostings }) {
     }
 
     axios
-      .post(`${process.env.REACT_APP_API_URL}/api/postings/`, formData)
+      .post(`${process.env.REACT_APP_API_URL}/api/postings/`, formData, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("atoken"),
+        },
+      })
       .then((res) => {
         const { data } = res;
         setErrors({});

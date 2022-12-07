@@ -37,15 +37,16 @@ export const JobPosting = () => {
   const [jobpostings, setJobpostings] = useState([]);
   //pagination
   const [pages, setPages] = useState([]);
+  const [activePage, setActivePage] = useState(null);
   const [postCount, setPostCount] = useState(0);
   const [offset, setOffset] = useState(0);
   const [limit, setLimit] = useState(10);
   const [limitRanges, setLimitRanges] = useState([
-    { value: 10 },
-    { value: 20 },
-    { value: 50 },
-    { value: 80 },
-    { value: 100 },
+    { limitValue: 10 },
+    { limitValue: 20 },
+    { limitValue: 50 },
+    { limitValue: 80 },
+    { limitValue: 100 },
   ]);
   //search
   const [toggleState, setToggleState] = useState(false);
@@ -89,7 +90,7 @@ export const JobPosting = () => {
           },
         }
       )
-      .then((res) => {
+      .then(async (res) => {
         // console.log(JSON.stringify(res.data.results));
         setJobpostings(res.data.results);
         setPostCount(res.data.count);
@@ -248,16 +249,18 @@ export const JobPosting = () => {
         </div>
         {/* Recruiter - Modal to add job posting form */}
         {uRole === "employer" && (
-          <div
-            style={{
-              cursor: "pointer",
-              marginRight: "12px",
-            }}
-            onClick={() => {
-              setShowAdd(true);
-            }}
-          >
-            <strong>Add job posting</strong>
+          <div>
+            <strong
+              style={{
+                cursor: "pointer",
+                marginRight: "12px",
+              }}
+              onClick={() => {
+                setShowAdd(true);
+              }}
+            >
+              Add job posting
+            </strong>
           </div>
         )}
         {loading === true && <ProgressBar animated now={percent} />}
@@ -284,15 +287,17 @@ export const JobPosting = () => {
             {limitRanges.map((l) => {
               return (
                 <option
-                  key={l.value}
+                  key={l.limitValue}
+                  value={l.limitValue}
                   onClick={() => {
-                    setLimit(l.value);
-                    if (postCount < l.value) {
+                    setLimit(l.limitValue);
+                    console.log(l.limitValue);
+                    if (postCount < l.limitValue) {
                       setOffset(0);
                     }
                   }}
                 >
-                  {l.value}
+                  {l.limitValue}
                 </option>
               );
             })}
