@@ -16,7 +16,7 @@ const HomePage = () => {
           className="d-flex flex-column justify-content-around"
           style={{ height: "400px" }}
         >
-          <h1 style={{ fontSize: "4rem" }}>The easy way to job search.</h1>
+          <h1 style={{ fontSize: "4rem" }}>Job searching made easy.</h1>
           <p style={{ fontSize: "1.5rem", opacity: "0.8" }}>
             All the jobs, all in 1 place. Stay organized and get hired, with
             Jobdash.
