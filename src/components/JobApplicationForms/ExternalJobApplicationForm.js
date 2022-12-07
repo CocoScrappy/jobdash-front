@@ -6,6 +6,8 @@ import Modal from "react-bootstrap/Modal";
 import { FormControl } from "react-bootstrap";
 import Heart from "react-heart";
 import parse from "html-react-parser";
+import { Formik } from "formik";
+import * as yup from "yup";
 
 import axios from "axios";
 //zustand
@@ -66,14 +68,23 @@ function ExternalJobApplicationForm() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+
+  const schema = yup.object().shape({
+    logo_url: yup.string()
+    .matches(
+        /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
+        'Enter correct url!'
+    )
+    .required('Please enter website'),
+  });
+
+
   const handleCreateRecord = async () => {
     // adding job posting first
 
     formData.description = convertedDescContent;
     formData.employer = 14; //14 will be default internal Employer
 
-    console.log("this func is running");
-    console.log(formData);
     axios
       .post(`${process.env.REACT_APP_API_URL}/api/postings/`, formData, {
         headers: { Authorization: "Bearer " + localStorage.getItem("atoken") },
@@ -86,6 +97,7 @@ function ExternalJobApplicationForm() {
           notes: convertedNoteContent,
           favorited: isLiked,
           status: "applied",
+          //logo_url: logo_url,
           // applicant: uId,
           cv: uCv,
           job_posting: res.data.id,
@@ -115,7 +127,8 @@ function ExternalJobApplicationForm() {
       //   console.log(res.data);
       // })
       .catch((error) => {
-        alert("Something wrong with creating job posting record");
+        setSuccess(false);
+        handleShowModalFail(error);
       });
   };
 
@@ -168,6 +181,19 @@ function ExternalJobApplicationForm() {
     >
       <div>External Job Application Form</div>
       <Container>
+
+      {/* <Formik
+      validationSchema={schema}
+      onSubmit={console.log}
+      initialValues={{
+        logo_url: '',
+      }}
+    >
+      {({
+        touched,
+        handleSubmit,
+        errors,
+      }) => ( */}
         <Form onSubmit={handleSubmit}>
           {/* Title */}
           <InputGroup className="mb-4">
@@ -184,7 +210,7 @@ function ExternalJobApplicationForm() {
           </InputGroup>
 
           {/* Logo Url */}
-          <InputGroup className="mb-4">
+          {/* <InputGroup className="mb-4">
             <InputGroup.Text>Logo Url</InputGroup.Text>
             <FormControl
               placeholder="ex. yourHosting/yourImage.ext"
@@ -192,10 +218,11 @@ function ExternalJobApplicationForm() {
               name="logo_url"
               defaultValue={logo_url || ""}
             />
+
           </InputGroup>
           <Form.Control.Feedback type="invalid">
             {errors.logo_url}
-          </Form.Control.Feedback>
+          </Form.Control.Feedback> */}
 
           {/* Location */}
           <InputGroup className="mb-4">
@@ -287,6 +314,8 @@ function ExternalJobApplicationForm() {
             Save External Application
           </Button>
         </Form>
+        {/* )}
+    </Formik> */}
       </Container>
       <MyVerticallyCenteredModal
         show={modalShow}
