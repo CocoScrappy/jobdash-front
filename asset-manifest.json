@@ -1,16 +1,17 @@
 {
   "files": {
-    "main.css": "/jobdash-front/static/css/main.8ffe5a00.css",
-    "main.js": "/jobdash-front/static/js/main.c55383dc.js",
+    "main.css": "/jobdash-front/static/css/main.d7e355aa.css",
+    "main.js": "/jobdash-front/static/js/main.6c6c83e6.js",
     "static/js/787.c4e7f8f9.chunk.js": "/jobdash-front/static/js/787.c4e7f8f9.chunk.js",
-    "static/media/girlwithcomp.jpeg": "/jobdash-front/static/media/girlwithcomp.645267fd4f24b3e55100.jpeg",
+    "static/media/girlwithcomp.jpeg": "/jobdash-front/static/media/girlwithcomp.ca792b3617c1c1481f82.jpeg",
+    "static/media/personwithcomp.jpg": "/jobdash-front/static/media/personwithcomp.82307c5ea5d9de0a0c6b.jpg",
     "index.html": "/jobdash-front/index.html",
-    "main.8ffe5a00.css.map": "/jobdash-front/static/css/main.8ffe5a00.css.map",
-    "main.c55383dc.js.map": "/jobdash-front/static/js/main.c55383dc.js.map",
+    "main.d7e355aa.css.map": "/jobdash-front/static/css/main.d7e355aa.css.map",
+    "main.6c6c83e6.js.map": "/jobdash-front/static/js/main.6c6c83e6.js.map",
     "787.c4e7f8f9.chunk.js.map": "/jobdash-front/static/js/787.c4e7f8f9.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.8ffe5a00.css",
-    "static/js/main.c55383dc.js"
+    "static/css/main.d7e355aa.css",
+    "static/js/main.6c6c83e6.js"
   ]
 }
