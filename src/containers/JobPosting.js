@@ -191,10 +191,10 @@ export const JobPosting = () => {
   };
   //pagination by page number
   const renderPagination = (p) => {
-    return p.page == activePage ? (
+    return p.page === activePage ? (
       <Pagination.Item
         key={p.page}
-        className="active"
+        className="active-jobdash"
         onClick={() => {
           setOffset(p.offset);
         }}

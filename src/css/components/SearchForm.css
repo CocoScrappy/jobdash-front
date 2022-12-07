@@ -29,6 +29,11 @@
   height: max-content;
   padding: 8px;
 }
+
+.search-form-jobdash input {
+  width: 100%;
+}
+
 .search-form-jobdash input:focus-visible,
 .search-form-jobdash select:focus-visible {
   outline: none;
