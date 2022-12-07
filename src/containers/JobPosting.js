@@ -128,6 +128,8 @@ export const JobPosting = () => {
       socket.onopen = function (e) {
         console.log("connection established");
         socket.send(JSON.stringify(message));
+        setLoading(true);
+        setPercent(1)
       };
 
       socket.onmessage = function (event) {
@@ -135,7 +137,8 @@ export const JobPosting = () => {
         // console.log("event occured, data is ="+res.message)
         if (res.message === "Beginning search") {
           console.log("Recognized Begin Search");
-          setLoading(true);
+          setPercent(3)
+          
         }
         if (res.percent !== undefined) {
           setPercent(res.percent);
@@ -147,6 +150,7 @@ export const JobPosting = () => {
           console.log(res.payload);
           setJobpostings(JSON.parse(res.payload)); //res
           setPercent(0);
+          socket.close();
         }
       };
 
