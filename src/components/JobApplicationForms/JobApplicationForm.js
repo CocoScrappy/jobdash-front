@@ -59,8 +59,7 @@ function JobApplicationForm() {
         status: "applied",
         // applicant: uId,
         cv: uCv,
-        job_posting: post.id,
-        saved_dates: [],
+        job_posting: post.id
       };
     } catch (err) {
       console.log(
