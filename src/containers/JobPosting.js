@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Container from "react-bootstrap/Container";
 import ProgressBar from "react-bootstrap/ProgressBar";
 import Button from "react-bootstrap/Button";
+import Spinner from "react-bootstrap/Spinner";
 import Modal from "react-bootstrap/Modal";
 import Pagination from "react-bootstrap/Pagination";
 import BootstrapForm from "react-bootstrap/Form";
@@ -35,6 +36,7 @@ export const JobPosting = () => {
   const uId = useStore((state) => state.id);
   //job posting list
   const [jobpostings, setJobpostings] = useState([]);
+  const [jobListLoading, setJobListLoading] = useState(false);
   //pagination
   const [pages, setPages] = useState([]);
   const [activePage, setActivePage] = useState(1);
@@ -82,6 +84,7 @@ export const JobPosting = () => {
   };
   //fetch job posting list and render page
   useEffect(() => {
+    setJobListLoading(true);
     axios
       .get(
         `${process.env.REACT_APP_API_URL}/api/postings/get_user_postings/?limit=${limit}&offset=${offset}`,
@@ -96,6 +99,7 @@ export const JobPosting = () => {
         setJobpostings(res.data.results);
         setPostCount(res.data.count);
         handlePages();
+        setJobListLoading(false);
       })
       .catch((error) => {
         if (error.response.status != 404) {
@@ -315,10 +319,23 @@ export const JobPosting = () => {
           </BootstrapForm.Select>
         </div>
         {/* Listing jobs */}
-        <JobpostingList
-          jobpostings={jobpostings}
-          setJobpostings={setJobpostings}
-        />
+        {jobListLoading === true ? (
+          <Button variant="primary" disabled>
+            <Spinner
+              as="span"
+              animation="grow"
+              size="sm"
+              role="status"
+              aria-hidden="true"
+            />
+            Loading...
+          </Button>
+        ) : (
+          <JobpostingList
+            jobpostings={jobpostings}
+            setJobpostings={setJobpostings}
+          />
+        )}
         {/* Pagination Section*/}
         <div
           style={{ height: "150px" }}
