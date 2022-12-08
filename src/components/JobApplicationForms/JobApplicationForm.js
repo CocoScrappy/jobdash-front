@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Layout from "layouts/MainLayout";
-import { Button, Container } from "react-bootstrap";
 import Heart from "react-heart";
-import { Modal } from "react-bootstrap";
+import { Button, Modal } from "react-bootstrap";
 import useStore from "store";
 import axios from "axios";
 import { Form } from "react-bootstrap";
@@ -16,7 +15,7 @@ import Badge from "react-bootstrap/Badge";
 
 // custom components
 import Tag from "../Tag";
-import ClosePage from "components/ClosePage";
+import ClosePage from "../ClosePage";
 
 // css
 import "../../css/components/Card.css";
