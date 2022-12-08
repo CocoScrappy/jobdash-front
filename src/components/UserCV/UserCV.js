@@ -147,6 +147,7 @@ function UserCV({ cv, setPageMsg, setPageMsgStyle, setUserCVInfo }) {
         title={cv.name}
         content={convertedContent}
       />
+      <p>{parse(convertedContent)}</p>
     </div>
   );
 }

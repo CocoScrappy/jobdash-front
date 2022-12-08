@@ -296,7 +296,7 @@ export const JobPosting = () => {
             </Button>
           )}
           {/* Limit per page section*/}
-          <div className="d-flex align-items-center">
+          <div className="d-flex align-items-center ms-auto">
             <p className="me-2 my-0">Jobs per page: </p>
             <BootstrapForm.Select style={{ width: "auto" }}>
               {limitRanges.map((l) => {
@@ -323,9 +323,10 @@ export const JobPosting = () => {
         {/* Loading effect */}
 
         {jobListLoading === true ? (
+          // Spinner
           //   <div className="d-flex justify-content-center align-items-center">
-          //   <div className="loader"></div>
-          // </div>
+          //    <div className="loader"></div>
+          //   </div>
           <div className="card-grid">
             <SkeletonCards />
           </div>
