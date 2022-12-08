@@ -127,6 +127,10 @@ function JobApplicationForm() {
     setModalState("modal-fail");
   };
 
+  const handleShowModalNoCV = () => {
+    setModalState("modal-no-CV");
+  };
+
   const handleCloseSuccess = () => {
     setModalState("close");
     navigate("/jobpostings");
@@ -134,6 +138,52 @@ function JobApplicationForm() {
 
   const handleCloseFail = () => {
     setModalState("close");
+  };
+
+  const submitApplication = (e) => {
+    var applicationData = {};
+    try {
+      applicationData = {
+        notes: convertedNoteContent,
+        favorited: isLiked,
+        status: "applied",
+        // applicant: uId,
+        cv: uCv,
+        job_posting: post.id,
+      };
+    } catch (err) {
+      console.log(
+        "Whoops, something went wrong while assigning the values for the request body"
+      );
+    }
+
+    if (uCv == "") {
+      setSuccess(false);
+      handleShowModalNoCV();
+    } else {
+      axios
+        .post(
+          `${process.env.REACT_APP_API_URL}/api/applications/`,
+          applicationData,
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("atoken"),
+            },
+          }
+        )
+        .then((res) => {
+          if (res.status === 201) {
+            handleShowModalSuccess();
+            setSuccess(true);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          setSuccess(false);
+          setFailModalMsg(error.response.data.message);
+          handleShowModalFail();
+        });
+    }
   };
 
   const runCVAnalyzer = () => {
@@ -188,6 +238,27 @@ function JobApplicationForm() {
           <Modal.Body>{failModalMsg}</Modal.Body>
           <Modal.Footer>
             <Button variant="primary" onClick={handleCloseFail}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+        <Modal
+          show={modalState === "modal-no-CV"}
+          size="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          centered
+        >
+          <Modal.Header closeButton>
+            <Modal.Title id="contained-modal-title-vcenter">
+              Warning!
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            Oops, looks like you haven't created a CV. Create it and try again.{" "}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleCloseFail}>
               Close
             </Button>
           </Modal.Footer>

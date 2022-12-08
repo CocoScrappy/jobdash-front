@@ -9,6 +9,8 @@ import LargeBannerLayout from "layouts/LargeBannerLayout";
 import Button from "react-bootstrap/Button";
 // import Form from "react-bootstrap/Form";
 // import FloatingLabel from "react-bootstrap/FloatingLabel";
+//zustand
+import useStore from "store";
 
 // CSS
 import "../css/components/Link.css";
@@ -19,7 +21,8 @@ const RegisterPage = () => {
   const navigate = useNavigate();
   const [passwordError, setpasswordError] = useState("");
   const [emailTaken, setEmailTaken] = useState("");
-
+  const addCVId = useStore((state) => state.addId);
+  addCVId("");
   const onSubmit = async (data) => {
     data.summary = "";
     console.log(data);

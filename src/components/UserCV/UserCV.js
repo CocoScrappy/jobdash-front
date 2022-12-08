@@ -10,6 +10,7 @@ import { format } from "date-fns";
 import "./UserCV.css";
 import MyEditor from "components/MyEditor";
 import PreviewModal from "components/PreviewModal";
+import useStore from "store";
 
 function UserCV({
   cv,
@@ -22,7 +23,7 @@ function UserCV({
   const [showModal, setShowModal] = useState(false);
 
   const [convertedContent, setConvertedContent] = useState("");
-
+  const addCVId = useStore((state) => state.addCVId);
   const onSubmit = (data) => {
     // setPageMsg("");
     data.content = convertedContent;
@@ -47,6 +48,7 @@ function UserCV({
           );
           setPageMsgStyle("success");
           setShowAlert(true);
+          addCVId(response.data.id);
         })
         .catch((error) => {
           console.log(error);

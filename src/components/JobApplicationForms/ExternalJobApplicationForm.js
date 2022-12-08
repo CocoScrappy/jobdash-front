@@ -41,6 +41,10 @@ function ExternalJobApplicationForm() {
     setModalState("modal-fail");
   };
 
+  const handleShowModalNoCV = () => {
+    setModalState("modal-no-CV");
+  };
+
   const handleCloseSuccess = () => {
     setModalState("close");
     navigate("/jobpostings");
@@ -72,7 +76,10 @@ function ExternalJobApplicationForm() {
 
     formData.description = convertedDescContent;
     formData.employer = 14; //14 will be default internal Employer
-
+    if (uCv == "") {
+      setSuccess(false);
+      handleShowModalNoCV();
+    } else {
     axios
       .post(`${process.env.REACT_APP_API_URL}/api/postings/`, formData, {
         headers: { Authorization: "Bearer " + localStorage.getItem("atoken") },
@@ -112,7 +119,7 @@ function ExternalJobApplicationForm() {
             if (e.response !== null) {
               setErrors({ ...e.response.data });
               setSuccess(false);
-              handleShowModalFail(e);
+              handleShowModalFail();
             } else {
             }
           });
@@ -125,10 +132,11 @@ function ExternalJobApplicationForm() {
           setErrors({ ...e.response.data });
           setSuccess(false);
           console.log(e.response.data);
-          handleShowModalFail(e);
+          handleShowModalFail();
         } else {
         }
       });
+  };
   };
 
   function MyVerticallyCenteredModal(props) {
@@ -164,6 +172,27 @@ function ExternalJobApplicationForm() {
           </Modal.Header>
           <Modal.Body>
             Oops, something went wrong with your request. Please try again.{" "}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleCloseFail}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+        <Modal
+          show={modalState === "modal-no-CV"}
+          size="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          centered
+        >
+          <Modal.Header closeButton>
+            <Modal.Title id="contained-modal-title-vcenter">
+              Warning!
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            Oops, looks like you haven't created a CV. Create it and try again.{" "}
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleCloseFail}>
