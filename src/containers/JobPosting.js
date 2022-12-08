@@ -63,6 +63,7 @@ export const JobPosting = () => {
   //alerts
   const [showAlert, setShowAlert] = useState(false);
   const [alertMsg, setAlertMsg] = useState(false);
+  const [variant, setVariant] = useState("");
 
   const handleCloseAdd = () => {
     setShowAdd(false);
@@ -104,12 +105,19 @@ export const JobPosting = () => {
         setJobListLoading(false);
       })
       .catch((error) => {
+        setJobListLoading(false);
         if (error.response.status != 404) {
+          setVariant("danger");
           setShowAlert(true);
           setAlertMsg(
             `Could not retrieve job posting from database. ` + error.message
           );
         }
+        setVariant("info");
+        setAlertMsg(
+          "Seems like you have yet to create a job posting. ~ Click on +New job and fill the form! "
+        );
+        setShowAlert(true);
       });
   }, [toggleState, offset, limit]);
   //search by keyword and location
@@ -239,7 +247,7 @@ export const JobPosting = () => {
           <FlashAlert
             setShowAlert={setShowAlert}
             msg={alertMsg}
-            variant={"danger"}
+            variant={variant}
           />
         )}
         <div className="pb-5 d-flex flex-column justify-content-start">
@@ -262,17 +270,20 @@ export const JobPosting = () => {
               <div>
                 <Field id="location" name="location" placeholder="Location" />
               </div>
-              <div>
-                <Field
-                  as="select"
-                  name="searchEngineSelect"
-                  aria-label="Search Engine Select"
-                  id="searchEngineSelect"
-                >
-                  <option value="jobdash">JobDash</option>
-                  <option value="monster">Monster</option>
-                </Field>
-              </div>
+              {uRole === "user" && (
+                <div>
+                  <Field
+                    as="select"
+                    name="searchEngineSelect"
+                    aria-label="Search Engine Select"
+                    id="searchEngineSelect"
+                  >
+                    <option value="jobdash">JobDash</option>
+                    <option value="monster">Monster</option>
+                  </Field>
+                </div>
+              )}
+              
               <button type="submit">Search</button>
             </Form>
           </Formik>

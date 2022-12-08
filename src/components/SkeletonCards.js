@@ -64,43 +64,8 @@ export default function SkeletonCards() {
         </div>
         {/* display crud only for owner of posts */}
         {uRole === "employer" && (
-          <div
-            style={{
-              display: "flex",
-              placeItems: "center",
-              gap: 15,
-            }}
-          >
-            <div
-              style={{
-                cursor: "pointer",
-              }}
-            >
-              <h5>
-                <MdEdit />
-                Edit
-              </h5>
-            </div>
-            <div
-              style={{
-                cursor: "pointer",
-              }}
-            >
-              <h5>
-                <MdDelete />
-                Delete
-              </h5>
-            </div>
-            <div
-              style={{
-                cursor: "pointer",
-              }}
-            >
-              <h5>
-                <BsPersonLinesFill />
-                Applicants
-              </h5>
-            </div>
+          <div>
+            <p className="skt_long"></p>
           </div>
         )}
         {uRole === "user" && (
