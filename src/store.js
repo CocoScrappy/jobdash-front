@@ -14,7 +14,6 @@ const useStore = create(
       last_name: "",
       role: "",
       cv_id: "",
-      cv_id: "",
 
       // User Info
       addId: (uid) => {
