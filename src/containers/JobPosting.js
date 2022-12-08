@@ -296,7 +296,6 @@ export const JobPosting = () => {
             </Button>
           </Modal.Footer>
         </Modal>
-styling-lastday-1
         <div className="d-flex align-items-center justify-content-between my-2">
           {/* Recruiter - Modal to add job posting form */}
           {uRole === "employer" && (
@@ -307,32 +306,31 @@ styling-lastday-1
                 setShowAdd(true);
               }}
             >
-              Add New Job
+              + New Job
             </Button>
           )}
-        {/* Limit per page section*/}
-        <div className="d-flex align-items-center justify-content-end my-2">
-          <p className="me-2 my-0">Jobs per page: </p>
-          <BootstrapForm.Select
-            onChange={(e) => {
-              setLimit(e.target.value);
-              console.log(e.target.value);
-              if (postCount < e.target.value) {
-                setOffset(0);
-              }
-            }}
-            style={{ width: "auto" }}
-          >
-            {limitRanges.map((l) => {
-              return (
-                <option key={l.limitValue} value={l.limitValue}>
-                  {l.limitValue}
-                </option>
-              );
-            })}
-          </BootstrapForm.Select>
+          {/* Limit per page section*/}
+          <div className="d-flex align-items-center justify-content-end my-2 ms-auto">
+            <p className="me-2 my-0">Jobs per page: </p>
+            <BootstrapForm.Select
+              onChange={(e) => {
+                setLimit(e.target.value);
+                console.log(e.target.value);
+                if (postCount < e.target.value) {
+                  setOffset(0);
+                }
+              }}
+              style={{ width: "auto" }}
+            >
+              {limitRanges.map((l) => {
+                return (
+                  <option key={l.limitValue} value={l.limitValue}>
+                    {l.limitValue}
+                  </option>
+                );
+              })}
+            </BootstrapForm.Select>
           </div>
-
         </div>
         {/* Listing jobs */}
         {/* Loading effect */}

@@ -119,7 +119,8 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
           background: "white",
           borderRadius: "8px",
         }}
-        onClick={() => previewJobDescription(t)}
+        // onClick={() => previewJobDescription(t)}
+        onClick={() => navigate("/jobapplicationform", { state: { ...t } })}
       >
         <div className="d-flex flex-column">
           {/* <img src={t.logo_url} /> */}
@@ -204,7 +205,7 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
           <Button
             variant="dark"
             className="btn-jobdash btn-change-text"
-            onClick={() => navigate("/jobapplicationform", { state: { ...t } })}
+            // onClick={() => navigate("/jobapplicationform", { state: { ...t } })}
           >
             <i className="button-text-extra bi bi-send-fill"></i>
             <span className="button-text">Apply now </span>
