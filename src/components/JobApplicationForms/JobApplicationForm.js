@@ -206,8 +206,8 @@ function JobApplicationForm() {
         <div className="row">
           <div className="col">
             <div>
-              <h5>Company: {post.company}</h5>
-              <h5>Job Title: {post.title}</h5>
+              <h2>{post.title}</h2>
+              <h3>{post.company}</h3>
             </div>
             <div style={{ width: "1.5rem" }}>
               <h5>Favorite: </h5>
