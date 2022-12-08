@@ -1,16 +1,15 @@
 .pagination {
   margin: 0;
+  align-items: center;
+  justify-content: center;
 }
 .pagination > li,
 .page-item:first-child .page-link,
 .page-item:last-child .page-link {
   margin: 2px;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  /* width: 30px;
+  height: 30px; */
+  /* border-radius: 50%; */
 }
 
 .pagination > li.page-link > a {
@@ -26,15 +25,14 @@
 
 .pagination > li.active-jobdash:hover a,
 .pagination > li.active-jobdash:focus a,
+.pagination > li.active-jobdash a:hover,
 .pagination > li.active-jobdash a:focus,
-.pagination > li.active-jobdash:focus {
+.pagination > li.active-jobdash:focus,
+.pagination > li.active-jobdash:hover {
   color: white;
-  width: 30px;
+  /* width: 30px;
   height: 30px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border-radius: 50%; */
 }
 
 .pagination > li.disabled span {
@@ -42,13 +40,16 @@
   background: none;
 }
 .pagination > li > a {
+  /* width: 30px;
+  height: 30px; */
+  /*border-radius: 50%; */
   color: var(--color-dark-gray);
   background: none;
   border: none;
   transition-property: color;
   transition-duration: 0.3s;
   transition-timing-function: ease-out;
-  border-radius: 50%;
+  /* margin: auto; */
 }
 
 .pagination > li > a:focus-visible {

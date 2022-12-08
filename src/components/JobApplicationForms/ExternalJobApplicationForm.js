@@ -15,6 +15,7 @@ import useStore from "store";
 // custom components
 import MyEditor from "components/MyEditor";
 import { JobpostingForm } from "components/JobpostingForm";
+import GenericPageLayout from "layouts/GenericPageLayout";
 
 function ExternalJobApplicationForm() {
   const handleSubmit = (event) => {
@@ -68,16 +69,15 @@ function ExternalJobApplicationForm() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-
   const schema = yup.object().shape({
-    logo_url: yup.string()
-    .matches(
+    logo_url: yup
+      .string()
+      .matches(
         /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
-        'Enter correct url!'
-    )
-    .required('Please enter website'),
+        "Enter correct url!"
+      )
+      .required("Please enter website"),
   });
-
 
   const handleCreateRecord = async () => {
     // adding job posting first
@@ -176,13 +176,12 @@ function ExternalJobApplicationForm() {
 
   return (
     <Layout
-      title="ExternalJobApplicationForm"
-      content="ExternalJobApplicationForm"
+      title="JOBDASH - External job application form"
+      content="External Job Application Form"
+      color="var(--color-gray)"
     >
-      <div>External Job Application Form</div>
-      <Container>
-
-      {/* <Formik
+      <GenericPageLayout>
+        {/* <Formik
       validationSchema={schema}
       onSubmit={console.log}
       initialValues={{
@@ -316,7 +315,7 @@ function ExternalJobApplicationForm() {
         </Form>
         {/* )}
     </Formik> */}
-      </Container>
+      </GenericPageLayout>
       <MyVerticallyCenteredModal
         show={modalShow}
         onHide={() => setModalShow(false)}
