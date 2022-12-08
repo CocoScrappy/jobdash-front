@@ -56,7 +56,7 @@ export const JobPosting = () => {
   const [toggleState, setToggleState] = useState(false);
   const [loading, setLoading] = useState(false);
   const [percent, setPercent] = useState(0);
-
+  const [noResults,setNoResults]=useState(false)
   //add posting modal
   const [showAdd, setShowAdd] = useState(false);
 
@@ -114,6 +114,7 @@ export const JobPosting = () => {
   }, [toggleState, offset, limit]);
   //search by keyword and location
   const searchJobs = (data) => {
+    setNoResults(false);
     const searchString = data.search;
     const searchLocation = data.location;
     const searchEngine = data.searchEngineSelect;
@@ -130,6 +131,8 @@ export const JobPosting = () => {
       socket.onopen = function (e) {
         console.log("connection established");
         socket.send(JSON.stringify(message));
+        setLoading(true);
+        setPercent(1)
       };
 
       socket.onmessage = function (event) {
@@ -137,7 +140,8 @@ export const JobPosting = () => {
         // console.log("event occured, data is ="+res.message)
         if (res.message === "Beginning search") {
           console.log("Recognized Begin Search");
-          setLoading(true);
+          setPercent(3)
+          
         }
         if (res.percent !== undefined) {
           setPercent(res.percent);
@@ -146,9 +150,16 @@ export const JobPosting = () => {
 
         if (res.payload !== undefined) {
           setLoading(false);
-          console.log(res.payload);
+          console.log(JSON.parse(res.payload).length);
+          
+          if(JSON.parse(res.payload).length===0){
+            setNoResults(true)
+            console.log("no result is true")
+          }
           setJobpostings(JSON.parse(res.payload)); //res
           setPercent(0);
+            
+          socket.close();
         }
       };
 
@@ -177,13 +188,17 @@ export const JobPosting = () => {
         }
       )
       .then((res) => {
-        // console.log("Result");
-        // console.log(res.data);
-        const result = [];
-        //res.data.results.forEach((match) => result.push(match.fields));
+        if(res.data.results.length===0){
+          console.log("result is "+res.data.results)
+          setNoResults(true)
+        }
+        else{
+          console.log(JSON.stringify(res.data.results))
+        }
         setJobpostings(res.data.results);
         setPostCount(res.data.count);
         handlePages();
+        
         // res.data.foreach(match=>console.log(match.fields));
       })
       .catch((err) => {
@@ -266,6 +281,7 @@ export const JobPosting = () => {
         </div>
 
         {loading === true && <ProgressBar animated now={percent} />}
+        {noResults === true && (<div>Sorry, no results :(</div>)}
         <Modal show={showAdd} onHide={handleCloseAdd}>
           <Modal.Header closeButton>
             <Modal.Title>Add Jobposting</Modal.Title>

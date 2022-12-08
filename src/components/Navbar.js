@@ -89,7 +89,7 @@ const Navigation = () => {
     >
       <Container fluid className="px-md-5">
         <Navbar.Brand>
-          <Link className="navbar-brand" to="/">
+          <Link className="navbar-brand" to="/jobpostings">
             Jobdash
           </Link>
         </Navbar.Brand>
