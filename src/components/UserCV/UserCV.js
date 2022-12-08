@@ -102,7 +102,7 @@ function UserCV({
   });
 
   return (
-    <div>
+    <div className="mt-5 shadow-lg cv-builder-card">
       <Formik
         initialValues={initialValues}
         onSubmit={onSubmit}
@@ -113,7 +113,10 @@ function UserCV({
           <div>
             <Field type="hidden" name="id" className="form-control col-auto" />
           </div>
-          <div className="my-3 d-flex align-items-center">
+          <div
+            className="my-3 d-flex align-items-center"
+            style={{ height: "48px" }}
+          >
             <FloatingLabel label="CV Name" className="w-100">
               <Field
                 name="name"
@@ -121,20 +124,12 @@ function UserCV({
                 className="form-control col-auto"
               />
             </FloatingLabel>
-            {/* <button
-              className="button-preview"
+            <button
+              className="button-preview ms-2"
               onClick={() => setShowModal(true)}
             >
               Preview
-            </button> */}
-
-            <Button
-              variant="dark"
-              className="btn-jobdash"
-              onClick={() => setShowModal(true)}
-            >
-              Preview
-            </Button>
+            </button>
           </div>
           <ErrorMessage
             name="name"
@@ -148,7 +143,7 @@ function UserCV({
               setConvertedContent={setConvertedContent}
             />
           </div>
-          <div className="d-grid gap-2  col-6 mx-auto">
+          {/* <div className="d-grid gap-2  col-6 mx-auto">
             <Button type="submit" variant="primary" size="lg">
               Submit
             </Button>
@@ -159,6 +154,24 @@ function UserCV({
               onClick={() => resetEditorState()}
             >
               Cancel
+            </Button>
+          </div> */}
+
+          {/*  */}
+
+          <div
+            className="d-flex flex-column flex-lg-row justify-content-between ms-auto"
+            style={{ gap: "8px", maxWidth: "50%", marginTop: "30px" }}
+          >
+            <Button
+              variant="light"
+              className="btn-jobdash w-100"
+              onClick={() => resetEditorState()}
+            >
+              Reset
+            </Button>
+            <Button variant="dark" className="btn-jobdash w-100" type="submit">
+              Save
             </Button>
           </div>
         </Form>

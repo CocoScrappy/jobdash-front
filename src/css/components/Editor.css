@@ -1,0 +1,14 @@
+.message-toolbar {
+  border-bottom: 1px solid #c4cdd5;
+  margin-bottom: 0px;
+  padding: 6px 5px;
+}
+.message-editor {
+  height: 150px;
+  font-size: 16px;
+  padding: 0px 10px;
+}
+.rdw-option-wrapper {
+  min-width: 35px;
+  height: 30px;
+}

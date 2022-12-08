@@ -10,6 +10,8 @@ import draftToHtml from "draftjs-to-html";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import parse from "html-react-parser";
 import { BsEmojiSmile } from "react-icons/bs";
+// css
+import "../css/components/Editor.css";
 
 function MyEditor(props) {
   const content = props.content;
@@ -57,15 +59,17 @@ function MyEditor(props) {
   return (
     <div className="mb-3">
       <Editor
-        placeholder="Content"
+        // placeholder="Content"
         editorState={editorState}
         onEditorStateChange={handleEditorChange}
-        toolbarClassName="toolbar-class"
+        wrapperClassName="editor-wrapper"
+        editorClassName="message-editor"
+        toolbarClassName="message-toolbar"
         editorStyle={{
-          border: "1px solid",
-          borderStyle: "groove",
-          color: "black",
-          height: "200px",
+          // border: "1px solid",
+          // borderStyle: "groove",
+          // color: "black",
+          height: "40vh",
         }}
         toolbar={toolbarOptions}
       />
