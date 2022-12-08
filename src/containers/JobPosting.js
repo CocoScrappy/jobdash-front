@@ -115,7 +115,7 @@ export const JobPosting = () => {
         }
         setVariant("info");
         setAlertMsg(
-          "Seems like you have yet to create a job posting! Click on +New job and fill the form! "
+          "Seems like you have yet to create a job posting. ~ Click on +New job and fill the form! "
         );
         setShowAlert(true);
       });
