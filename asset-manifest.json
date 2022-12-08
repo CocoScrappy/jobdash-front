@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/jobdash-front/static/css/main.993336c3.css",
-    "main.js": "/jobdash-front/static/js/main.663a2814.js",
+    "main.css": "/jobdash-front/static/css/main.dbde529d.css",
+    "main.js": "/jobdash-front/static/js/main.dcddf82d.js",
     "static/js/787.c4e7f8f9.chunk.js": "/jobdash-front/static/js/787.c4e7f8f9.chunk.js",
     "static/media/girlwithcomp.jpeg": "/jobdash-front/static/media/girlwithcomp.ca792b3617c1c1481f82.jpeg",
     "static/media/personwithcomp.jpg": "/jobdash-front/static/media/personwithcomp.82307c5ea5d9de0a0c6b.jpg",
     "index.html": "/jobdash-front/index.html",
-    "main.993336c3.css.map": "/jobdash-front/static/css/main.993336c3.css.map",
-    "main.663a2814.js.map": "/jobdash-front/static/js/main.663a2814.js.map",
+    "main.dbde529d.css.map": "/jobdash-front/static/css/main.dbde529d.css.map",
+    "main.dcddf82d.js.map": "/jobdash-front/static/js/main.dcddf82d.js.map",
     "787.c4e7f8f9.chunk.js.map": "/jobdash-front/static/js/787.c4e7f8f9.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.993336c3.css",
-    "static/js/main.663a2814.js"
+    "static/css/main.dbde529d.css",
+    "static/js/main.dcddf82d.js"
   ]
 }
