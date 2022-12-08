@@ -21,6 +21,7 @@ const Navigation = () => {
   const addFirstName = useStore((state) => state.addFirstName);
   const addLastName = useStore((state) => state.addLastName);
   const addRole = useStore((state) => state.addRole);
+  const addCVId = useStore((state) => state.addCVId);
   console.log("Role is:", uRole);
 
   const logout = (event) => {
@@ -32,6 +33,7 @@ const Navigation = () => {
     addFirstName("");
     addLastName("");
     addRole("");
+    addCVId("");
   };
 
   useEffect(() => {}, [authState]);

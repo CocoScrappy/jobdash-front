@@ -10,13 +10,15 @@ import { format } from "date-fns";
 import "./UserCV.css";
 import MyEditor from "components/MyEditor";
 import PreviewModal from "components/PreviewModal";
+import useStore from "store";
+
 
 function UserCV({ cv, setPageMsg, setPageMsgStyle, setUserCVInfo }) {
   // console.log(cv)
   const [showModal, setShowModal] = useState(false);
 
   const [convertedContent, setConvertedContent] = useState("");
-
+  const addCVId = useStore((state) => state.addCVId);
   const onSubmit = (data) => {
     // setPageMsg("");
     data.content = convertedContent;
@@ -40,6 +42,7 @@ function UserCV({ cv, setPageMsg, setPageMsgStyle, setUserCVInfo }) {
               format(new Date(), "MMM dd yyyy h:mmaa")
           );
           setPageMsgStyle("text-success");
+          addCVId(response.data.id);
         })
         .catch((error) => {
           console.log(error);
