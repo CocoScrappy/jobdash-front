@@ -270,17 +270,20 @@ export const JobPosting = () => {
               <div>
                 <Field id="location" name="location" placeholder="Location" />
               </div>
-              <div>
-                <Field
-                  as="select"
-                  name="searchEngineSelect"
-                  aria-label="Search Engine Select"
-                  id="searchEngineSelect"
-                >
-                  <option value="jobdash">JobDash</option>
-                  <option value="monster">Monster</option>
-                </Field>
-              </div>
+              {uRole === "user" && (
+                <div>
+                  <Field
+                    as="select"
+                    name="searchEngineSelect"
+                    aria-label="Search Engine Select"
+                    id="searchEngineSelect"
+                  >
+                    <option value="jobdash">JobDash</option>
+                    <option value="monster">Monster</option>
+                  </Field>
+                </div>
+              )}
+              
               <button type="submit">Search</button>
             </Form>
           </Formik>
