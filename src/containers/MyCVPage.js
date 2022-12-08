@@ -64,6 +64,7 @@ const MyCVPage = () => {
               setShowAlert={setShowAlert}
             />
           )}
+
           <UserCV
             cv={UserCVInfo}
             setPageMsg={setPageMsg}
