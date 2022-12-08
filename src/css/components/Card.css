@@ -16,7 +16,7 @@
   color: var(--color-dark-gray);
 }
 
-.card-job .tag-colored {
+.tag-colored {
   width: fit-content;
   padding: 4px 12px;
   border-radius: 16px;

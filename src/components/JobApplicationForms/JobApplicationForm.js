@@ -14,6 +14,15 @@ import Spinner from "react-bootstrap/Spinner";
 import DonutChart from "react-donut-chart";
 import Badge from "react-bootstrap/Badge";
 
+// custom components
+import Tag from "../Tag";
+import ClosePage from "components/ClosePage";
+
+// css
+import "../../css/components/Card.css";
+import "../UserCV/UserCV.css";
+import "../../css/components/Button.css";
+
 function JobApplicationForm() {
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -274,130 +283,168 @@ function JobApplicationForm() {
       color="var(--color-gray)"
     >
       <GenericPageLayout>
-        <div>
-          <h2>{post.title}</h2>
-          <h3>{post.company}</h3>
-        </div>
-        <div style={{ width: "1.5rem" }}>
-          <h5>Favorite: </h5>
-          <Heart isActive={isLiked} onClick={() => setIsLiked(!isLiked)} />
-        </div>
-        <div>
-          <h5>Location: {post.location}</h5>
-          <h5>Remote Option: {post.remote_option}</h5>
-          <h5>Date Created: {shortDate}</h5>
-        </div>
-
-        {/* post analyzer */}
-        <div className="col text-center">
-          <h3>JobPost Analyzer (beta)</h3>
+        <div className="cv-builder-card shadow-lg">
+          {/* Close & Go Back to Previous Page */}
+          <ClosePage />
           <div>
-            {jobAnalysisResults === undefined ? (
-              <>
-                <Button
-                  disabled={analysisDisabled}
-                  onClick={() => runCVAnalyzer()}
-                >
-                  {analysisLoading ? (
-                    <>
-                      <Spinner
-                        as="span"
-                        animation="border"
-                        size="sm"
-                        role="status"
-                        aria-hidden="true"
-                        className="me-3"
-                        variant="light"
-                      />
-                      Loading...
-                    </>
-                  ) : (
-                    "Start"
-                  )}
-                </Button>
-              </>
-            ) : (
-              <div>
-                <DonutChart
-                  data={[
-                    {
-                      label: "Match",
-                      value: jobAnalysisResults.matching_score,
-                    },
-                    {
-                      label: "",
-                      value: 100 - jobAnalysisResults.matching_score,
-                      isEmpty: true,
-                    },
-                  ]}
-                  height={100}
-                  width={100}
-                  colors={["MediumBlue", "lightgrey"]}
-                  legend={false}
-                  emptyColor="lightgrey"
-                  strokeColor="white"
-                  clickToggle={false}
-                  interactive={true}
-                  formatValues={(values, total) => `${values.toFixed(0)}%`}
+            <p>Posted: {shortDate}</p>
+            <Tag tag={post.remote_option} />
+          </div>
+          {/* Company Info */}
+          <div className="d-flex justify-content-between mb-5 ">
+            <div>
+              <h2>{post.title}</h2>
+              <h3>{post.company}</h3>
+              <p>{post.location}</p>
+              <div style={{ width: "32px" }}>
+                <Heart
+                  isActive={isLiked}
+                  onClick={() => setIsLiked(!isLiked)}
                 />
-                <p>
-                  <strong>Matching: </strong>
-                  {jobAnalysisResults.matching_skills_results.matching_skills.map(
-                    (item) => (
-                      <Badge bg="success" className="me-1">
-                        {item}
-                      </Badge>
-                    )
-                  )}
-                </p>
-                <p>
-                  <strong>Missing: </strong>
-                  {jobAnalysisResults.matching_skills_results.missing_skills
-                    .slice(0, 10)
-                    .map((item) => (
-                      <Badge bg="warning" className="me-1">
-                        {item}
-                      </Badge>
-                    ))}
-                </p>
               </div>
+            </div>
+            {/* Image */}
+            <div
+              style={{
+                fontSize: "6rem",
+                backgroundColor: "var(--color-dark-gray)",
+                color: "white",
+                width: "9rem",
+                height: "9rem",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: "50%",
+              }}
+            >
+              <i className="bi bi-buildings" style={{ color: "inherit" }}></i>
+            </div>
+          </div>
+
+          {/* post analyzer */}
+          <div className="mb-5">
+            <h3>
+              Job Match Analyzer (Beta) <i class="bi bi-activity"></i>
+            </h3>
+            <hr />
+            <div>
+              {jobAnalysisResults === undefined ? (
+                <>
+                  <Button
+                    variant="dark"
+                    className="btn-jobdash"
+                    disabled={analysisDisabled}
+                    onClick={() => runCVAnalyzer()}
+                  >
+                    {analysisLoading ? (
+                      <>
+                        <Spinner
+                          as="span"
+                          animation="border"
+                          size="sm"
+                          role="status"
+                          aria-hidden="true"
+                          className="me-3"
+                          variant="light"
+                        />
+                        Loading...
+                      </>
+                    ) : (
+                      "Start"
+                    )}
+                  </Button>
+                </>
+              ) : (
+                <div>
+                  <DonutChart
+                    data={[
+                      {
+                        label: "Match",
+                        value: jobAnalysisResults.matching_score,
+                      },
+                      {
+                        label: "",
+                        value: 100 - jobAnalysisResults.matching_score,
+                        isEmpty: true,
+                      },
+                    ]}
+                    height={100}
+                    width={100}
+                    colors={["MediumBlue", "lightgrey"]}
+                    legend={false}
+                    emptyColor="lightgrey"
+                    strokeColor="white"
+                    clickToggle={false}
+                    interactive={true}
+                    formatValues={(values, total) => `${values.toFixed(0)}%`}
+                  />
+                  <p>
+                    <strong>Matching: </strong>
+                    {jobAnalysisResults.matching_skills_results.matching_skills.map(
+                      (item) => (
+                        <Badge bg="success" className="me-1">
+                          {item}
+                        </Badge>
+                      )
+                    )}
+                  </p>
+                  <p>
+                    <strong>Missing: </strong>
+                    {jobAnalysisResults.matching_skills_results.missing_skills
+                      .slice(0, 10)
+                      .map((item) => (
+                        <Badge bg="warning" className="me-1">
+                          {item}
+                        </Badge>
+                      ))}
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="mb-5">
+            <h3>Description</h3>
+            <hr />
+            <p>{parse(post.description)}</p>
+          </div>
+          {/* Links */}
+          <div>
+            {post.link && (
+              <>
+                <p>Website:</p>
+                <a href={post.link}></a>
+              </>
             )}
           </div>
-        </div>
 
-        <div>
-          <h5>Job Description: </h5>
-          <p>{parse(post.description)}</p>
-        </div>
-        <div>
-          <h5>
-            Job Link: <a href={post.link}>{post.link ?? "None"}</a>{" "}
-          </h5>
-        </div>
+          <Form onSubmit={handleSubmit}>
+            {/* Notes */}
+            <div className="mb-5">
+              <h3>Notes</h3>
+              <MyEditor
+                content={""}
+                name="notes"
+                placeholder={"Notes..."}
+                setConvertedContent={setConvertedNoteContent}
+                height={"10vh"}
+              />
+            </div>
 
-        <Form onSubmit={handleSubmit}>
-          {/* Notes */}
-          <div className="mb-4">
-            <h4>Notes</h4>
-            <MyEditor
-              content={""}
-              name="notes"
-              placeholder={"Notes..."}
-              setConvertedContent={setConvertedNoteContent}
-            />
-          </div>
-
-          {/* Save Button */}
-          <Button
-            variant="dark"
-            className="btn-jobdash btn-change-text"
-            type="submit"
-            onClick={submitApplication}
-          >
-            <i className="button-text-extra bi bi-send-fill"></i>
-            <span className="button-text">Apply now </span>
-          </Button>
-        </Form>
+            {/* Save Button */}
+            <div className="d-flex justify-content-end w-100">
+              <Button
+                variant="dark"
+                className="btn-jobdash btn-change-text"
+                type="submit"
+                onClick={submitApplication}
+              >
+                <i className="button-text-extra bi bi-send-fill"></i>
+                <span className="button-text">Save and apply </span>
+              </Button>
+            </div>
+          </Form>
+        </div>
       </GenericPageLayout>
       <MyVerticallyCenteredModal
         show={modalShow}
