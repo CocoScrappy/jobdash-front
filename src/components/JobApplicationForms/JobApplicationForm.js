@@ -87,6 +87,10 @@ function JobApplicationForm() {
     setModalState("modal-fail");
   };
 
+  const handleShowModalNoCV = () => {
+    setModalState("modal-no-CV");
+  };
+
   const handleCloseSuccess = () => {
     setModalState("close");
     navigate("/jobpostings");
@@ -96,7 +100,7 @@ function JobApplicationForm() {
     setModalState("close");
   };
 
-  const submitApplication = () => {
+  const submitApplication = (e) => {
     var applicationData = {};
     try {
       applicationData = {
@@ -112,6 +116,11 @@ function JobApplicationForm() {
         "Whoops, something went wrong while assigning the values for the request body"
       );
     }
+
+    if (uCv == "") {
+      setSuccess(false);
+      handleShowModalNoCV();
+    } else {
     axios
       .post(
         `${process.env.REACT_APP_API_URL}/api/applications/`,
@@ -135,6 +144,7 @@ function JobApplicationForm() {
         handleShowModalFail();
       });
   };
+}
 
   const runCVAnalyzer = () => {
     setAnalysisLoading(true);
@@ -188,6 +198,27 @@ function JobApplicationForm() {
           <Modal.Body>{failModalMsg}</Modal.Body>
           <Modal.Footer>
             <Button variant="primary" onClick={handleCloseFail}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+        <Modal
+          show={modalState === "modal-no-CV"}
+          size="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          centered
+        >
+          <Modal.Header closeButton>
+            <Modal.Title id="contained-modal-title-vcenter">
+              Warning!
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            Oops, looks like you haven't created a CV. Create it and try again.{" "}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleCloseFail}>
               Close
             </Button>
           </Modal.Footer>
