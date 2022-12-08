@@ -18,10 +18,6 @@ import { JobpostingForm } from "components/JobpostingForm";
 import GenericPageLayout from "layouts/GenericPageLayout";
 
 function ExternalJobApplicationForm() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-  };
-
   var uId = useStore((state) => state.id);
   var uCv = useStore((state) => state.cv_id);
   const [convertedDescContent, setConvertedDescContent] = useState("");
@@ -69,18 +65,9 @@ function ExternalJobApplicationForm() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const schema = yup.object().shape({
-    logo_url: yup
-      .string()
-      .matches(
-        /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
-        "Enter correct url!"
-      )
-      .required("Please enter website"),
-  });
-
-  const handleCreateRecord = async () => {
+  const handleSubmit = (e) => {
     // adding job posting first
+    e.preventDefault();
 
     formData.description = convertedDescContent;
     formData.employer = 14; //14 will be default internal Employer
@@ -97,7 +84,7 @@ function ExternalJobApplicationForm() {
           notes: convertedNoteContent,
           favorited: isLiked,
           status: "applied",
-          //logo_url: logo_url,
+          logo_url: logo_url,
           // applicant: uId,
           cv: uCv,
           job_posting: res.data.id,
@@ -114,21 +101,31 @@ function ExternalJobApplicationForm() {
           )
           .then((res) => {
             if (res.status === 201) {
+              setErrors({});
               handleShowModalSuccess();
               setSuccess(true);
             }
           })
-          .catch((error) => {
-            setSuccess(false);
-            handleShowModalFail(error);
+          .catch((e) => {
+            if (e.response !== null) {
+              setErrors({ ...e.response.data });
+              setSuccess(false);
+              handleShowModalFail(e);
+            } else {
+            }
           });
       })
       // .then((res) => {
       //   console.log(res.data);
       // })
-      .catch((error) => {
-        setSuccess(false);
-        handleShowModalFail(error);
+      .catch((e) => {
+        if (e.response !== null) {
+          setErrors({ ...e.response.data });
+          setSuccess(false);
+          console.log(e.response.data);
+          handleShowModalFail(e);
+        } else {
+        }
       });
   };
 
@@ -159,10 +156,12 @@ function ExternalJobApplicationForm() {
           centered
         >
           <Modal.Header closeButton>
-            <Modal.Title id="contained-modal-title-vcenter">Status</Modal.Title>
+            <Modal.Title id="contained-modal-title-vcenter">
+              Warning!
+            </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            Oops, something went wrong with your request. Try again later.{" "}
+            Oops, something went wrong with your request. Please try again.{" "}
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleCloseFail}>
@@ -200,6 +199,7 @@ function ExternalJobApplicationForm() {
             <FormControl
               placeholder="enter title"
               onChange={handleChange}
+              isInvalid={!!errors.title}
               name="title"
               defaultValue={title || ""}
             />
@@ -209,19 +209,20 @@ function ExternalJobApplicationForm() {
           </InputGroup>
 
           {/* Logo Url */}
-          {/* <InputGroup className="mb-4">
+          <InputGroup className="mb-4">
             <InputGroup.Text>Logo Url</InputGroup.Text>
             <FormControl
               placeholder="ex. yourHosting/yourImage.ext"
               onChange={handleChange}
+              isInvalid={!!errors.logo_url}
               name="logo_url"
+              // pattern="https?://.+"
               defaultValue={logo_url || ""}
             />
-
+            <Form.Control.Feedback type="invalid">
+              {errors.logo_url}
+            </Form.Control.Feedback>
           </InputGroup>
-          <Form.Control.Feedback type="invalid">
-            {errors.logo_url}
-          </Form.Control.Feedback> */}
 
           {/* Location */}
           <InputGroup className="mb-4">
@@ -229,6 +230,7 @@ function ExternalJobApplicationForm() {
             <FormControl
               placeholder="ex. Montreal"
               onChange={handleChange}
+              isInvalid={!!errors.location}
               name="location"
               defaultValue={location || ""}
             />
@@ -243,6 +245,7 @@ function ExternalJobApplicationForm() {
             <FormControl
               placeholder="enter Company Name"
               onChange={handleChange}
+              isInvalid={!!errors.company}
               name="company"
               defaultValue={company || ""}
             />
@@ -257,6 +260,7 @@ function ExternalJobApplicationForm() {
             <Form.Select
               aria-label="Default select example"
               onChange={handleChange}
+              isInvalid={!!errors.remote_option}
               name="remote_option"
               defaultValue={"#"}
             >
@@ -303,15 +307,11 @@ function ExternalJobApplicationForm() {
           </div>
 
           {/* Save Button */}
-          <Button
-            variant="secondary"
-            type="submit"
-            onClick={() => {
-              handleCreateRecord();
-            }}
-          >
-            Save External Application
-          </Button>
+          <InputGroup className="mb-4">
+            <Button type="sumbit" variant="secondary">
+              Add External Application
+            </Button>
+          </InputGroup>
         </Form>
         {/* )}
     </Formik> */}
