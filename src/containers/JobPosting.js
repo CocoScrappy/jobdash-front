@@ -104,6 +104,7 @@ export const JobPosting = () => {
         setJobListLoading(false);
       })
       .catch((error) => {
+        setJobListLoading(false);
         if (error.response.status != 404) {
           setShowAlert(true);
           setAlertMsg(
