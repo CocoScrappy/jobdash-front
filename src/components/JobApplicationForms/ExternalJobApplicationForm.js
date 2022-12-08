@@ -55,6 +55,7 @@ function ExternalJobApplicationForm() {
     employer,
     title,
     logo_url,
+    link,
     location,
     description,
     company,
@@ -85,6 +86,7 @@ function ExternalJobApplicationForm() {
           favorited: isLiked,
           status: "applied",
           logo_url: logo_url,
+          link: link,
           // applicant: uId,
           cv: uCv,
           job_posting: res.data.id,
@@ -273,6 +275,22 @@ function ExternalJobApplicationForm() {
             </Form.Select>
             <Form.Control.Feedback type="invalid">
               {errors.remote_option}
+            </Form.Control.Feedback>
+          </InputGroup>
+
+          {/* Link */}
+          <InputGroup className="mb-4">
+            <InputGroup.Text>Link to job posting</InputGroup.Text>
+            <FormControl
+              placeholder="ex. platform/job_link.ext"
+              onChange={handleChange}
+              isInvalid={!!errors.link}
+              name="link"
+              pattern="https?://.+"
+              defaultValue={link || ""}
+            />
+            <Form.Control.Feedback type="invalid">
+              {errors.link}
             </Form.Control.Feedback>
           </InputGroup>
 
