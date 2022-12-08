@@ -67,7 +67,11 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
 
   const handleDelete = (id) => {
     axios
-      .delete(`${process.env.REACT_APP_API_URL}/api/postings/${id}/`)
+      .delete(`${process.env.REACT_APP_API_URL}/api/postings/${id}/`, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("atoken"),
+        },
+      })
       .then(() => {
         const newJobpostings = jobpostings.filter((t) => {
           return t.id !== id;
@@ -84,7 +88,12 @@ export default function JobpostingList({ jobpostings = [], setJobpostings }) {
     axios
       .patch(
         `${process.env.REACT_APP_API_URL}/api/postings/default/${id}/`,
-        value.record
+        value.record,
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("atoken"),
+          },
+        }
       )
       .then((res) => {
         const { data } = res;
