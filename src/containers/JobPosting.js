@@ -44,13 +44,13 @@ export const JobPosting = () => {
   const [activePage, setActivePage] = useState(1);
   const [postCount, setPostCount] = useState(0);
   const [offset, setOffset] = useState(0);
-  const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(12);
   const [limitRanges, setLimitRanges] = useState([
-    { limitValue: 10 },
-    { limitValue: 20 },
-    { limitValue: 50 },
-    { limitValue: 80 },
-    { limitValue: 100 },
+    { limitValue: 12 },
+    { limitValue: 30 },
+    { limitValue: 60 },
+    { limitValue: 90 },
+    { limitValue: 120 },
   ]);
   //search
   const [toggleState, setToggleState] = useState(false);

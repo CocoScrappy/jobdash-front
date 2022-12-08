@@ -456,8 +456,48 @@ export const deleteApplication = ({ applicationId, navigate }) => {
     });
 };
 
-export const NewLine =function(props){
+export const NewLine = function (props) {
   const text = props.text;
-  const newText = text.split('\n').map(str=><p>{str}</p>)
-  return newText
-}
+  const newText = text.split("\n").map((str) => <p>{str}</p>);
+  return newText;
+};
+
+// export const submitApplication = function(){
+//   var applicationData = {};
+//   try {
+//     applicationData = {
+//       notes: convertedNoteContent,
+//       favorited: isLiked,
+//       status: "applied",
+//       // applicant: uId,
+//       cv: uCv,
+//       job_posting: post.id,
+//     };
+//   } catch (err) {
+//     console.log(
+//       "Whoops, something went wrong while assigning the values for the request body"
+//     );
+//   }
+//   axios
+//     .post(
+//       `${process.env.REACT_APP_API_URL}/api/applications/`,
+//       applicationData,
+//       {
+//         headers: {
+//           Authorization: "Bearer " + localStorage.getItem("atoken"),
+//         },
+//       }
+//     )
+//     .then((res) => {
+//       if (res.status === 201) {
+//         handleShowModalSuccess();
+//         setSuccess(true);
+//       }
+//     })
+//     .catch((error) => {
+//       console.log(error);
+//       setSuccess(false);
+//       setFailModalMsg(error.response.data.message);
+//       handleShowModalFail();
+//     });
+// };

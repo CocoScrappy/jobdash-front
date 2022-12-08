@@ -1,4 +1,5 @@
 import DashboardNav from "components/DashboardNav";
+import { Container } from "react-bootstrap";
 
 const DashboardLayout = ({ children }) => (
   <div
@@ -6,10 +7,10 @@ const DashboardLayout = ({ children }) => (
       height: "100%",
     }}
   >
-    <div className="py-lg-5">
+    <Container className="py-lg-5">
       <DashboardNav />
       {children}
-    </div>
+    </Container>
   </div>
 );
 
