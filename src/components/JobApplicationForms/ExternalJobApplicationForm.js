@@ -286,7 +286,7 @@ function ExternalJobApplicationForm() {
               onChange={handleChange}
               isInvalid={!!errors.link}
               name="link"
-              pattern="https?://.+"
+              //pattern="https?://.+"
               defaultValue={link || ""}
             />
             <Form.Control.Feedback type="invalid">
