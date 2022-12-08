@@ -5,7 +5,11 @@ import "../css/components/Link.css";
 
 const DashboardNav = () => {
   return (
-    <Nav className="link-color-inherit" defaultActiveKey="/dashboard" as="ul">
+    <Nav
+      className="link-color-inherit mb-4"
+      defaultActiveKey="/dashboard"
+      as="ul"
+    >
       <Nav.Item as="li">
         <Nav.Link as={Link} to="/dashboard" style={{ paddingLeft: "0" }}>
           Dashboard

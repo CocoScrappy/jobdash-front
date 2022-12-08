@@ -66,10 +66,8 @@ function MyEditor(props) {
         editorClassName="message-editor"
         toolbarClassName="message-toolbar"
         editorStyle={{
-          // border: "1px solid",
-          // borderStyle: "groove",
-          // color: "black",
           height: "40vh",
+          border: "1px solid #e5e7e8",
         }}
         toolbar={toolbarOptions}
       />

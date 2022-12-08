@@ -51,7 +51,7 @@ const MyCVPage = () => {
         color="var(--color-gray)"
       >
         <GenericPageLayout>
-          <h2>You look good on paper</h2>
+          <h2>Build your CV, look good on paper.</h2>
           <p>
             We'll send this out to employers when you apply for jobs, so keep it
             current.
