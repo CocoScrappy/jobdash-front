@@ -44,13 +44,14 @@ const MyCVPage = () => {
   if (UserCVInfo != null) {
     return (
       <Layout
-        title="JOBDASH - MyCVPage"
+        title="JOBDASH - My CV"
         content="Build your CV"
         color="var(--color-gray)"
       >
         <GenericPageLayout>
-          <h2>My CV</h2>
-          <hr />
+          {console.log("my console.log", pageMsgStyle, pageMsg)}
+          {/* pageMsgStyle: text-success */}
+          {/* pageMsg: CV successfully edited on Dec 07 2022 5:12PM */}
           <p className={pageMsgStyle}>{pageMsg}</p>
           <UserCV
             cv={UserCVInfo}

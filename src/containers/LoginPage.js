@@ -34,7 +34,7 @@ const LoginPage = () => {
       .catch((error) => {
         if (error.response.data.detail != null) {
           setErrorMsg(error.response.data.detail);
-          console.log(errorMsg)
+          console.log(errorMsg);
         }
       })
       .then((response) => {
@@ -61,44 +61,46 @@ const LoginPage = () => {
             addULastName(res.data.last_name);
             addUEmail(res.data.email);
             addURole(res.data.role);
-            navigate("/dashboard");
+            navigate("/jobpostings");
           })
           .then(() => {
             axios
-          .get(`${process.env.REACT_APP_API_URL}/api/cvs/get_user_cvs/`, {
-            headers: { Authorization: "Bearer " + localStorage.getItem("atoken") },
+              .get(`${process.env.REACT_APP_API_URL}/api/cvs/get_user_cvs/`, {
+                headers: {
+                  Authorization: "Bearer " + localStorage.getItem("atoken"),
+                },
+              })
+              .then((response) => {
+                if (response.data.id != null) {
+                  addCVId(response.data.id);
+                } else {
+                  addCVId("");
+                }
+              })
+              .catch((error) => {
+                console.log(error.response.data.message);
+              });
           })
-          .then((response) => {
-            if (response.data.id != null) {
-            addCVId(response.data.id);
-            } else {
-              addCVId("");
-            }
-          })
-          .catch((error) => {
-            console.log(error.response.data.message);
+          .then(() => {
+            axios
+              .get(`${process.env.REACT_APP_API_URL}/api/cvs/get_user_cvs/`, {
+                headers: {
+                  Authorization: "Bearer " + localStorage.getItem("atoken"),
+                },
+              })
+              .then((response) => {
+                if (response.data.id != null) {
+                  addCVId(response.data.id);
+                } else {
+                  addCVId("");
+                }
+              })
+              .catch((error) => {
+                console.log(error.response.data.message);
+              });
           });
-      })
-      .then(() => {
-        axios
-      .get(`${process.env.REACT_APP_API_URL}/api/cvs/get_user_cvs/`, {
-        headers: { Authorization: "Bearer " + localStorage.getItem("atoken") },
-      })
-      .then((response) => {
-        if (response.data.id != null) {
-        addCVId(response.data.id);
-        } else {
-          addCVId("");
-        }
-      })
-      .catch((error) => {
-        console.log(error.response.data.message);
-      });
-  })
       });
   };
-
-
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().required("Field must not be blank."),

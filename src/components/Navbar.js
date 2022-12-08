@@ -11,6 +11,7 @@ import "../css/components/Navbar.css";
 
 const Navigation = () => {
   const uId = useStore((state) => state.id);
+  var uRole = useStore((state) => state.role);
   var isAuthenticated = uId === -1 ? false : true;
 
   const [authState, setAuthState] = useState(isAuthenticated);
@@ -20,6 +21,7 @@ const Navigation = () => {
   const addFirstName = useStore((state) => state.addFirstName);
   const addLastName = useStore((state) => state.addLastName);
   const addRole = useStore((state) => state.addRole);
+  console.log("Role is:", uRole);
 
   const logout = (event) => {
     setAuthState(false);
@@ -37,21 +39,23 @@ const Navigation = () => {
   const authLinks = (
     <>
       <Nav.Link as={Link} to="/jobpostings">
-        Find jobs
+        Jobs
       </Nav.Link>
-      <Nav.Link as={Link} to="/cv">
-        Build CV
-      </Nav.Link>
+      {uRole === "user" && (
+        <Nav.Link as={Link} to="/cv">
+          Build CV
+        </Nav.Link>
+      )}
       <Nav.Link as={Link} to="/dashboard">
         Dashboard
       </Nav.Link>
 
-      <Nav.Link as={Link} to="/jobapplications">
+      {/* <Nav.Link as={Link} to="/jobapplications">
         Applications
-      </Nav.Link>
+      </Nav.Link> */}
 
       <Nav.Link as={Link} onClick={logout}>
-        LogOut
+        Sign out
       </Nav.Link>
       {/* WIP - Dropdown */}
       {/* <NavDropdown title="Dropdown" id="basic-nav-dropdown">
@@ -87,15 +91,23 @@ const Navigation = () => {
       }}
       expand="lg"
     >
-      <Container fluid className="px-md-5">
+      <Container fluid className="px-md-5 ">
         <Navbar.Brand>
-          <Link className="navbar-brand" to="/jobpostings">
-            Jobdash
-          </Link>
+          {authState ? (
+            <Link className="navbar-brand" to="/jobpostings">
+              Jobdash
+            </Link>
+          ) : (
+            <Link className="navbar-brand" to="/">
+              Jobdash
+            </Link>
+          )}
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">{authState ? authLinks : guestLinks}</Nav>
+          <Nav className="me-auto justify-content-end w-100">
+            {authState ? authLinks : guestLinks}
+          </Nav>
         </Navbar.Collapse>
       </Container>
     </Navbar>

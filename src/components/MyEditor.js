@@ -9,12 +9,13 @@ import { Editor } from "react-draft-wysiwyg";
 import draftToHtml from "draftjs-to-html";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import parse from "html-react-parser";
+import { BsEmojiSmile } from "react-icons/bs";
 
 function MyEditor(props) {
   const content = props.content;
   const setConvertedContent = props.setConvertedContent;
 
-  const initialContent = content == "" ? "<p></p>" : content;
+  const initialContent = content === "" ? "<p></p>" : content;
   const blocksFromHTML = convertFromHTML(initialContent);
   const state = ContentState.createFromBlockArray(
     blocksFromHTML.contentBlocks,
@@ -38,6 +39,21 @@ function MyEditor(props) {
     // convertContentToHTML();
   };
 
+  const toolbarOptions = {
+    options: [
+      "inline",
+      "fontSize",
+      "blockType",
+      "list",
+      "textAlign",
+      "link",
+      "emoji",
+    ],
+    inline: {
+      options: ["bold", "italic", "underline", "strikethrough"],
+    },
+  };
+
   return (
     <div className="mb-3">
       <Editor
@@ -51,6 +67,7 @@ function MyEditor(props) {
           color: "black",
           height: "200px",
         }}
+        toolbar={toolbarOptions}
       />
     </div>
   );

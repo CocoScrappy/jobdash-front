@@ -27,6 +27,7 @@ import useStore from "store";
 import "../css/components/Stylized-letters.css";
 import "../css/components/SearchForm.css";
 import "../css/components/Pagination.css";
+import "../css/components/Loader.css";
 
 //unused?
 import { set } from "date-fns";
@@ -276,22 +277,7 @@ export const JobPosting = () => {
             </Form>
           </Formik>
         </div>
-        {/* Recruiter - Modal to add job posting form */}
-        {uRole === "employer" && (
-          <div>
-            <strong
-              style={{
-                cursor: "pointer",
-                marginRight: "12px",
-              }}
-              onClick={() => {
-                setShowAdd(true);
-              }}
-            >
-              Add job posting
-            </strong>
-          </div>
-        )}
+
         {loading === true && <ProgressBar animated now={percent} />}
         {noResults === true && <div>Sorry, no results :(</div>}
         <Modal show={showAdd} onHide={handleCloseAdd}>
@@ -310,6 +296,20 @@ export const JobPosting = () => {
             </Button>
           </Modal.Footer>
         </Modal>
+styling-lastday-1
+        <div className="d-flex align-items-center justify-content-between my-2">
+          {/* Recruiter - Modal to add job posting form */}
+          {uRole === "employer" && (
+            <Button
+              variant="dark"
+              className="btn-jobdash"
+              onClick={() => {
+                setShowAdd(true);
+              }}
+            >
+              Add New Job
+            </Button>
+          )}
         {/* Limit per page section*/}
         <div className="d-flex align-items-center justify-content-end my-2">
           <p className="me-2 my-0">Jobs per page: </p>
@@ -331,9 +331,17 @@ export const JobPosting = () => {
               );
             })}
           </BootstrapForm.Select>
+          </div>
+
         </div>
         {/* Listing jobs */}
+        {/* Loading effect */}
+
         {jobListLoading === true ? (
+          // Spinner
+          //   <div className="d-flex justify-content-center align-items-center">
+          //    <div className="loader"></div>
+          //   </div>
           <div className="card-grid">
             <SkeletonCards />
           </div>
