@@ -379,17 +379,15 @@ function JobApplicationForm() {
                   />
                   <p>
                     <strong>Matching: </strong>
-                    {jobAnalysisResults.matching_skills_results.matching_skills.map(
-                      (item) => (
-                        <Badge bg="success" className="me-1">
-                          {item}
-                        </Badge>
-                      )
-                    )}
+                    {jobAnalysisResults.matching_skills.map((item) => (
+                      <Badge bg="success" className="me-1">
+                        {item}
+                      </Badge>
+                    ))}
                   </p>
                   <p>
                     <strong>Missing: </strong>
-                    {jobAnalysisResults.matching_skills_results.missing_skills
+                    {jobAnalysisResults.missing_skills
                       .slice(0, 10)
                       .map((item) => (
                         <Badge bg="warning" className="me-1">
