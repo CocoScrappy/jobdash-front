@@ -2,6 +2,7 @@ import Layout from "layouts/MainLayout";
 import JobApplicationDetails from "components/JobApplicationDetails";
 import { Container } from "react-bootstrap";
 import { useParams } from "react-router-dom";
+import GenericPageLayout from "layouts/GenericPageLayout";
 
 function JobApplicationInfoPage() {
   const params = useParams();
@@ -9,10 +10,14 @@ function JobApplicationInfoPage() {
   const applicationId = params.appId;
 
   return (
-    <Layout title="Job Application Details" content="JobApplication">
-      <Container>
+    <Layout
+      title="JOBDASH - Job Application Details"
+      content="JobApplication"
+      color="var(--color-gray)"
+    >
+      <GenericPageLayout>
         <JobApplicationDetails applicationId={applicationId} />
-      </Container>
+      </GenericPageLayout>
     </Layout>
   );
 }

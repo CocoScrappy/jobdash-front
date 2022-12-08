@@ -16,9 +16,6 @@ const DashboardNav = () => {
           Applications
         </Nav.Link>
       </Nav.Item>
-      <Nav.Item as="li">
-        <Nav.Link>Calendar</Nav.Link>
-      </Nav.Item>
     </Nav>
   );
 };

@@ -14,10 +14,10 @@ import axios from "axios";
 import useStore from "store";
 // custom components
 import MyEditor from "components/MyEditor";
-
+import { JobpostingForm } from "components/JobpostingForm";
+import GenericPageLayout from "layouts/GenericPageLayout";
 
 function ExternalJobApplicationForm() {
-
   var uId = useStore((state) => state.id);
   var uCv = useStore((state) => state.cv_id);
   const [convertedDescContent, setConvertedDescContent] = useState("");
@@ -65,8 +65,7 @@ function ExternalJobApplicationForm() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-
-  const handleSubmit =  (e) => {
+  const handleSubmit = (e) => {
     // adding job posting first
     e.preventDefault();
 
@@ -109,11 +108,10 @@ function ExternalJobApplicationForm() {
           })
           .catch((e) => {
             if (e.response !== null) {
-            setErrors({ ...e.response.data });
-            setSuccess(false);
-            handleShowModalFail(e);
-            }else {
-
+              setErrors({ ...e.response.data });
+              setSuccess(false);
+              handleShowModalFail(e);
+            } else {
             }
           });
       })
@@ -127,7 +125,6 @@ function ExternalJobApplicationForm() {
           console.log(e.response.data);
           handleShowModalFail(e);
         } else {
-
         }
       });
   };
@@ -159,7 +156,9 @@ function ExternalJobApplicationForm() {
           centered
         >
           <Modal.Header closeButton>
-            <Modal.Title id="contained-modal-title-vcenter">Warning!</Modal.Title>
+            <Modal.Title id="contained-modal-title-vcenter">
+              Warning!
+            </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             Oops, something went wrong with your request. Please try again.{" "}
@@ -176,11 +175,23 @@ function ExternalJobApplicationForm() {
 
   return (
     <Layout
-      title="ExternalJobApplicationForm"
-      content="ExternalJobApplicationForm"
+      title="JOBDASH - External job application form"
+      content="External Job Application Form"
+      color="var(--color-gray)"
     >
-      <div>External Job Application Form</div>
-      <Container>
+      <GenericPageLayout>
+        {/* <Formik
+      validationSchema={schema}
+      onSubmit={console.log}
+      initialValues={{
+        logo_url: '',
+      }}
+    >
+      {({
+        touched,
+        handleSubmit,
+        errors,
+      }) => ( */}
         <Form onSubmit={handleSubmit}>
           {/* Title */}
           <InputGroup className="mb-4">
@@ -208,11 +219,10 @@ function ExternalJobApplicationForm() {
               // pattern="https?://.+"
               defaultValue={logo_url || ""}
             />
-          <Form.Control.Feedback type="invalid">
-            {errors.logo_url}
-          </Form.Control.Feedback>
+            <Form.Control.Feedback type="invalid">
+              {errors.logo_url}
+            </Form.Control.Feedback>
           </InputGroup>
-
 
           {/* Location */}
           <InputGroup className="mb-4">
@@ -298,12 +308,14 @@ function ExternalJobApplicationForm() {
 
           {/* Save Button */}
           <InputGroup className="mb-4">
-            <Button type="sumbit" variant="secondary"> 
+            <Button type="sumbit" variant="secondary">
               Add External Application
             </Button>
           </InputGroup>
         </Form>
-      </Container>
+        {/* )}
+    </Formik> */}
+      </GenericPageLayout>
       <MyVerticallyCenteredModal
         show={modalShow}
         onHide={() => setModalShow(false)}

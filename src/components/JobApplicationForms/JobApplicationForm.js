@@ -206,8 +206,8 @@ function JobApplicationForm() {
         <div className="row">
           <div className="col">
             <div>
-              <h5>Company: {post.company}</h5>
-              <h5>Job Title: {post.title}</h5>
+              <h2>{post.title}</h2>
+              <h3>{post.company}</h3>
             </div>
             <div style={{ width: "1.5rem" }}>
               <h5>Favorite: </h5>
@@ -273,17 +273,15 @@ function JobApplicationForm() {
                   />
                   <p>
                     <strong>Matching: </strong>
-                    {jobAnalysisResults.matching_skills_results.matching_skills.map(
-                      (item) => (
-                        <Badge bg="success" className="me-1">
-                          {item}
-                        </Badge>
-                      )
-                    )}
+                    {jobAnalysisResults.matching_skills.map((item) => (
+                      <Badge bg="success" className="me-1">
+                        {item}
+                      </Badge>
+                    ))}
                   </p>
                   <p>
                     <strong>Missing: </strong>
-                    {jobAnalysisResults.matching_skills_results.missing_skills
+                    {jobAnalysisResults.missing_skills
                       .slice(0, 10)
                       .map((item) => (
                         <Badge bg="warning" className="me-1">

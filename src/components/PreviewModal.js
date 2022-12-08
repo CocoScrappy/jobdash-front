@@ -3,6 +3,7 @@ import parse from "html-react-parser";
 
 function PreviewModal(props) {
   return (
+    // console.log(props.show)
     <Modal
       size="lg"
       show={props.show}
