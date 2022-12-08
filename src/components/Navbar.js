@@ -50,7 +50,7 @@ const Navigation = () => {
         </Nav.Link>
       )}
 
-      <NavDropdown title={user} id="basic-nav-dropdown">
+      <NavDropdown title={user} id="basic-nav-dropdown" className="me-5">
         <NavDropdown.Item as={Link} to="/dashboard">
           Dashboard
         </NavDropdown.Item>

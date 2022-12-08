@@ -401,6 +401,7 @@ function JobApplicationForm() {
               )}
             </div>
           </div>
+          {/* End job analysis */}
 
           <div className="mb-5">
             <h3>Description</h3>
@@ -408,11 +409,10 @@ function JobApplicationForm() {
             <p>{parse(post.description)}</p>
           </div>
           {/* Links */}
-          <div>
+          <div className="mb-5">
             {post.link && (
               <>
-                <p>Website:</p>
-                <a href={post.link}></a>
+                <a href={post.link}>Website</a>
               </>
             )}
           </div>

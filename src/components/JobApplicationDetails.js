@@ -2,9 +2,11 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { format, parseISO } from "date-fns";
 import MyEditor from "./MyEditor";
-import { Button, Form } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import PreviewModal from "./PreviewModal";
 import SavedDateDetails from "./SavedDateDetails";
+import parse from "html-react-parser";
+
 import {
   updateFavoritedStatus,
   getApplicationInfo,
@@ -16,6 +18,8 @@ import {
 import Heart from "react-heart";
 import Select from "react-select";
 import { useNavigate } from "react-router-dom";
+import ClosePage from "./ClosePage";
+import Tag from "./Tag";
 
 function JobApplicationDetails(props) {
   const navigate = useNavigate();
@@ -85,51 +89,79 @@ function JobApplicationDetails(props) {
   if (applicationInfo === undefined) {
     return null;
   }
+
+  // console.log("Job Post is: ", applicationInfo.job_posting);
+
   return (
-    <div>
-      <div className="row">
-        <div className="col col-10">
+    <div className="cv-builder-card shadow-lg">
+      {/* Close & Go Back to Previous Page */}
+      <ClosePage />
+      <div>
+        <p>
+          Applied:{" "}
+          {format(
+            parseISO(applicationInfo.application_date),
+            "MMM dd yyyy h:mmaa"
+          )}
+        </p>
+        <Tag tag={applicationInfo.job_posting.remote_option} />
+      </div>
+      {/* Company Info */}
+      <div className="d-flex justify-content-between mb-5 ">
+        <div>
           <h2>{applicationInfo.job_posting.title}</h2>
-          <h3 className="text-secondary">
-            {applicationInfo.job_posting.company}
-          </h3>
-          <h6 className="mt-4">{applicationInfo.job_posting.location}</h6>
-          <h6 className="mb-4">{applicationInfo.job_posting.remote_option}</h6>
+          <h3>{applicationInfo.job_posting.company}</h3>
+          <p className="mt-4">{applicationInfo.job_posting.location}</p>
+          {/* Heart from Job Application Form  */}
+          {/* <div style={{ width: "32px" }}>
+            <Heart isActive={isLiked} onClick={() => setIsLiked(!isLiked)} />
+          </div> */}
+
+          {/* Heart */}
+          {/* <Heart
+          style={{ cursor: "default" }}
+          // ref={likeBtn}
+          key={applicationInfo.id}
+          isActive={applicationInfo.favorited}
+          onClick={() =>
+            updateFavoritedStatus({ applicationInfo, setApplicationInfo })
+          }
+        /> */}
         </div>
-        <div className="col">
-          <Button
-            className="my-3"
-            variant="danger"
-            onClick={() => handleDeleteApplication(applicationId)}
-          >
-            Delete
-          </Button>
-          <Heart
-            style={{ cursor: "default" }}
-            // ref={likeBtn}
-            key={applicationInfo.id}
-            isActive={applicationInfo.favorited}
-            onClick={() =>
-              updateFavoritedStatus({ applicationInfo, setApplicationInfo })
-            }
-          />
-          <Button
-            className="my-3"
-            variant="primary"
-            onClick={() => previewJobDescription()}
-          >
-            Job Description
-          </Button>
+        {/* Image */}
+        <div
+          style={{
+            fontSize: "6rem",
+            backgroundColor: "var(--color-dark-gray)",
+            color: "white",
+            width: "9rem",
+            height: "9rem",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            borderRadius: "50%",
+          }}
+        >
+          <i className="bi bi-buildings" style={{ color: "inherit" }}></i>
         </div>
       </div>
-      <hr></hr>
-      <p className="text-muted fst-italic">
-        <strong>Applied on: </strong>
-        {format(
-          parseISO(applicationInfo.application_date),
-          "MMM dd yyyy h:mmaa"
+
+      <div className="mb-5">
+        <h3>Description</h3>
+        <hr />
+        <p>{parse(applicationInfo.job_posting.description)}</p>
+      </div>
+
+      {/* Links */}
+      <div className="mb-5">
+        {applicationInfo.job_posting.link && (
+          <>
+            <a href={applicationInfo.job_posting.link}>Website</a>
+          </>
         )}
-      </p>
+      </div>
+
+      <hr></hr>
       <div className="row my-3">
         <p className="col-2">Status</p>
         <div className="col-4" style={{ "z-index": "100" }}>
@@ -155,19 +187,18 @@ function JobApplicationDetails(props) {
         </div>
         <p className="col-6 text-success">{statusMsg}</p>
       </div>
-      <hr></hr>
-      <div className="row">
-        <p className="col-2">Important Dates: </p>
+      <div className="mb-5">
+        <h3>Important Dates</h3>
+        <hr />
         <Button
-          variant="link"
-          // size="sm"
-          className="col-2 pt-0 pb-3"
+          variant="dark"
+          className="btn-jobdash"
           onClick={() => addNewDate()}
         >
           Add New
         </Button>
       </div>
-      <div>
+      <div className="mb-5">
         {applicationInfo.saved_dates.map((date, index) => (
           <div className="row">
             <p className="col-8">{date.name}</p>
@@ -185,22 +216,24 @@ function JobApplicationDetails(props) {
           </div>
         ))}
       </div>
-      <hr></hr>
-      <br></br>
-      <h5>
-        Notes{" "}
+
+      <h3>Notes</h3>
+      <span className="text-success">{notesMsg}</span>
+      <MyEditor
+        content={applicationInfo.notes}
+        setConvertedContent={setConvertedContent}
+      />
+      <div className="ms-auto w-100">
         <Button
-          variant="primary"
-          size="sm"
-          className="mx-2"
-          onClick={() => previewNotes()}
+          className="my-3"
+          variant="danger"
+          onClick={() => handleDeleteApplication(applicationId)}
         >
-          Preview
+          Delete
         </Button>
         <Button
-          variant="primary"
-          size="sm"
-          className="mx-2"
+          variant="dark"
+          className="btn-jobdash mx-2"
           onClick={() =>
             updateApplicationNotes({
               applicationId,
@@ -213,18 +246,13 @@ function JobApplicationDetails(props) {
         >
           Save
         </Button>
-      </h5>
-      <span className="text-success">{notesMsg}</span>
-      <MyEditor
-        content={applicationInfo.notes}
-        setConvertedContent={setConvertedContent}
-      />
-      <PreviewModal
-        show={showModal}
-        setShow={setShowModal}
-        title={""}
-        content={modalContent}
-      />
+        <PreviewModal
+          show={showModal}
+          setShow={setShowModal}
+          title={""}
+          content={modalContent}
+        />
+      </div>
       {dateModalInfo !== undefined ? (
         <SavedDateDetails
           show={showDateModal}

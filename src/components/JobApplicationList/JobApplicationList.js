@@ -72,7 +72,7 @@ function JobApplicationList(props) {
   return (
     <>
       <div className="pb-5">
-        {/* <h2>Job Applications ({paginationLinks.count})</h2> */}
+        <h2>Job Applications ({paginationLinks.count})</h2>
         <Formik
           initialValues={{ searchString: "" }}
           onSubmit={searchApplications}
@@ -103,7 +103,7 @@ function JobApplicationList(props) {
         <span className={searchMsgStyle}>{searchMsg}</span>
       </div>
 
-      <div className="row my-3">
+      <div className="d-flex justify-content-between my-3">
         <nav aria-label="Page navigation" className="col-4">
           <ul className="pagination">
             <li
@@ -148,7 +148,7 @@ function JobApplicationList(props) {
             </li>
           </ul>
         </nav>
-        <div className="col">
+        <div>
           <Formik
             initialValues={{ applicationNumber: 1 }}
             onSubmit={jumpToApplication}
@@ -164,26 +164,36 @@ function JobApplicationList(props) {
                 // placeholder="jump to Application..."
                 className="mx-3"
               />
-              <button type="submit" className="mx-3">
+              <Button
+                variant="light"
+                className="btn-jobdash mx-3"
+                type="submit"
+              >
                 Jump
-              </button>
-              <button
-                className="me-2"
+              </Button>
+              <Button
+                variant="light"
+                className="btn-jobdash me-2"
                 type="reset"
                 onClick={() => resetSearch()}
               >
                 Reset
-              </button>
+              </Button>
               {/* <span className={searchMsgStyle}>{searchMsg}</span> */}
             </Form>
           </Formik>
         </div>
-      <div className="col" >
-      <Button variant="secondary" onClick={() => {
-        navigate("/externaljobapplicationform") }} >
-              + Application
-            </Button>
-      </div>
+        <div>
+          <Button
+            variant="dark"
+            className="btn-jobdash btn-change-text"
+            onClick={() => {
+              navigate("/externaljobapplicationform");
+            }}
+          >
+            + Application
+          </Button>
+        </div>
       </div>
       <table className="table table-striped">
         <thead>

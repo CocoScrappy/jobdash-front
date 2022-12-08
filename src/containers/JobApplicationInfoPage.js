@@ -1,6 +1,5 @@
 import Layout from "layouts/MainLayout";
 import JobApplicationDetails from "components/JobApplicationDetails";
-import { Container } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import GenericPageLayout from "layouts/GenericPageLayout";
 
