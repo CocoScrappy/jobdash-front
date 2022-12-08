@@ -55,7 +55,7 @@ export const JobPosting = () => {
   const [toggleState, setToggleState] = useState(false);
   const [loading, setLoading] = useState(false);
   const [percent, setPercent] = useState(0);
-  const [noResults,setNoResults]=useState(false)
+  const [noResults, setNoResults] = useState(false);
   //add posting modal
   const [showAdd, setShowAdd] = useState(false);
 
@@ -66,7 +66,7 @@ export const JobPosting = () => {
   const handleCloseAdd = () => {
     setShowAdd(false);
   };
-
+  //This is called inside useEffect that fetches the list of job postings
   const handlePages = () => {
     //Calculate the number of page objects needed
     let leftOver = postCount % limit;
@@ -78,7 +78,7 @@ export const JobPosting = () => {
     let pageArray = [];
     for (let i = 1; i <= totalPages; i++) {
       pageArray.push({ page: i, offset: limit * (i - 1) });
-      // console.log(`pageArray[${i - 1}].offset = ${pageArray[i - 1].offset}`);
+      //ie :if limit: 10 => page: 1, offset: 0 and page 3, offset:20
     }
     setPages(pageArray);
     setActivePage(offset / limit + 1);
@@ -131,7 +131,7 @@ export const JobPosting = () => {
         console.log("connection established");
         socket.send(JSON.stringify(message));
         setLoading(true);
-        setPercent(1)
+        setPercent(1);
       };
 
       socket.onmessage = function (event) {
@@ -139,8 +139,7 @@ export const JobPosting = () => {
         // console.log("event occured, data is ="+res.message)
         if (res.message === "Beginning search") {
           console.log("Recognized Begin Search");
-          setPercent(3)
-          
+          setPercent(3);
         }
         if (res.percent !== undefined) {
           setPercent(res.percent);
@@ -150,14 +149,14 @@ export const JobPosting = () => {
         if (res.payload !== undefined) {
           setLoading(false);
           console.log(JSON.parse(res.payload).length);
-          
-          if(JSON.parse(res.payload).length===0){
-            setNoResults(true)
-            console.log("no result is true")
+
+          if (JSON.parse(res.payload).length === 0) {
+            setNoResults(true);
+            console.log("no result is true");
           }
           setJobpostings(JSON.parse(res.payload)); //res
           setPercent(0);
-            
+
           socket.close();
         }
       };
@@ -187,17 +186,16 @@ export const JobPosting = () => {
         }
       )
       .then((res) => {
-        if(res.data.results.length===0){
-          console.log("result is "+res.data.results)
-          setNoResults(true)
-        }
-        else{
-          console.log(JSON.stringify(res.data.results))
+        if (res.data.results.length === 0) {
+          console.log("result is " + res.data.results);
+          setNoResults(true);
+        } else {
+          console.log(JSON.stringify(res.data.results));
         }
         setJobpostings(res.data.results);
         setPostCount(res.data.count);
         handlePages();
-        
+
         // res.data.foreach(match=>console.log(match.fields));
       })
       .catch((err) => {
@@ -295,7 +293,7 @@ export const JobPosting = () => {
           </div>
         )}
         {loading === true && <ProgressBar animated now={percent} />}
-        {noResults === true && (<div>Sorry, no results :(</div>)}
+        {noResults === true && <div>Sorry, no results :(</div>}
         <Modal show={showAdd} onHide={handleCloseAdd}>
           <Modal.Header closeButton>
             <Modal.Title>Add Jobposting</Modal.Title>
@@ -315,20 +313,19 @@ export const JobPosting = () => {
         {/* Limit per page section*/}
         <div className="d-flex align-items-center justify-content-end my-2">
           <p className="me-2 my-0">Jobs per page: </p>
-          <BootstrapForm.Select style={{ width: "auto" }}>
+          <BootstrapForm.Select
+            onChange={(e) => {
+              setLimit(e.target.value);
+              console.log(e.target.value);
+              if (postCount < e.target.value) {
+                setOffset(0);
+              }
+            }}
+            style={{ width: "auto" }}
+          >
             {limitRanges.map((l) => {
               return (
-                <option
-                  key={l.limitValue}
-                  value={l.limitValue}
-                  onClick={() => {
-                    setLimit(l.limitValue);
-                    console.log(l.limitValue);
-                    if (postCount < l.limitValue) {
-                      setOffset(0);
-                    }
-                  }}
-                >
+                <option key={l.limitValue} value={l.limitValue}>
                   {l.limitValue}
                 </option>
               );
