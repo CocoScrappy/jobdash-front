@@ -171,7 +171,6 @@ export default function JobpostingForm({ jobpostings, setJobpostings }) {
       <Form.Control.Feedback type="invalid">
         {errors.description}
       </Form.Control.Feedback>
-
       <InputGroup className="mb-4">
         <Button type="sumbit"> Add job posting</Button>
       </InputGroup>

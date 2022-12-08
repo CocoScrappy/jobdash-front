@@ -283,7 +283,7 @@ export const JobPosting = () => {
                   </Field>
                 </div>
               )}
-              
+
               <button type="submit">Search</button>
             </Form>
           </Formik>

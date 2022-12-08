@@ -11,7 +11,13 @@ import "./UserCV.css";
 import MyEditor from "components/MyEditor";
 import PreviewModal from "components/PreviewModal";
 
-function UserCV({ cv, setPageMsg, setPageMsgStyle, setUserCVInfo }) {
+function UserCV({
+  cv,
+  setPageMsg,
+  setPageMsgStyle,
+  setShowAlert,
+  setUserCVInfo,
+}) {
   // console.log(cv)
   const [showModal, setShowModal] = useState(false);
 
@@ -39,13 +45,15 @@ function UserCV({ cv, setPageMsg, setPageMsgStyle, setUserCVInfo }) {
             "CV successfully created on " +
               format(new Date(), "MMM dd yyyy h:mmaa")
           );
-          setPageMsgStyle("text-success");
+          setPageMsgStyle("success");
+          setShowAlert(true);
         })
         .catch((error) => {
           console.log(error);
           if (error.response) {
             setPageMsg(error.response.data.message);
-            setPageMsgStyle("text-danger");
+            setPageMsgStyle("danger");
+            setShowAlert(true);
           }
         });
     } else {
@@ -63,13 +71,15 @@ function UserCV({ cv, setPageMsg, setPageMsgStyle, setUserCVInfo }) {
             "CV successfully edited on " +
               format(new Date(), "MMM dd yyyy h:mmaa")
           );
-          setPageMsgStyle("text-success");
+          setPageMsgStyle("success");
+          setShowAlert(true);
         })
         .catch((error) => {
           console.log(error);
           if (error.response) {
             setPageMsg(error.response.data.message);
-            setPageMsgStyle("text-danger");
+            setPageMsgStyle("danger");
+            setShowAlert(true);
           }
         });
     }
@@ -97,27 +107,40 @@ function UserCV({ cv, setPageMsg, setPageMsgStyle, setUserCVInfo }) {
         validationSchema={validationSchema}
         enableReinitialize
       >
-        <Form className="m-3">
+        <Form className="">
           <div>
             <Field type="hidden" name="id" className="form-control col-auto" />
           </div>
-          <div className="my-3">
-            <ErrorMessage
-              name="name"
-              component="p"
-              className="text-danger text-start"
-            />
-            <FloatingLabel label="CV Name" className="mb-3">
+          <div className="my-3 d-flex align-items-center">
+            <FloatingLabel label="CV Name" className="w-100">
               <Field
                 name="name"
                 placeholder="CV Name"
                 className="form-control col-auto"
               />
             </FloatingLabel>
+            {/* <button
+              className="button-preview"
+              onClick={() => setShowModal(true)}
+            >
+              Preview
+            </button> */}
+
+            <Button
+              variant="dark"
+              className="btn-jobdash"
+              onClick={() => setShowModal(true)}
+            >
+              Preview
+            </Button>
           </div>
+          <ErrorMessage
+            name="name"
+            component="p"
+            className="text-danger text-start"
+          />
           <div className="mb-3">
-            {/* <p className="text-danger">{EditorMsg}</p> */}
-            <p className="h5 text-start my-3">Content</p>
+            {/* <p className="h5 text-start my-3">Content</p> */}
             <MyEditor
               content={cv.content}
               setConvertedContent={setConvertedContent}
@@ -135,9 +158,6 @@ function UserCV({ cv, setPageMsg, setPageMsgStyle, setUserCVInfo }) {
             >
               Cancel
             </Button>
-            <Button variant="info" onClick={() => setShowModal(true)}>
-              Preview
-            </Button>
           </div>
         </Form>
       </Formik>
@@ -147,7 +167,7 @@ function UserCV({ cv, setPageMsg, setPageMsgStyle, setUserCVInfo }) {
         title={cv.name}
         content={convertedContent}
       />
-      <p>{parse(convertedContent)}</p>
+      {/* <p>{parse(convertedContent)}</p> */}
     </div>
   );
 }
