@@ -4,7 +4,7 @@ import Alert from "react-bootstrap/Alert";
 export default function FlashAlert({ setShowAlert, msg, variant }) {
   return (
     <Alert variant={variant} onClose={() => setShowAlert(false)} dismissible>
-      <p>{msg}</p>
+      {msg}
     </Alert>
   );
 }

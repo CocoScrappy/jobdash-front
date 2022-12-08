@@ -1,4 +1,20 @@
-#modal{
-    width: 816px;
+#modal {
+  width: 816px;
 }
 
+.button-preview {
+  padding: 0 34px;
+  border-radius: 30px;
+  background-color: var(--color-main);
+  color: white;
+  border: var(--color-main);
+  height: 100%;
+  transition-property: background-color, border-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-out;
+}
+
+.button-preview:hover {
+  background-color: var(--color-main-lighter);
+  border-color: var(--color-main-lighter);
+}

@@ -1,10 +1,12 @@
+import { Container } from "react-bootstrap";
+
 const GenericPageLayout = ({ children }) => (
   <div
     style={{
       height: "100%",
     }}
   >
-    <div className="py-5">{children}</div>
+    <Container className="py-5">{children}</Container>
   </div>
 );
 

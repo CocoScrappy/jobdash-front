@@ -11,7 +11,8 @@ import "../css/components/Navbar.css";
 
 const Navigation = () => {
   const uId = useStore((state) => state.id);
-  var uRole = useStore((state) => state.role);
+  const uRole = useStore((state) => state.role);
+  const user = useStore((state) => state.first_name);
   var isAuthenticated = uId === -1 ? false : true;
 
   const [authState, setAuthState] = useState(isAuthenticated);
@@ -48,17 +49,27 @@ const Navigation = () => {
           Build CV
         </Nav.Link>
       )}
-      <Nav.Link as={Link} to="/dashboard">
-        Dashboard
-      </Nav.Link>
+
+      <NavDropdown title={user} id="basic-nav-dropdown">
+        <NavDropdown.Item as={Link} to="/dashboard">
+          Dashboard
+        </NavDropdown.Item>
+        <NavDropdown.Item as={Link} to="/jobapplications">
+          Applications
+        </NavDropdown.Item>
+        <NavDropdown.Divider />
+        <NavDropdown.Item as={Link} onClick={logout}>
+          Sign out
+        </NavDropdown.Item>
+      </NavDropdown>
 
       {/* <Nav.Link as={Link} to="/jobapplications">
         Applications
       </Nav.Link> */}
 
-      <Nav.Link as={Link} onClick={logout}>
+      {/* <Nav.Link as={Link} onClick={logout}>
         Sign out
-      </Nav.Link>
+      </Nav.Link> */}
       {/* WIP - Dropdown */}
       {/* <NavDropdown title="Dropdown" id="basic-nav-dropdown">
         <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>

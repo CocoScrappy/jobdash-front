@@ -40,6 +40,46 @@ function JobApplicationForm() {
   const [analysisLoading, setAnalysisLoading] = useState(false);
   const [analysisDisabled, setAnalysisDisabled] = useState(false);
 
+  const submitApplication = () => {
+    var applicationData = {};
+    try {
+      applicationData = {
+        notes: convertedNoteContent,
+        favorited: isLiked,
+        status: "applied",
+        // applicant: uId,
+        cv: uCv,
+        job_posting: post.id,
+      };
+    } catch (err) {
+      console.log(
+        "Whoops, something went wrong while assigning the values for the request body"
+      );
+    }
+    axios
+      .post(
+        `${process.env.REACT_APP_API_URL}/api/applications/`,
+        applicationData,
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("atoken"),
+          },
+        }
+      )
+      .then((res) => {
+        if (res.status === 201) {
+          handleShowModalSuccess();
+          setSuccess(true);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        setSuccess(false);
+        setFailModalMsg(error.response.data.message);
+        handleShowModalFail();
+      });
+  };
+
   // useEffect(() => {
   //   setJobAnalysisResults({
   //     matching_score: 13.79,
@@ -121,30 +161,30 @@ function JobApplicationForm() {
       setSuccess(false);
       handleShowModalNoCV();
     } else {
-    axios
-      .post(
-        `${process.env.REACT_APP_API_URL}/api/applications/`,
-        applicationData,
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("atoken"),
-          },
-        }
-      )
-      .then((res) => {
-        if (res.status === 201) {
-          handleShowModalSuccess();
-          setSuccess(true);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        setSuccess(false);
-        setFailModalMsg(error.response.data.message);
-        handleShowModalFail();
-      });
+      axios
+        .post(
+          `${process.env.REACT_APP_API_URL}/api/applications/`,
+          applicationData,
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("atoken"),
+            },
+          }
+        )
+        .then((res) => {
+          if (res.status === 201) {
+            handleShowModalSuccess();
+            setSuccess(true);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          setSuccess(false);
+          setFailModalMsg(error.response.data.message);
+          handleShowModalFail();
+        });
+    }
   };
-}
 
   const runCVAnalyzer = () => {
     setAnalysisLoading(true);
@@ -234,97 +274,97 @@ function JobApplicationForm() {
       color="var(--color-gray)"
     >
       <GenericPageLayout>
-        <div className="row">
-          <div className="col">
-            <div>
-              <h2>{post.title}</h2>
-              <h3>{post.company}</h3>
-            </div>
-            <div style={{ width: "1.5rem" }}>
-              <h5>Favorite: </h5>
-              <Heart isActive={isLiked} onClick={() => setIsLiked(!isLiked)} />
-            </div>
-            <div>
-              <h5>Location: {post.location}</h5>
-              <h5>Remote Option: {post.remote_option}</h5>
-              <h5>Date Created: {shortDate}</h5>
-            </div>
-          </div>
-          {/* post analyzer */}
-          <div className="col text-center">
-            <h3>JobPost Analyzer (beta)</h3>
-            <div>
-              {jobAnalysisResults === undefined ? (
-                <>
-                  <Button
-                    disabled={analysisDisabled}
-                    onClick={() => runCVAnalyzer()}
-                  >
-                    {analysisLoading ? (
-                      <>
-                        <Spinner
-                          as="span"
-                          animation="border"
-                          size="sm"
-                          role="status"
-                          aria-hidden="true"
-                          className="me-3"
-                          variant="light"
-                        />
-                        Loading...
-                      </>
-                    ) : (
-                      "Start"
-                    )}
-                  </Button>
-                </>
-              ) : (
-                <div>
-                  <DonutChart
-                    data={[
-                      {
-                        label: "Match",
-                        value: jobAnalysisResults.matching_score,
-                      },
-                      {
-                        label: "",
-                        value: 100 - jobAnalysisResults.matching_score,
-                        isEmpty: true,
-                      },
-                    ]}
-                    height={100}
-                    width={100}
-                    colors={["MediumBlue", "lightgrey"]}
-                    legend={false}
-                    emptyColor="lightgrey"
-                    strokeColor="white"
-                    clickToggle={false}
-                    interactive={true}
-                    formatValues={(values, total) => `${values.toFixed(0)}%`}
-                  />
-                  <p>
-                    <strong>Matching: </strong>
-                    {jobAnalysisResults.matching_skills.map((item) => (
+        <div>
+          <h2>{post.title}</h2>
+          <h3>{post.company}</h3>
+        </div>
+        <div style={{ width: "1.5rem" }}>
+          <h5>Favorite: </h5>
+          <Heart isActive={isLiked} onClick={() => setIsLiked(!isLiked)} />
+        </div>
+        <div>
+          <h5>Location: {post.location}</h5>
+          <h5>Remote Option: {post.remote_option}</h5>
+          <h5>Date Created: {shortDate}</h5>
+        </div>
+
+        {/* post analyzer */}
+        <div className="col text-center">
+          <h3>JobPost Analyzer (beta)</h3>
+          <div>
+            {jobAnalysisResults === undefined ? (
+              <>
+                <Button
+                  disabled={analysisDisabled}
+                  onClick={() => runCVAnalyzer()}
+                >
+                  {analysisLoading ? (
+                    <>
+                      <Spinner
+                        as="span"
+                        animation="border"
+                        size="sm"
+                        role="status"
+                        aria-hidden="true"
+                        className="me-3"
+                        variant="light"
+                      />
+                      Loading...
+                    </>
+                  ) : (
+                    "Start"
+                  )}
+                </Button>
+              </>
+            ) : (
+              <div>
+                <DonutChart
+                  data={[
+                    {
+                      label: "Match",
+                      value: jobAnalysisResults.matching_score,
+                    },
+                    {
+                      label: "",
+                      value: 100 - jobAnalysisResults.matching_score,
+                      isEmpty: true,
+                    },
+                  ]}
+                  height={100}
+                  width={100}
+                  colors={["MediumBlue", "lightgrey"]}
+                  legend={false}
+                  emptyColor="lightgrey"
+                  strokeColor="white"
+                  clickToggle={false}
+                  interactive={true}
+                  formatValues={(values, total) => `${values.toFixed(0)}%`}
+                />
+                <p>
+                  <strong>Matching: </strong>
+                  {jobAnalysisResults.matching_skills_results.matching_skills.map(
+                    (item) => (
                       <Badge bg="success" className="me-1">
                         {item}
                       </Badge>
+                    )
+                  )}
+                </p>
+                <p>
+                  <strong>Missing: </strong>
+                  {jobAnalysisResults.matching_skills_results.missing_skills
+                    .slice(0, 10)
+                    .map((item) => (
+                      <Badge bg="warning" className="me-1">
+                        {item}
+                      </Badge>
                     ))}
-                  </p>
-                  <p>
-                    <strong>Missing: </strong>
-                    {jobAnalysisResults.missing_skills
-                      .slice(0, 10)
-                      .map((item) => (
-                        <Badge bg="warning" className="me-1">
-                          {item}
-                        </Badge>
-                      ))}
-                  </p>
-                </div>
-              )}
-            </div>
+                </p>
+              </div>
+            )}
           </div>
         </div>
+
         <div>
           <h5>Job Description: </h5>
           <p>{parse(post.description)}</p>
